@@ -43,10 +43,10 @@
           "id": 4,
           "soru": "Dünya Kupası finalleri tarihinde en çok gol atan oyuncu kimdir?",
           "secenekler": {
-            "A": "Miroslav Klose",
-            "B": "Ronaldo Nazario",
-            "C": "Gerd Müller",
-            "D": "Just Fontaine"
+    "A": "Lionel Messi",
+    "B": "Kylian Mbappe",
+    "C": "Miroslav Klose",
+    "D": "Ronaldo Nazario"
           },
           "dogru_cevap": "A"
         },
