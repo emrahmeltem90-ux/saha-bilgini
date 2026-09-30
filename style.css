@@ -38,6 +38,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 .btn-howto { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #fff; box-shadow: 0 5px 0 #14532d; }
 .btn-spin { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #4c1d95 !important; }
 .btn-daily { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #14532d !important; }
+.btn-ach { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #78350f !important; }
 
 /* AYARLAR */
 #settings-screen { background-color: #0f172a; padding-top: 40px; }
@@ -57,6 +58,19 @@ input:checked + .slider:before { transform: translateX(24px); }
 .howto-content { display: flex; flex-direction: column; gap: 15px; }
 .howto-item { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.4; }
 .howto-icon { font-size: 2rem; flex-shrink: 0; }
+
+/* BAŞARIMLAR EKRANI */
+#achievements-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; overflow-y: auto; }
+.ach-subtitle { color: #cbd5e1; font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
+.ach-list { display: flex; flex-direction: column; gap: 12px; }
+.ach-card { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 0 #0f172a; position: relative; }
+.ach-card.done { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); border-color: #4ade80; }
+.ach-icon { font-size: 2rem; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); border-radius: 12px; flex-shrink: 0; }
+.ach-info { flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
+.ach-title { font-size: 1rem; font-weight: 900; color: #fff; }
+.ach-desc { font-size: 0.75rem; color: #cbd5e1; }
+.ach-reward { font-size: 0.8rem; color: var(--accent-gold); font-weight: bold; }
+.ach-status { font-size: 1.5rem; flex-shrink: 0; }
 
 /* GÜNLÜK ÖDÜL EKRANI */
 #daily-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; overflow-y: auto; }
@@ -207,40 +221,3 @@ input:checked + .slider:before { transform: translateX(24px); }
 .player-rank-box { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 3px solid var(--accent-gold); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); }
 .player-rank-box .player-rank { font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); letter-spacing: 2px; margin: 0; }
 .player-rank-box .player-rank-desc { font-size: 0.85rem; color: #cbd5e1; text-align: center; font-weight: bold; margin-top: 5px; }
-
-/* BAŞARIMLAR EKRANI */
-#achievements-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; overflow-y: auto; }
-.ach-subtitle { color: #cbd5e1; font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
-.ach-list { display: flex; flex-direction: column; gap: 12px; }
-.ach-card {
-    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
-    border: 2px solid #3b82f6;
-    border-radius: 15px;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 0 #0f172a;
-    position: relative;
-}
-.ach-card.done {
-    background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
-    border-color: #4ade80;
-}
-.ach-icon {
-    font-size: 2rem;
-    width: 50px; height: 50px;
-    display: flex; justify-content: center; align-items: center;
-    background: rgba(0,0,0,0.3);
-    border-radius: 12px;
-    flex-shrink: 0;
-}
-.ach-info { flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
-.ach-title { font-size: 1rem; font-weight: 900; color: #fff; }
-.ach-desc { font-size: 0.75rem; color: #cbd5e1; }
-.ach-reward { font-size: 0.8rem; color: var(--accent-gold); font-weight: bold; }
-.ach-status {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-.btn-ach { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #78350f !important; }
