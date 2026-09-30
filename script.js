@@ -99,6 +99,53 @@ function updateTopPanel() {
     document.getElementById('total-stars-display').innerText = userProgress.totalStars || 0;
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
     document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
+    let welcomeEl = document.getElementById('welcome-text');
+    if (welcomeEl) {
+        welcomeEl.innerText = `Hoş geldin, ${userProgress.profileName || "Oyuncu"}!`;
+    }
+}
+
+// --- RÜTBE HESAPLAMA ---
+function calculateRank() {
+    let total = (userProgress.totalCorrect || 0) + (userProgress.totalWrong || 0);
+    if (total === 0) return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: 0 };
+    let percentage = Math.round(((userProgress.totalCorrect || 0) / total) * 100);
+
+    if (percentage >= 90) return { name: "👑 EFSANE", desc: "Sen bir futbol dehasısın!", percentage: percentage };
+    if (percentage >= 75) return { name: "🌟 PROFESYONEL", desc: "Harika gidiyorsun, çok bilgilisin!", percentage: percentage };
+    if (percentage >= 50) return { name: "⚽ USTA", desc: "İyi gidiyorsun, gelişmeye devam!", percentage: percentage };
+    return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: percentage };
+}
+
+// --- İSTATİSTİK ÇEMBERİ ÇİZİMİ ---
+function drawStatsCircle(percentage) {
+    const canvas = document.getElementById('stats-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 80;
+    const lineWidth = 15;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Arka plan çemberi (gri)
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+
+    // Dolgu çemberi (yeşil)
+    let endAngle = -Math.PI / 2 + (2 * Math.PI) * (percentage / 100);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, -Math.PI / 2, endAngle);
+    ctx.strokeStyle = percentage >= 75 ? '#fbbf24' : (percentage >= 50 ? '#22c55e' : '#3b82f6');
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    document.getElementById('stats-percentage').innerText = percentage + '%';
 }
 
 // --- PROFİL FONKSİYONLARI ---
@@ -111,6 +158,12 @@ function showProfileScreen() {
     document.getElementById('stat-high-score').innerText = userProgress.highScore || 0;
     document.getElementById('stat-levels-completed').innerText = Object.keys(userProgress.levels).length || 0;
     document.getElementById('stat-perfect-levels').innerText = userProgress.perfectLevels || 0;
+
+    // Rütbe ve istatistik çemberi
+    let rank = calculateRank();
+    document.getElementById('player-rank').innerText = rank.name;
+    document.getElementById('player-rank-desc').innerText = rank.desc;
+    drawStatsCircle(rank.percentage);
 }
 
 function saveProfileName() {
@@ -121,10 +174,15 @@ function saveProfileName() {
     sesDogru.play();
     alert("İsim kaydedildi: " + newName);
     updateTopPanel();
+    showMenuScreen();
 }
 
 function loadProfileName() {
     document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
+    let welcomeEl = document.getElementById('welcome-text');
+    if (welcomeEl) {
+        welcomeEl.innerText = `Hoş geldin, ${userProgress.profileName || "Oyuncu"}!`;
+    }
 }
 
 // --- ÇARKIFELEK ---
@@ -209,7 +267,6 @@ function spinWheel() {
     const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle + sliceAngle / 2));
 
     const canvas = document.getElementById('wheel-canvas');
-    let currentRotation = 0;
     let startTime = null;
     const duration = 4000;
 
@@ -234,30 +291,16 @@ function spinWheel() {
 }
 
 function givePrize(prize) {
-    let icon = "🎁";
-    let title = "TEBRİKLER!";
-    let text = "";
-
-    if (prize.type === "coin") {
-        userProgress.totalCoins += prize.value;
-        icon = "🪙"; text = `${prize.value} Coin kazandın!`; sesDogru.play();
-    } else if (prize.type === "star") {
-        userProgress.totalStars += prize.value;
-        icon = "⭐"; text = `${prize.value} Yıldız kazandın!`; sesDogru.play();
-    } else if (prize.type === "joker") {
-        icon = "✂️"; text = `1 adet Yarı Yarıya Joker kazandın!`; sesDogru.play();
-    } else if (prize.type === "respin") {
-        userProgress.freeSpins += 1;
-        icon = "🎡"; text = `1 Bedava Çevirme Hakkı kazandın!`; sesDogru.play();
-    }
-
+    let icon = "🎁", title = "TEBRİKLER!", text = "";
+    if (prize.type === "coin") { userProgress.totalCoins += prize.value; icon = "🪙"; text = `${prize.value} Coin kazandın!`; sesDogru.play(); }
+    else if (prize.type === "star") { userProgress.totalStars += prize.value; icon = "⭐"; text = `${prize.value} Yıldız kazandın!`; sesDogru.play(); }
+    else if (prize.type === "joker") { icon = "✂️"; text = `1 adet Yarı Yarıya Joker kazandın!`; sesDogru.play(); }
+    else if (prize.type === "respin") { userProgress.freeSpins += 1; icon = "🎡"; text = `1 Bedava Çevirme Hakkı kazandın!`; sesDogru.play(); }
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel();
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins;
-
     const canvas = document.getElementById('wheel-canvas');
     if (canvas) canvas.style.transform = `rotate(0deg)`;
-
     document.getElementById('prize-icon').innerText = icon;
     document.getElementById('prize-title').innerText = title;
     document.getElementById('prize-text').innerText = text;
@@ -286,7 +329,6 @@ function showLevelScreen() {
     const container = document.getElementById('levels-container');
     container.innerHTML = ''; updateTopPanel();
     if (levelsData.length === 0) { container.innerHTML = "<p style='color:#fff;'>Yükleniyor...</p>"; return; }
-
     for (let i = 0; i < 40; i++) {
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
         let catData = levelsData[i] || { kategori: `LEVEL ${i+1}` };
@@ -478,7 +520,6 @@ function showResults() {
     if (percentage >= 70) starsEarned = 2;
     if (percentage >= 100) starsEarned = 3;
 
-    // İstatistikleri güncelle
     userProgress.totalScore = (userProgress.totalScore || 0) + score;
     userProgress.totalCorrect = (userProgress.totalCorrect || 0) + correctCount;
     userProgress.totalWrong = (userProgress.totalWrong || 0) + wrongCount;
@@ -515,4 +556,4 @@ function watchAdForStars() {
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel(); alert("Tebrikler! 5 yıldız kazandın. ⭐"); showLevelScreen();
     }, 1500);
-                              }
+}
