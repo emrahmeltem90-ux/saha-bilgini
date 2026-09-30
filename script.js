@@ -30,6 +30,14 @@ const DAILY_REWARDS = [
 ];
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
+// GÜNLÜK GÖREVLER
+const DAILY_QUESTS = [
+    { id: 'play_3_levels', icon: '🎮', title: '3 Level Oyna', desc: 'Bugün 3 level tamamla', reward: '150 🪙', coin: 150, star: 0, target: 3, type: 'levels' },
+    { id: 'use_5_jokers', icon: '🃏', title: '5 Joker Kullan', desc: 'Bugün 5 joker kullan', reward: '100 🪙', coin: 100, star: 0, target: 5, type: 'jokers' },
+    { id: 'spin_wheel', icon: '🎡', title: 'Çarkı Çevir', desc: 'Bugün 1 kez çark çevir', reward: '50 🪙', coin: 50, star: 0, target: 1, type: 'spins' },
+    { id: 'get_20_correct', icon: '✅', title: '20 Doğru Yap', desc: 'Bugün 20 doğru cevap ver', reward: '200 🪙', coin: 200, star: 0, target: 20, type: 'correct' }
+];
+
 const ACHIEVEMENTS = [
     { id: 'first_blood', icon: '🩸', title: 'İlk Kan', desc: 'İlk doğru cevabını ver', reward: '50 🪙', coin: 50, star: 0, check: (p) => (p.totalCorrect || 0) >= 1 },
     { id: 'ten_correct', icon: '🥉', title: 'Çaylak', desc: '10 doğru cevap yap', reward: '100 🪙', coin: 100, star: 0, check: (p) => (p.totalCorrect || 0) >= 10 },
@@ -74,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 100);
     drawWheel();
     loadProfileName();
+    applyTheme();
 });
 
 let levelsData = [];
@@ -95,7 +104,7 @@ async function loadAllQuestions() {
             const data = await response.json();
             championsData = data.seviyeler || [];
         }
-    } catch (error) { console.log("Şampiyonlar Ligi soruları yüklenemedi:", error); }
+    } catch (error) { console.log("Şampiyonlar Ligi yüklenemedi:", error); }
 }
 loadAllQuestions();
 
@@ -110,7 +119,8 @@ let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {}, totalStars: 0, totalCoins: 100,
     profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0,
     lastDailyClaim: 0, dailyStreak: 0, totalSpins: 0, totalJokersUsed: 0, unlockedAchievements: [],
-    musicEnabled: true, soundEnabled: true, lastShareDate: "", totalShares: 0
+    musicEnabled: true, soundEnabled: true, lastShareDate: "", totalShares: 0,
+    theme: "dark", leaderboard: [], quests: {}, questDate: ""
 };
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
@@ -130,6 +140,10 @@ if (userProgress.musicEnabled === undefined) userProgress.musicEnabled = true;
 if (userProgress.soundEnabled === undefined) userProgress.soundEnabled = true;
 if (userProgress.lastShareDate === undefined) userProgress.lastShareDate = "";
 if (userProgress.totalShares === undefined) userProgress.totalShares = 0;
+if (userProgress.theme === undefined) userProgress.theme = "dark";
+if (userProgress.leaderboard === undefined) userProgress.leaderboard = [];
+if (userProgress.quests === undefined) userProgress.quests = {};
+if (userProgress.questDate === undefined) userProgress.questDate = "";
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -150,11 +164,17 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
     updateTopPanel();
 }
-function showMenuScreen() { showScreen('menu-screen'); updateTopPanel(); checkAchievements(); }
+function showMenuScreen() { 
+    showScreen('menu-screen'); 
+    updateTopPanel(); 
+    checkAchievements(); 
+    checkDailyReminder();
+}
 function showSettingsScreen() {
     showScreen('settings-screen');
     document.getElementById('toggle-music').checked = userProgress.musicEnabled;
     document.getElementById('toggle-sound').checked = userProgress.soundEnabled;
+    document.getElementById('theme-toggle-btn').innerText = userProgress.theme === 'dark' ? '🌙 KOYU' : '☀️ AÇIK';
 }
 function showHowToScreen() { showScreen('howto-screen'); }
 
@@ -169,6 +189,140 @@ function showToast(message) {
     toast.innerText = message;
     toast.classList.add('show');
     setTimeout(() => { toast.classList.remove('show'); }, 2500);
+}
+
+// --- TEMA ---
+function applyTheme() {
+    if (userProgress.theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+}
+function toggleTheme() {
+    userProgress.theme = userProgress.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    applyTheme();
+    document.getElementById('theme-toggle-btn').innerText = userProgress.theme === 'dark' ? '🌙 KOYU' : '☀️ AÇIK';
+    showToast(userProgress.theme === 'dark' ? "🌙 Koyu tema aktif" : "☀️ Açık tema aktif");
+}
+
+// --- GÜNLÜK HATIRLATICI ---
+function checkDailyReminder() {
+    let banner = document.getElementById('daily-reminder-banner');
+    if (checkDailyReward()) {
+        banner.style.display = 'block';
+    } else {
+        banner.style.display = 'none';
+    }
+}
+
+// --- LİDERLİK TABLOSU ---
+function addToLeaderboard(levelName, scoreValue) {
+    if (!userProgress.leaderboard) userProgress.leaderboard = [];
+    userProgress.leaderboard.push({ level: levelName, score: scoreValue, date: new Date().toLocaleDateString('tr-TR') });
+    userProgress.leaderboard.sort((a, b) => b.score - a.score);
+    userProgress.leaderboard = userProgress.leaderboard.slice(0, 10); // Sadece ilk 10
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+}
+function showLeaderboardScreen() {
+    showScreen('leaderboard-screen');
+    renderLeaderboard();
+}
+function renderLeaderboard() {
+    const list = document.getElementById('leaderboard-list');
+    list.innerHTML = '';
+    if (!userProgress.leaderboard || userProgress.leaderboard.length === 0) {
+        list.innerHTML = `<div class="ach-card"><div class="ach-info"><div class="ach-title">Henüz skor yok!</div><div class="ach-desc">Oyna ve liderlik tablosuna gir.</div></div></div>`;
+        return;
+    }
+    userProgress.leaderboard.forEach((entry, index) => {
+        let medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+        let card = document.createElement('div');
+        card.className = 'ach-card' + (index === 0 ? ' done' : '');
+        card.innerHTML = `
+            <div class="ach-icon">${medal}</div>
+            <div class="ach-info">
+                <div class="ach-title">${entry.level}</div>
+                <div class="ach-desc">${entry.date}</div>
+            </div>
+            <div class="ach-reward">${entry.score} Puan</div>
+        `;
+        list.appendChild(card);
+    });
+}
+
+// --- GÜNLÜK GÖREVLER ---
+function getTodayString() {
+    return new Date().toDateString();
+}
+function initDailyQuests() {
+    let today = getTodayString();
+    if (userProgress.questDate !== today) {
+        userProgress.quests = {};
+        DAILY_QUESTS.forEach(q => {
+            userProgress.quests[q.id] = { progress: 0, claimed: false };
+        });
+        userProgress.questDate = today;
+        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    }
+}
+function updateQuestProgress(type, amount) {
+    initDailyQuests();
+    DAILY_QUESTS.forEach(q => {
+        if (q.type === type) {
+            if (userProgress.quests[q.id] && !userProgress.quests[q.id].claimed) {
+                userProgress.quests[q.id].progress = (userProgress.quests[q.id].progress || 0) + amount;
+                if (userProgress.quests[q.id].progress > q.target) userProgress.quests[q.id].progress = q.target;
+            }
+        }
+    });
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+}
+function showQuestsScreen() {
+    showScreen('quests-screen');
+    initDailyQuests();
+    renderQuests();
+}
+function renderQuests() {
+    const list = document.getElementById('quests-list');
+    list.innerHTML = '';
+    DAILY_QUESTS.forEach(q => {
+        let questData = userProgress.quests[q.id] || { progress: 0, claimed: false };
+        let isCompleted = questData.progress >= q.target;
+        let isClaimed = questData.claimed;
+        let card = document.createElement('div');
+        card.className = 'ach-card' + (isCompleted ? ' done' : '');
+        card.innerHTML = `
+            <div class="ach-icon">${q.icon}</div>
+            <div class="ach-info">
+                <div class="ach-title">${q.title}</div>
+                <div class="ach-desc">${q.desc} (${questData.progress}/${q.target})</div>
+                <div class="ach-reward">Ödül: ${q.reward}</div>
+            </div>
+            <div class="ach-status">${isClaimed ? '✅' : (isCompleted ? '🎁' : '⏳')}</div>
+        `;
+        if (isCompleted && !isClaimed) {
+            card.style.cursor = 'pointer';
+            card.onclick = () => claimQuestReward(q.id);
+        }
+        list.appendChild(card);
+    });
+}
+function claimQuestReward(questId) {
+    let quest = DAILY_QUESTS.find(q => q.id === questId);
+    if (!quest) return;
+    let questData = userProgress.quests[questId];
+    if (!questData || questData.claimed || questData.progress < quest.target) return;
+    questData.claimed = true;
+    userProgress.totalCoins += quest.coin;
+    if (quest.star > 0) userProgress.totalStars += quest.star;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    sesDogru.play();
+    showToast(`✅ ${quest.title} ödülü alındı: ${quest.reward}`);
+    updateTopPanel();
+    renderQuests();
+    checkAchievements();
 }
 
 function startGameWithMusic() {
@@ -233,11 +387,11 @@ function renderAchievements() {
     });
 }
 
-// --- PAYLAŞIM FONKSİYONLARI ---
+// --- PAYLAŞIM ---
 function shareGameForStars() {
     let today = new Date().toDateString();
     if (userProgress.lastShareDate === today) {
-        showToast("⏳ Bugünkü paylaşım ödülünü zaten aldın! Yarın tekrar gel.");
+        showToast("⏳ Bugünkü paylaşım ödülünü zaten aldın!");
         return;
     }
     let shareText = `⚽ Futbol Bilgi Yarışması'nı oyna ve futbol bilgini test et! 🏆 Şu an ${userProgress.totalStars} yıldızım var. Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
@@ -248,15 +402,12 @@ function shareGameForStars() {
             userProgress.lastShareDate = today;
             userProgress.totalShares = (userProgress.totalShares || 0) + 1;
             localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-            updateTopPanel();
-            sesDogru.play();
+            updateTopPanel(); sesDogru.play();
             showToast("⭐ Tebrikler! 10 yıldız kazandın!");
             checkAchievements();
-        })
-        .catch((err) => { console.log("Paylaşım iptal edildi:", err); });
+        }).catch((err) => { console.log("Paylaşım iptal:", err); });
     } else {
-        // Web Share API desteklenmiyorsa, WhatsApp ve X butonları
-        let choice = confirm("WhatsApp'ta paylaşmak için Tamam, X (Twitter)'da paylaşmak için İptal'e bas.");
+        let choice = confirm("WhatsApp için Tamam, X için İptal.");
         let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
         let text = encodeURIComponent(shareText);
         if (choice) { window.open(`https://wa.me/?text=${text}`, '_blank'); }
@@ -277,9 +428,8 @@ function shareScore() {
     let shareText = `⚽ Futbol Bilgi Yarışması'nda "${levelName}" bölümünü ${score} puan ve ${correctCount}/${totalQ} doğruyla bitirdim! 🏆 Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
     if (navigator.share) {
         navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
-        .catch((err) => { console.log("Paylaşım iptal edildi:", err); });
+        .catch((err) => { console.log("Paylaşım iptal:", err); });
     } else {
-        let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
         let text = encodeURIComponent(shareText);
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
@@ -293,9 +443,8 @@ function shareProfile() {
     let shareText = `⚽ Futbol Bilgi Yarışması'nda ${userProgress.profileName} adlı oyuncunun profili! 🏆 Rütbe: ${rank.name} | Toplam Puan: ${userProgress.totalScore} | Doğruluk: ${rank.percentage}% Sen de katıl! 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
     if (navigator.share) {
         navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
-        .catch((err) => { console.log("Paylaşım iptal edildi:", err); });
+        .catch((err) => { console.log("Paylaşım iptal:", err); });
     } else {
-        let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
         let text = encodeURIComponent(shareText);
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
@@ -373,8 +522,8 @@ function calculateRank() {
     if (total === 0) return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: 0 };
     let percentage = Math.round(((userProgress.totalCorrect || 0) / total) * 100);
     if (percentage >= 90) return { name: "👑 EFSANE", desc: "Sen bir futbol dehasısın!", percentage: percentage };
-    if (percentage >= 75) return { name: "🌟 PROFESYONEL", desc: "Harika gidiyorsun, çok bilgilisin!", percentage: percentage };
-    if (percentage >= 50) return { name: "⚽ USTA", desc: "İyi gidiyorsun, gelişmeye devam!", percentage: percentage };
+    if (percentage >= 75) return { name: "🌟 PROFESYONEL", desc: "Harika gidiyorsun!", percentage: percentage };
+    if (percentage >= 50) return { name: "⚽ USTA", desc: "İyi gidiyorsun, devam!", percentage: percentage };
     return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: percentage };
 }
 
@@ -511,6 +660,7 @@ function spinWheel() {
             userProgress.totalSpins = (userProgress.totalSpins || 0) + 1;
             givePrize(WHEEL_PRIZES[randomIndex]);
             userProgress.lastSpinTime = Date.now();
+            updateQuestProgress('spins', 1);
             localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
             updateSpinTimer();
         }
@@ -652,6 +802,7 @@ function selectChampionOption(selectedIndex, selectedBtn) {
         answered = true; clearInterval(timerInterval);
         selectedBtn.classList.add("correct");
         score += 100; correctCount++; sesDogru.play();
+        updateQuestProgress('correct', 1);
         for (let btn of buttons) btn.disabled = true;
         setTimeout(nextChampionQuestion, 1200);
     } else {
@@ -701,6 +852,7 @@ function showChampionResults() {
     }
     let coinsEarned = correctCount * 20;
     userProgress.totalCoins += coinsEarned;
+    addToLeaderboard(`👑 ${championsData[currentLevelIndex].kategori}`, score);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
@@ -711,6 +863,10 @@ function showChampionResults() {
     document.getElementById('final-correct-text').innerText = `Doğru: ${correctCount}/${totalQ} | Coin: ${coinsEarned} 🪙`;
     isChampionLevel = false;
     checkAchievements();
+    // Ödül kutusu (3 yıldızla bitirdiyse)
+    if (starsEarned === 3) {
+        setTimeout(() => { openChestModal(); }, 2000);
+    }
 }
 
 function openUnlockModal(levelIndex) {
@@ -814,6 +970,7 @@ function useJoker(type) {
     if (usedJokers[type]) return;
     userProgress.totalCoins -= price; usedJokers[type] = true;
     userProgress.totalJokersUsed = (userProgress.totalJokersUsed || 0) + 1;
+    updateQuestProgress('jokers', 1);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel(); sesTiklama.play();
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
@@ -841,6 +998,7 @@ function selectOption(selectedIndex, selectedBtn) {
         answered = true; clearInterval(timerInterval);
         selectedBtn.classList.add("correct");
         score += 100; correctCount++; sesDogru.play();
+        updateQuestProgress('correct', 1);
         for (let btn of buttons) btn.disabled = true;
         setTimeout(nextQuestion, 1200);
     } else {
@@ -889,6 +1047,8 @@ function showResults() {
     }
     let coinsEarned = correctCount * 5;
     userProgress.totalCoins += coinsEarned;
+    updateQuestProgress('levels', 1);
+    addToLeaderboard(levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`, score);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
@@ -898,6 +1058,9 @@ function showResults() {
     document.getElementById('final-score-text').innerText = `SKOR: ${score}`;
     document.getElementById('final-correct-text').innerText = `Doğru Sayısı: ${correctCount}/${totalQ} | Kazanılan Coin: ${coinsEarned} 🪙`;
     checkAchievements();
+    if (starsEarned === 3) {
+        setTimeout(() => { openChestModal(); }, 2000);
+    }
 }
 
 function restartLevel() { sesTiklama.play(); if (isChampionLevel) startChampionLevel(currentLevelIndex); else startLevel(currentLevelIndex); }
@@ -910,4 +1073,33 @@ function watchAdForStars() {
         updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
         checkAchievements();
     }, 1500);
+}
+
+// --- ÖDÜL KUTUSU ---
+function openChestModal() {
+    document.getElementById('chest-modal').classList.add('active');
+    document.getElementById('chest-icon').innerText = '📦';
+    document.getElementById('chest-text').innerText = 'Kutuyu açmak için dokun!';
+}
+function openChest() {
+    let chestIcon = document.getElementById('chest-icon');
+    let chestText = document.getElementById('chest-text');
+    let random = Math.random();
+    let rewardType, rewardValue, rewardText;
+    if (random < 0.4) { rewardType = 'coin'; rewardValue = Math.floor(Math.random() * 100) + 50; userProgress.totalCoins += rewardValue; rewardText = `${rewardValue} Coin kazandın!`; chestIcon.innerText = '🪙'; }
+    else if (random < 0.7) { rewardType = 'star'; rewardValue = Math.floor(Math.random() * 5) + 3; userProgress.totalStars += rewardValue; rewardText = `${rewardValue} Yıldız kazandın!`; chestIcon.innerText = '⭐'; }
+    else { rewardType = 'joker'; rewardText = `1 adet Yarı Yarıya Joker kazandın!`; chestIcon.innerText = '✂️'; }
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    updateTopPanel();
+    sesDogru.play();
+    chestText.innerText = `🎉 ${rewardText}`;
+    document.getElementById('chest-open-btn').innerText = 'TAMAM ✅';
+    document.getElementById('chest-open-btn').onclick = closeChestModal;
+    checkAchievements();
+}
+function closeChestModal() {
+    document.getElementById('chest-modal').classList.remove('active');
+    document.getElementById('chest-open-btn').innerText = 'AÇ 📦';
+    document.getElementById('chest-open-btn').onclick = openChest;
+    sesTiklama.play();
 }
