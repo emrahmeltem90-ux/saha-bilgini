@@ -3,66 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saha Bilgini</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>Kapsamlı Futbol Bilgi Yarışması</title>
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .quiz-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .question-box {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background-color: #2e3b4e;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 14px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #3b4d66;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            color: #34d399;
+        }
+
+        .option-btn.incorrect {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #f87171;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background-color: var(--primary-color);
+            color: #0f172a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            opacity: 0.9;
+        }
+
+        .score-card {
+            text-align: center;
+        }
+
+        .score-card h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .restart-btn {
+            background-color: var(--primary-color);
+            color: #0f172a;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Ana Menü Ekranı -->
-    <div id="main-menu" class="main-menu">
-        <div class="menu-content">
-            <h1>SAHA BİLGİNİ</h1>
-            <p>40 Level - 400 Soru ile Futbol Kültürünü Test Et!</p>
-            <button id="start-btn" class="btn-primary">Oyuna Başla</button>
-        </div>
-    </div>
-
-    <!-- Yükleniyor / Geçiş Ekranı -->
-    <div id="loading-screen" class="loading-screen" style="display: none;">
-        <div class="loader-content">
-            <div class="spinner">⚽</div>
-            <h2>Maça Hazırlanılıyor...</h2>
-            <div class="progress-bar-container">
-                <div id="progress-bar" class="progress-bar"></div>
+    <div class="container" id="app">
+        <h1>⚽ Futbol Bilgi Yarışması</h1>
+        
+        <div id="quiz-screen">
+            <div class="quiz-info">
+                <span id="question-counter">Soru: 1 / 259</span>
+                <span id="score-display">Skor: 0</span>
+            </div>
+            <div class="question-box" id="question-text">Soru yükleniyor...</div>
+            <div class="options-list" id="options-container"></div>
+            <div class="footer-nav">
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Sonraki Soru</button>
             </div>
         </div>
-    </div>
 
-    <!-- Oyun Ekranı -->
-    <div id="game-screen" class="game-screen" style="display: none;">
-        <div class="game-header">
-            <button id="home-btn" class="icon-btn">🏠</button>
-            <div id="level-counter" class="badge">Level: 1/40</div>
-            <div id="question-counter" class="badge">Soru: 1/10</div>
-            <div id="score-display" class="badge">⭐ 0</div>
-        </div>
-
-        <div class="jokers-container">
-            <button id="fifty-joker" class="joker-btn">✂️ 50:50</button>
-            <button id="pass-joker" class="joker-btn">⏭️ Pas Geç</button>
-        </div>
-
-        <div class="question-container">
-            <h2 id="question-text">Soru metni yükleniyor...</h2>
-        </div>
-
-        <div class="options-container">
-            <button class="option-btn" data-index="0">Seçenek 1</button>
-            <button class="option-btn" data-index="1">Seçenek 2</button>
-            <button class="option-btn" data-index="2">Seçenek 3</button>
-            <button class="option-btn" data-index="3">Seçenek 4</button>
-        </div>
-
-        <!-- Görsel Animasyon Katmanı (Gol / Kırmızı Kart) -->
-        <div id="game-feedback-overlay" class="feedback-overlay">
-            <div id="feedback-content" class="feedback-box">
-                <span id="feedback-icon">⚽</span>
-                <h2 id="feedback-text">GOL!</h2>
-            </div>
+        <div class="score-card" id="result-screen" style="display: none;">
+            <h2>Yarışma Bitti!</h2>
+            <p id="final-score-text" style="font-size: 1.2rem; margin-bottom: 20px;"></p>
+            <button class="restart-btn" onclick="restartQuiz()">Yeniden Başla</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // 259 soruluk havuz buraya entegre edilebilir. Örnek yapı:
+        const questions = [
+            {
+                soru: "FIFA hangi yıl kurulmuştur?",
+                secenekler: ["1904", "1930", "1954", "1910"],
+                dogru: 0
+            },
+            {
+                soru: "Şampiyonlar Ligi tarihini en çok kazanan takım hangisidir?",
+                secenekler: ["AC Milan", "Barcelona", "Real Madrid", "Bayern Münih"],
+                dogru: 2
+            }
+            // Diğer sorularınızı buraya ekleyebilirsiniz...
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionCounterEl = document.getElementById("question-counter");
+        const scoreDisplayEl = document.getElementById("score-display");
+        const questionTextEl = document.getElementById("question-text");
+        const optionsContainerEl = document.getElementById("options-container");
+        const nextBtnEl = document.getElementById("next-btn");
+        const quizScreenEl = document.getElementById("quiz-screen");
+        const resultScreenEl = document.getElementById("result-screen");
+        const finalScoreTextEl = document.getElementById("final-score-text");
+
+        function loadQuestion() {
+            answered = false;
+            nextBtnEl.style.display = "none";
+            
+            const currentQ = questions[currentQuestionIndex];
+            questionCounterEl.innerText = `Soru: ${currentQuestionIndex + 1} / ${questions.length}`;
+            scoreDisplayEl.innerText = `Skor: ${score}`;
+            questionTextEl.innerText = currentQ.soru;
+            
+            optionsContainerEl.innerHTML = "";
+            currentQ.secenekler.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.classList.add("option-btn");
+                btn.innerText = option;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainerEl.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const currentQ = questions[currentQuestionIndex];
+            const buttons = optionsContainerEl.getElementsByClassName("option-btn");
+
+            if (selectedIndex === currentQ.dogru) {
+                selectedBtn.classList.add("correct");
+                score += 10;
+                scoreDisplayEl.innerText = `Skor: ${score}`;
+            } else {
+                selectedBtn.classList.add("incorrect");
+                buttons[currentQ.dogru].classList.add("correct");
+            }
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtnEl.style.display = "block";
+            } else {
+                setTimeout(showResults, 1200);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            quizScreenEl.style.display = "none";
+            resultScreenEl.style.display = "block";
+            finalScoreTextEl.innerText = `Toplam Skorunuz: ${score} / ${questions.length * 10}`;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultScreenEl.style.display = "none";
+            quizScreenEl.style.display = "block";
+            loadQuestion();
+        }
+
+        // Başlangıç
+        loadQuestion();
+    </script>
 </body>
 </html>
