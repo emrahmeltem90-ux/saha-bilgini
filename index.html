@@ -33,10 +33,20 @@
         <div class="logo-container"><h1 class="game-logo">FUTBOL<br><span>BİLGİ YARIŞMASI</span></h1></div>
         <div class="menu-buttons">
             <button class="menu-btn btn-play" onclick="showLevelScreen()">▶️ OYUNA BAŞLA</button>
+            <button class="menu-btn btn-daily" onclick="showDailyScreen()">🎁 GÜNLÜK ÖDÜL</button>
             <button class="menu-btn btn-spin" onclick="showSpinScreen()">🎡 ÇARKIFELEK</button>
             <button class="menu-btn btn-settings" onclick="showSettingsScreen()">⚙️ AYARLAR</button>
             <button class="menu-btn btn-howto" onclick="showHowToScreen()">📖 NASIL OYNANIR</button>
         </div>
+    </div>
+
+    <!-- YENİ: GÜNLÜK ÖDÜL EKRANI -->
+    <div id="daily-screen" class="screen">
+        <div class="settings-header"><h2>🎁 Günlük Ödül</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
+        <p class="daily-subtitle">Her gün gel, ödülünü al! Seri bozulursa başa döner.</p>
+        <div class="daily-grid" id="daily-grid"></div>
+        <button class="daily-claim-btn" id="daily-claim-btn" onclick="claimDailyReward()">ÖDÜLÜ AL 🎁</button>
+        <p class="daily-status" id="daily-status"></p>
     </div>
 
     <div id="howto-screen" class="screen">
@@ -47,13 +57,12 @@
             <div class="howto-item"><div class="howto-icon">🔒</div><div><strong>Kilit Açma:</strong> Ya yeterli yıldız topla ya da coin öde.</div></div>
             <div class="howto-item"><div class="howto-icon">🃏</div><div><strong>Jokerler:</strong> Zorlandığında joker kullan. Coin maliyeti vardır.</div></div>
             <div class="howto-item"><div class="howto-icon">🎡</div><div><strong>Çarkıfelek:</strong> 4 saatte 1 ücretsiz çevirme hakkın var!</div></div>
+            <div class="howto-item"><div class="howto-icon">🎁</div><div><strong>Günlük Ödül:</strong> Her gün gel, artan ödüller kazan!</div></div>
         </div>
     </div>
 
-    <!-- BİLDİRİM (TOAST) -->
     <div id="toast-notification" class="toast">İsim kaydedildi!</div>
 
-    <!-- PROFİL EKRANI (YENİ SIRALAMA) -->
     <div id="profile-screen" class="screen">
         <div class="profile-header">
             <h2>👤 Oyuncu Profili</h2>
@@ -65,8 +74,6 @@
             <button class="profile-save-btn" onclick="saveProfileName()">KAYDET ✅</button>
             <div class="player-welcome" id="player-welcome">Hoş geldin, Oyuncu!</div>
         </div>
-
-        <!-- 1. İSTATİSTİK ÇEMBERİ -->
         <div class="stats-circle-container">
             <canvas id="stats-canvas" width="200" height="200"></canvas>
             <div class="stats-circle-center">
@@ -74,8 +81,6 @@
                 <div class="stats-circle-label">Doğruluk</div>
             </div>
         </div>
-
-        <!-- 2. İSTATİSTİK KUTULARI -->
         <div class="stats-grid">
             <div class="stat-card stat-blue"><div class="stat-card-icon">🎯</div><div class="stat-card-value" id="stat-total-score">0</div><div class="stat-card-label">Toplam Puan</div></div>
             <div class="stat-card stat-green"><div class="stat-card-icon">✅</div><div class="stat-card-value" id="stat-total-correct">0</div><div class="stat-card-label">Doğru Cevap</div></div>
@@ -84,8 +89,6 @@
             <div class="stat-card stat-purple"><div class="stat-card-icon">📚</div><div class="stat-card-value" id="stat-levels-completed">0</div><div class="stat-card-label">Tamamlanan Level</div></div>
             <div class="stat-card stat-orange"><div class="stat-card-icon">⭐</div><div class="stat-card-value" id="stat-perfect-levels">0</div><div class="stat-card-label">Tam Puan Level</div></div>
         </div>
-
-        <!-- 3. RÜTBE EN ALTTA -->
         <div class="player-rank-box">
             <div class="player-rank" id="player-rank">🏅 ACEMİ</div>
             <div class="player-rank-desc" id="player-rank-desc">Daha yeni başlıyorsun, devam et!</div>
@@ -173,4 +176,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
