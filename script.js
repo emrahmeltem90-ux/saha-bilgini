@@ -30,7 +30,6 @@ const DAILY_REWARDS = [
 ];
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-// GÜNLÜK GÖREVLER
 const DAILY_QUESTS = [
     { id: 'play_3_levels', icon: '🎮', title: '3 Level Oyna', desc: 'Bugün 3 level tamamla', reward: '150 🪙', coin: 150, star: 0, target: 3, type: 'levels' },
     { id: 'use_5_jokers', icon: '🃏', title: '5 Joker Kullan', desc: 'Bugün 5 joker kullan', reward: '100 🪙', coin: 100, star: 0, target: 5, type: 'jokers' },
@@ -222,7 +221,7 @@ function addToLeaderboard(levelName, scoreValue) {
     if (!userProgress.leaderboard) userProgress.leaderboard = [];
     userProgress.leaderboard.push({ level: levelName, score: scoreValue, date: new Date().toLocaleDateString('tr-TR') });
     userProgress.leaderboard.sort((a, b) => b.score - a.score);
-    userProgress.leaderboard = userProgress.leaderboard.slice(0, 10); // Sadece ilk 10
+    userProgress.leaderboard = userProgress.leaderboard.slice(0, 10);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
 }
 function showLeaderboardScreen() {
@@ -240,29 +239,18 @@ function renderLeaderboard() {
         let medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
         let card = document.createElement('div');
         card.className = 'ach-card' + (index === 0 ? ' done' : '');
-        card.innerHTML = `
-            <div class="ach-icon">${medal}</div>
-            <div class="ach-info">
-                <div class="ach-title">${entry.level}</div>
-                <div class="ach-desc">${entry.date}</div>
-            </div>
-            <div class="ach-reward">${entry.score} Puan</div>
-        `;
+        card.innerHTML = `<div class="ach-icon">${medal}</div><div class="ach-info"><div class="ach-title">${entry.level}</div><div class="ach-desc">${entry.date}</div></div><div class="ach-reward">${entry.score} Puan</div>`;
         list.appendChild(card);
     });
 }
 
 // --- GÜNLÜK GÖREVLER ---
-function getTodayString() {
-    return new Date().toDateString();
-}
+function getTodayString() { return new Date().toDateString(); }
 function initDailyQuests() {
     let today = getTodayString();
     if (userProgress.questDate !== today) {
         userProgress.quests = {};
-        DAILY_QUESTS.forEach(q => {
-            userProgress.quests[q.id] = { progress: 0, claimed: false };
-        });
+        DAILY_QUESTS.forEach(q => { userProgress.quests[q.id] = { progress: 0, claimed: false }; });
         userProgress.questDate = today;
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     }
@@ -293,15 +281,7 @@ function renderQuests() {
         let isClaimed = questData.claimed;
         let card = document.createElement('div');
         card.className = 'ach-card' + (isCompleted ? ' done' : '');
-        card.innerHTML = `
-            <div class="ach-icon">${q.icon}</div>
-            <div class="ach-info">
-                <div class="ach-title">${q.title}</div>
-                <div class="ach-desc">${q.desc} (${questData.progress}/${q.target})</div>
-                <div class="ach-reward">Ödül: ${q.reward}</div>
-            </div>
-            <div class="ach-status">${isClaimed ? '✅' : (isCompleted ? '🎁' : '⏳')}</div>
-        `;
+        card.innerHTML = `<div class="ach-icon">${q.icon}</div><div class="ach-info"><div class="ach-title">${q.title}</div><div class="ach-desc">${q.desc} (${questData.progress}/${q.target})</div><div class="ach-reward">Ödül: ${q.reward}</div></div><div class="ach-status">${isClaimed ? '✅' : (isCompleted ? '🎁' : '⏳')}</div>`;
         if (isCompleted && !isClaimed) {
             card.style.cursor = 'pointer';
             card.onclick = () => claimQuestReward(q.id);
@@ -714,10 +694,12 @@ function showLevelScreen() {
         if (progress.stars === 1) starsStr = '⭐☆☆';
         if (progress.stars === 2) starsStr = '⭐⭐☆';
         if (progress.stars === 3) starsStr = '⭐⭐⭐';
+        let displayScore = Math.min(progress.score, 100);
+        let progressPercent = displayScore;
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
         let statusHtml = isUnlocked ? '<span>🏆</span>' : `<div class="level-coin-btn">🪙 ${levelCoinCosts[i] || 100}</div>`;
-        card.innerHTML = `<div class="level-avatar-box"><div class="level-avatar-icon">${emojiData.icon}</div><div class="level-avatar-role">${emojiData.role}</div></div><div class="level-info"><div class="level-title">${catName}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${(progress.score / 100) * 100}%"></div><div class="level-progress-text">${progress.score}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
+        card.innerHTML = `<div class="level-avatar-box"><div class="level-avatar-icon">${emojiData.icon}</div><div class="level-avatar-role">${emojiData.role}</div></div><div class="level-info"><div class="level-title">${catName}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${progressPercent}%"></div><div class="level-progress-text">${displayScore}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
         card.onclick = () => { sesTiklama.play(); if (isUnlocked) startLevel(i); else openUnlockModal(i); };
         container.appendChild(card);
     }
@@ -736,10 +718,11 @@ function showLevelScreen() {
             if (progress.stars === 1) starsStr = '⭐☆☆';
             if (progress.stars === 2) starsStr = '⭐⭐☆';
             if (progress.stars === 3) starsStr = '⭐⭐⭐';
+            let displayScore = Math.min(progress.score, 100);
             let card = document.createElement('div');
             card.className = 'level-card champion-card' + (isUnlocked ? '' : ' locked');
             let statusHtml = isUnlocked ? '<span>👑</span>' : `<div class="level-coin-btn">⭐ ${requiredStars}</div>`;
-            card.innerHTML = `<div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">👑</div><div class="level-avatar-role">ŞAMPİYON</div></div><div class="level-info"><div class="level-title">${champ.kategori}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${(progress.score / 100) * 100}%"></div><div class="level-progress-text">${progress.score}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
+            card.innerHTML = `<div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">👑</div><div class="level-avatar-role">ŞAMPİYON</div></div><div class="level-info"><div class="level-title">${champ.kategori}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${displayScore}%"></div><div class="level-progress-text">${displayScore}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
             card.onclick = () => { sesTiklama.play(); if (isUnlocked) startChampionLevel(i); else showToast(`Bu bölüm için ${requiredStars} yıldız gerekiyor!`); };
             container.appendChild(card);
         }
@@ -863,7 +846,6 @@ function showChampionResults() {
     document.getElementById('final-correct-text').innerText = `Doğru: ${correctCount}/${totalQ} | Coin: ${coinsEarned} 🪙`;
     isChampionLevel = false;
     checkAchievements();
-    // Ödül kutusu (3 yıldızla bitirdiyse)
     if (starsEarned === 3) {
         setTimeout(() => { openChestModal(); }, 2000);
     }
@@ -1102,4 +1084,4 @@ function closeChestModal() {
     document.getElementById('chest-open-btn').innerText = 'AÇ 📦';
     document.getElementById('chest-open-btn').onclick = openChest;
     sesTiklama.play();
-}
+            }
