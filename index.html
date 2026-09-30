@@ -23,7 +23,10 @@
 
     <div id="menu-screen" class="screen active">
         <div class="top-panel">
-            <div class="profile-box"><span class="profile-icon">👤</span><span class="profile-name">Oyuncu</span></div>
+            <div class="profile-box" onclick="showProfileScreen()" style="cursor:pointer;">
+                <span class="profile-icon">👤</span>
+                <span class="profile-name" id="menu-profile-name">Oyuncu</span>
+            </div>
             <div class="stats-box"><span class="stat-icon">⭐</span><span id="total-stars-display">0</span></div>
             <div class="stats-box"><span class="stat-icon">🪙</span><span id="total-coins-display">0</span></div>
         </div>
@@ -33,6 +36,45 @@
             <button class="menu-btn btn-spin" onclick="showSpinScreen()">🎡 ÇARKIFELEK</button>
             <button class="menu-btn btn-settings" onclick="showSettingsScreen()">⚙️ AYARLAR</button>
             <button class="menu-btn btn-howto" onclick="alert('Her levelde 10 soru vardır. Doğru cevaplarla yıldız ve coin kazan!')">📖 NASIL OYNANIR</button>
+        </div>
+    </div>
+
+    <!-- YENİ: PROFİL EKRANI -->
+    <div id="profile-screen" class="screen">
+        <div class="profile-header">
+            <h2>👤 Profil</h2>
+            <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
+        </div>
+        <div class="profile-info">
+            <div class="profile-avatar">👤</div>
+            <input type="text" id="profile-name-input" class="profile-name-input" placeholder="İsmini yaz..." maxlength="15">
+            <button class="profile-save-btn" onclick="saveProfileName()">KAYDET ✅</button>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-value" id="stat-total-score">0</div>
+                <div class="stat-card-label">Toplam Puan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="stat-total-correct">0</div>
+                <div class="stat-card-label">Doğru Cevap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="stat-total-wrong">0</div>
+                <div class="stat-card-label">Yanlış Cevap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="stat-high-score">0</div>
+                <div class="stat-card-label">En Yüksek Skor</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="stat-levels-completed">0</div>
+                <div class="stat-card-label">Tamamlanan Level</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="stat-perfect-levels">0</div>
+                <div class="stat-card-label">Tam Puan Level</div>
+            </div>
         </div>
     </div>
 
@@ -97,7 +139,6 @@
         </div>
     </div>
 
-    <!-- YENİ: ÖDÜL KAZANMA PENCERESİ -->
     <div id="prize-modal" class="modal-overlay">
         <div class="modal-content prize-content">
             <div class="prize-icon" id="prize-icon">🎁</div>
