@@ -5,6 +5,28 @@ const sesTiklama = new Audio('ses_tiklama.mp3');
 const sesCark = new Audio('ses_cark.mp3');
 sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5; sesCark.volume = 0.6;
 
+// --- ARKA PLAN MÜZİĞİ ---
+const muzikArkaplan = new Audio('muzik_arkaplan.mp3');
+muzikArkaplan.loop = true; // Sonsuz döngü
+muzikArkaplan.volume = 0.3; // Menüde normal ses
+let muzikCaliniyor = false;
+
+// Müziği başlatma fonksiyonu (tarayıcı politikası nedeniyle kullanıcı etkileşimi gerekir)
+function muzikBaslat() {
+    if (!muzikCaliniyor) {
+        muzikArkaplan.play().then(() => {
+            muzikCaliniyor = true;
+        }).catch((err) => {
+            console.log("Müzik başlatılamadı (kullanıcı etkileşimi bekleniyor):", err);
+        });
+    }
+}
+
+// Müzik ses seviyesini değiştir
+function muzikSesSeviyesi(seviye) {
+    muzikArkaplan.volume = seviye;
+}
+
 // --- ÇARKIFELEK ÖDÜLLERİ ---
 const WHEEL_PRIZES = [
     { label: "10 🪙", type: "coin", value: 10, color: "#f472b6" },
@@ -88,7 +110,8 @@ const JOKER_PRICES = { "5050": 20, "answer": 40, "double": 60 };
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {}, totalStars: 0, totalCoins: 100,
     profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0,
-    lastDailyClaim: 0, dailyStreak: 0, totalSpins: 0, totalJokersUsed: 0, unlockedAchievements: []
+    lastDailyClaim: 0, dailyStreak: 0, totalSpins: 0, totalJokersUsed: 0, unlockedAchievements: [],
+    musicEnabled: true, soundEnabled: true
 };
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
@@ -104,6 +127,8 @@ if (userProgress.dailyStreak === undefined) userProgress.dailyStreak = 0;
 if (userProgress.totalSpins === undefined) userProgress.totalSpins = 0;
 if (userProgress.totalJokersUsed === undefined) userProgress.totalJokersUsed = 0;
 if (userProgress.unlockedAchievements === undefined) userProgress.unlockedAchievements = [];
+if (userProgress.musicEnabled === undefined) userProgress.musicEnabled = true;
+if (userProgress.soundEnabled === undefined) userProgress.soundEnabled = true;
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -124,7 +149,7 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
     updateTopPanel();
 }
-function showMenuScreen() { showScreen('menu-screen'); updateTopPanel(); checkAchievements(); }
+function showMenuScreen() { showScreen('menu-screen'); updateTopPanel(); checkAchievements(); muzikSesSeviyesi(0.3); }
 function showSettingsScreen() { showScreen('settings-screen'); }
 function showHowToScreen() { showScreen('howto-screen'); }
 
@@ -540,7 +565,9 @@ function startLevel(index) {
     usedJokers = { "5050": false, "answer": false, "double": false };
     hasDoubleChance = false;
     if (!levelsData[index] || levelsData[index].sorular.length === 0) { showToast("Soru yok!"); return; }
-    showScreen('quiz-screen'); loadQuestion();
+    showScreen('quiz-screen');
+    muzikSesSeviyesi(0.15); // Oyun sırasında müziği düşür
+    loadQuestion();
 }
 
 function loadQuestion() {
@@ -655,6 +682,7 @@ function nextQuestion() {
 
 function showResults() {
     clearInterval(timerInterval); showScreen('score-screen');
+    muzikSesSeviyesi(0.3); // Sonuç ekranında müziği normal seviyeye çıkar
     let totalQ = levelsData[currentLevelIndex].sorular.length;
     let totalPossible = totalQ * 100;
     let percentage = (score / totalPossible) * 100;
@@ -701,4 +729,33 @@ function watchAdForStars() {
         updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
         checkAchievements();
     }, 1500);
-        }
+}
+
+// --- MÜZİK BAŞLATICI (Kullanıcı etkileşimi ile) ---
+document.body.addEventListener('click', function() {
+    if (userProgress.musicEnabled && !muzikCaliniyor) {
+        muzikBaslat();
+    }
+}, { once: true });
+
+// Ses ayarları için toggle (ayarlar ekranında kullanılabilir)
+function toggleMusic() {
+    userProgress.musicEnabled = !userProgress.musicEnabled;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    if (userProgress.musicEnabled) {
+        muzikBaslat();
+    } else {
+        muzikArkaplan.pause();
+        muzikCaliniyor = false;
+    }
+}
+
+function toggleSound() {
+    userProgress.soundEnabled = !userProgress.soundEnabled;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    if (!userProgress.soundEnabled) {
+        sesDogru.volume = 0; sesYanlis.volume = 0; sesTiklama.volume = 0; sesCark.volume = 0;
+    } else {
+        sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5; sesCark.volume = 0.6;
+    }
+                            }
