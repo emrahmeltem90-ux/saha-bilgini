@@ -135,41 +135,48 @@ input:checked + .slider:before { transform: translateX(24px); }
 .spin-btn:disabled { background: #475569; box-shadow: 0 6px 0 #1e293b; cursor: not-allowed; opacity: 0.7; }
 .spin-timer { font-size: 1rem; font-weight: bold; color: #cbd5e1; margin-top: 10px; }
 
-/* YENİ: ÖDÜL KAZANMA PENCERESİ */
-.prize-content {
-    text-align: center;
-    border-color: var(--accent-gold) !important;
-    box-shadow: 0 0 40px rgba(251, 191, 36, 0.8) !important;
-}
-.prize-icon {
-    font-size: 5rem;
-    margin-bottom: 15px;
-    animation: pulse 1.5s infinite;
-    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
-}
-.prize-title {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--accent-gold);
-    margin: 0 0 10px 0;
-    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-}
-.prize-text {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    margin: 0 0 25px 0;
-}
-.prize-collect-btn {
-    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-    color: #fff;
-    border: 3px solid #fff;
-    border-radius: 15px;
-    padding: 15px 40px;
-    font-size: 1.2rem;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #14532d;
-    text-transform: uppercase;
-}
+/* ÖDÜL KAZANMA PENCERESİ */
+.prize-content { text-align: center; border-color: var(--accent-gold) !important; box-shadow: 0 0 40px rgba(251, 191, 36, 0.8) !important; }
+.prize-icon { font-size: 5rem; margin-bottom: 15px; animation: pulse 1.5s infinite; filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8)); }
+.prize-title { font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); margin: 0 0 10px 0; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
+.prize-text { font-size: 1.2rem; font-weight: bold; color: #fff; margin: 0 0 25px 0; }
+.prize-collect-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; border-radius: 15px; padding: 15px 40px; font-size: 1.2rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 0 #14532d; text-transform: uppercase; }
 .prize-collect-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
+
+/* PROFİL EKRANI */
+#profile-screen { background-color: #0f172a; padding-top: 30px; }
+.profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.profile-info { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; }
+.profile-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+    border: 3px solid var(--accent-gold);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 2.5rem; box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+}
+.profile-name-input {
+    background-color: var(--bg-card);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+    outline: none;
+}
+.profile-name-input:focus { border-color: var(--accent-gold); }
+.profile-save-btn {
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+    color: #fff; border: 3px solid #fff; border-radius: 12px;
+    padding: 12px 30px; font-size: 1rem; font-weight: bold;
+    cursor: pointer; box-shadow: 0 4px 0 #14532d;
+}
+.profile-save-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #14532d; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-card { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 15px; text-align: center; }
+.stat-card-value { font-size: 1.6rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+.stat-card-label { font-size: 0.75rem; font-weight: bold; color: #cbd5e1; text-transform: uppercase; margin-top: 5px; }
