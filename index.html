@@ -51,6 +51,16 @@
         </div>
 
         <div class="question-container">
+            <!-- JOKER BUTONLARI -->
+            <div class="jokers-container" style="display: flex; gap: 10px;">
+                <button class="joker-btn" onclick="useFiftyFifty()" style="flex: 1; background: rgba(0, 176, 255, 0.15); border: 1px solid #00b0ff; color: #00b0ff; padding: 10px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px;">
+                    ✂️ 50:50 (20 🪙)
+                </button>
+                <button class="joker-btn" onclick="useSkipQuestion()" style="flex: 1; background: rgba(255, 183, 3, 0.15); border: 1px solid #ffb703; color: #ffb703; padding: 10px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px;">
+                    ⏩ Pas Geç (30 🪙)
+                </button>
+            </div>
+
             <div id="question-text" class="question-text">Soru buraya gelecek...</div>
             <div class="options-container">
                 <button class="option-btn" onclick="checkAnswer(0)" id="opt-0">Seçenek A</button>
