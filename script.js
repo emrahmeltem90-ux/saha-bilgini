@@ -113,13 +113,15 @@ let usedJokers = { "5050": false, "answer": false, "double": false };
 let hasDoubleChance = false;
 const JOKER_PRICES = { "5050": 30, "answer": 70, "double": 50 };
 let isChampionLevel = false;
+let isPaused = false;
 
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {}, totalStars: 0, totalCoins: 100,
     profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0,
     lastDailyClaim: 0, dailyStreak: 0, totalSpins: 0, totalJokersUsed: 0, unlockedAchievements: [],
-    musicEnabled: true, soundEnabled: true, lastShareDate: "", totalShares: 0,
-    theme: "dark", leaderboard: [], quests: {}, questDate: ""
+    musicEnabled: true, soundEnabled: true, vibrationEnabled: true, lastShareDate: "", totalShares: 0,
+    theme: "dark", leaderboard: [], quests: {}, questDate: "",
+    lastPlayedLevel: -1, lastPlayedQuestion: -1, lastPlayedChampion: false, lastPlayedScore: 0, lastPlayedCorrect: 0, lastPlayedWrong: 0
 };
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
@@ -137,12 +139,19 @@ if (userProgress.totalJokersUsed === undefined) userProgress.totalJokersUsed = 0
 if (userProgress.unlockedAchievements === undefined) userProgress.unlockedAchievements = [];
 if (userProgress.musicEnabled === undefined) userProgress.musicEnabled = true;
 if (userProgress.soundEnabled === undefined) userProgress.soundEnabled = true;
+if (userProgress.vibrationEnabled === undefined) userProgress.vibrationEnabled = true;
 if (userProgress.lastShareDate === undefined) userProgress.lastShareDate = "";
 if (userProgress.totalShares === undefined) userProgress.totalShares = 0;
 if (userProgress.theme === undefined) userProgress.theme = "dark";
 if (userProgress.leaderboard === undefined) userProgress.leaderboard = [];
 if (userProgress.quests === undefined) userProgress.quests = {};
 if (userProgress.questDate === undefined) userProgress.questDate = "";
+if (userProgress.lastPlayedLevel === undefined) userProgress.lastPlayedLevel = -1;
+if (userProgress.lastPlayedQuestion === undefined) userProgress.lastPlayedQuestion = -1;
+if (userProgress.lastPlayedChampion === undefined) userProgress.lastPlayedChampion = false;
+if (userProgress.lastPlayedScore === undefined) userProgress.lastPlayedScore = 0;
+if (userProgress.lastPlayedCorrect === undefined) userProgress.lastPlayedCorrect = 0;
+if (userProgress.lastPlayedWrong === undefined) userProgress.lastPlayedWrong = 0;
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -168,11 +177,13 @@ function showMenuScreen() {
     updateTopPanel(); 
     checkAchievements(); 
     checkDailyReminder();
+    updateResumeButton();
 }
 function showSettingsScreen() {
     showScreen('settings-screen');
     document.getElementById('toggle-music').checked = userProgress.musicEnabled;
     document.getElementById('toggle-sound').checked = userProgress.soundEnabled;
+    document.getElementById('toggle-vibration').checked = userProgress.vibrationEnabled;
     document.getElementById('theme-toggle-btn').innerText = userProgress.theme === 'dark' ? '🌙 KOYU' : '☀️ AÇIK';
 }
 function showHowToScreen() { showScreen('howto-screen'); }
@@ -188,6 +199,54 @@ function showToast(message) {
     toast.innerText = message;
     toast.classList.add('show');
     setTimeout(() => { toast.classList.remove('show'); }, 2500);
+}
+
+// --- TİTREŞİM ---
+function vibrate(duration) {
+    if (userProgress.vibrationEnabled && navigator.vibrate) {
+        navigator.vibrate(duration);
+    }
+}
+
+// --- DEVAM ET ---
+function updateResumeButton() {
+    let resumeBtn = document.getElementById('resume-btn');
+    if (userProgress.lastPlayedLevel >= 0 && userProgress.lastPlayedQuestion >= 0) {
+        resumeBtn.style.display = 'flex';
+    } else {
+        resumeBtn.style.display = 'none';
+    }
+}
+function saveProgress(levelIndex, questionIndex) {
+    userProgress.lastPlayedLevel = levelIndex;
+    userProgress.lastPlayedQuestion = questionIndex;
+    userProgress.lastPlayedChampion = isChampionLevel;
+    userProgress.lastPlayedScore = score;
+    userProgress.lastPlayedCorrect = correctCount;
+    userProgress.lastPlayedWrong = wrongCount;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+}
+function resumeGame() {
+    if (userProgress.lastPlayedLevel < 0 || userProgress.lastPlayedQuestion < 0) return;
+    isChampionLevel = userProgress.lastPlayedChampion;
+    currentLevelIndex = userProgress.lastPlayedLevel;
+    currentQuestionIndex = userProgress.lastPlayedQuestion;
+    score = userProgress.lastPlayedScore || 0;
+    correctCount = userProgress.lastPlayedCorrect || 0;
+    wrongCount = userProgress.lastPlayedWrong || 0;
+    usedJokers = { "5050": false, "answer": false, "double": false };
+    hasDoubleChance = false;
+    showScreen('quiz-screen');
+    if (isChampionLevel) {
+        loadChampionQuestion();
+    } else {
+        loadQuestion();
+    }
+}
+function clearSavedProgress() {
+    userProgress.lastPlayedLevel = -1;
+    userProgress.lastPlayedQuestion = -1;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
 }
 
 // --- TEMA ---
@@ -224,10 +283,7 @@ function addToLeaderboard(levelName, scoreValue) {
     userProgress.leaderboard = userProgress.leaderboard.slice(0, 10);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
 }
-function showLeaderboardScreen() {
-    showScreen('leaderboard-screen');
-    renderLeaderboard();
-}
+function showLeaderboardScreen() { showScreen('leaderboard-screen'); renderLeaderboard(); }
 function renderLeaderboard() {
     const list = document.getElementById('leaderboard-list');
     list.innerHTML = '';
@@ -267,11 +323,7 @@ function updateQuestProgress(type, amount) {
     });
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
 }
-function showQuestsScreen() {
-    showScreen('quests-screen');
-    initDailyQuests();
-    renderQuests();
-}
+function showQuestsScreen() { showScreen('quests-screen'); initDailyQuests(); renderQuests(); }
 function renderQuests() {
     const list = document.getElementById('quests-list');
     list.innerHTML = '';
@@ -298,11 +350,9 @@ function claimQuestReward(questId) {
     userProgress.totalCoins += quest.coin;
     if (quest.star > 0) userProgress.totalStars += quest.star;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-    sesDogru.play();
+    sesDogru.play(); vibrate(50);
     showToast(`✅ ${quest.title} ödülü alındı: ${quest.reward}`);
-    updateTopPanel();
-    renderQuests();
-    checkAchievements();
+    updateTopPanel(); renderQuests(); checkAchievements();
 }
 
 function startGameWithMusic() {
@@ -320,8 +370,9 @@ function toggleMusic() {
     if (userProgress.musicEnabled) {
         muzikArkaplan.play().then(() => { muzikCaliniyor = true; }).catch(err => console.log(err));
     } else { muzikArkaplan.pause(); muzikCaliniyor = false; }
+    document.getElementById('toggle-music').checked = userProgress.musicEnabled;
+    document.getElementById('pause-toggle-music').checked = userProgress.musicEnabled;
 }
-
 function toggleSound() {
     userProgress.soundEnabled = !userProgress.soundEnabled;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
@@ -330,6 +381,14 @@ function toggleSound() {
     } else {
         sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5; sesCark.volume = 0.6;
     }
+    document.getElementById('toggle-sound').checked = userProgress.soundEnabled;
+    document.getElementById('pause-toggle-sound').checked = userProgress.soundEnabled;
+}
+function toggleVibration() {
+    userProgress.vibrationEnabled = !userProgress.vibrationEnabled;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    document.getElementById('toggle-vibration').checked = userProgress.vibrationEnabled;
+    document.getElementById('pause-toggle-vibration').checked = userProgress.vibrationEnabled;
 }
 
 function checkAchievements() {
@@ -348,7 +407,7 @@ function checkAchievements() {
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel();
         newUnlocks.forEach((ach, index) => {
-            setTimeout(() => { sesDogru.play(); showToast(`🏆 Başarım: ${ach.title} (+${ach.coin}🪙)`); }, index * 1200);
+            setTimeout(() => { sesDogru.play(); vibrate(50); showToast(`🏆 Başarım: ${ach.title} (+${ach.coin}🪙)`); }, index * 1200);
         });
     }
 }
@@ -382,7 +441,7 @@ function shareGameForStars() {
             userProgress.lastShareDate = today;
             userProgress.totalShares = (userProgress.totalShares || 0) + 1;
             localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-            updateTopPanel(); sesDogru.play();
+            updateTopPanel(); sesDogru.play(); vibrate(50);
             showToast("⭐ Tebrikler! 10 yıldız kazandın!");
             checkAchievements();
         }).catch((err) => { console.log("Paylaşım iptal:", err); });
@@ -396,12 +455,11 @@ function shareGameForStars() {
         userProgress.lastShareDate = today;
         userProgress.totalShares = (userProgress.totalShares || 0) + 1;
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-        updateTopPanel(); sesDogru.play();
+        updateTopPanel(); sesDogru.play(); vibrate(50);
         showToast("⭐ Tebrikler! 10 yıldız kazandın!");
         checkAchievements();
     }
 }
-
 function shareScore() {
     let levelName = isChampionLevel ? championsData[currentLevelIndex].kategori : (levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`);
     let totalQ = isChampionLevel ? championsData[currentLevelIndex].sorular.length : levelsData[currentLevelIndex].sorular.length;
@@ -417,7 +475,6 @@ function shareScore() {
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     checkAchievements();
 }
-
 function shareProfile() {
     let rank = calculateRank();
     let shareText = `⚽ Futbol Bilgi Yarışması'nda ${userProgress.profileName} adlı oyuncunun profili! 🏆 Rütbe: ${rank.name} | Toplam Puan: ${userProgress.totalScore} | Doğruluk: ${rank.percentage}% Sen de katıl! 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
@@ -439,16 +496,13 @@ function checkDailyReward() {
     if (now - lastClaim >= ONE_DAY_MS || lastClaim === 0) return true;
     return false;
 }
-
 function getDailyStreak() {
     let now = Date.now();
     let lastClaim = userProgress.lastDailyClaim || 0;
     if (now - lastClaim > 2 * ONE_DAY_MS) { userProgress.dailyStreak = 0; localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress)); }
     return userProgress.dailyStreak || 0;
 }
-
 function showDailyScreen() { showScreen('daily-screen'); renderDailyGrid(); }
-
 function renderDailyGrid() {
     const grid = document.getElementById('daily-grid');
     grid.innerHTML = '';
@@ -479,7 +533,6 @@ function renderDailyGrid() {
         status.innerText = `Sonraki ödül: ${hours} saat ${minutes} dakika sonra`;
     }
 }
-
 function claimDailyReward() {
     if (!checkDailyReward()) return;
     let currentStreak = getDailyStreak();
@@ -490,7 +543,7 @@ function claimDailyReward() {
     userProgress.dailyStreak = currentStreak + 1;
     userProgress.lastDailyClaim = Date.now();
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-    sesDogru.play();
+    sesDogru.play(); vibrate(50);
     let msg = `🎁 ${reward.coin} Coin`;
     if (reward.star > 0) msg += ` + ${reward.star} Yıldız`;
     msg += " kazandın!";
@@ -506,7 +559,6 @@ function calculateRank() {
     if (percentage >= 50) return { name: "⚽ USTA", desc: "İyi gidiyorsun, devam!", percentage: percentage };
     return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: percentage };
 }
-
 function drawStatsCircle(percentage) {
     const canvas = document.getElementById('stats-canvas');
     if (!canvas) return;
@@ -524,7 +576,6 @@ function drawStatsCircle(percentage) {
     ctx.lineWidth = lineWidth; ctx.lineCap = 'round'; ctx.stroke();
     document.getElementById('stats-percentage').innerText = percentage + '%';
 }
-
 function showProfileScreen() {
     showScreen('profile-screen');
     document.getElementById('profile-name-input').value = userProgress.profileName || "Oyuncu";
@@ -540,18 +591,16 @@ function showProfileScreen() {
     document.getElementById('player-rank-desc').innerText = rank.desc;
     drawStatsCircle(rank.percentage);
 }
-
 function saveProfileName() {
     let newName = document.getElementById('profile-name-input').value.trim();
     if (newName === "") newName = "Oyuncu";
     userProgress.profileName = newName;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-    sesDogru.play();
+    sesDogru.play(); vibrate(50);
     showToast("✅ İsim kaydedildi: " + newName);
     updateTopPanel();
     document.getElementById('player-welcome').innerText = `Hoş geldin, ${newName}!`;
 }
-
 function loadProfileName() {
     document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
 }
@@ -561,7 +610,6 @@ function showSpinScreen() {
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins || 0;
     updateSpinTimer(); drawWheel();
 }
-
 function drawWheel() {
     const canvas = document.getElementById('wheel-canvas');
     if (!canvas) return;
@@ -584,7 +632,6 @@ function drawWheel() {
         ctx.restore();
     }
 }
-
 function updateSpinTimer() {
     let now = Date.now();
     let lastSpin = userProgress.lastSpinTime || 0;
@@ -609,7 +656,6 @@ function updateSpinTimer() {
         spinBtn.disabled = true;
     }
 }
-
 function spinWheel() {
     if (isSpinning) return;
     isSpinning = true;
@@ -620,7 +666,7 @@ function spinWheel() {
         if (userProgress.totalCoins >= 50) { userProgress.totalCoins -= 50; updateTopPanel(); }
         else { showToast("❌ Yetersiz coin!"); isSpinning = false; spinBtn.disabled = false; return; }
     }
-    sesCark.currentTime = 0; sesCark.play();
+    sesCark.currentTime = 0; sesCark.play(); vibrate(30);
     const randomIndex = Math.floor(Math.random() * WHEEL_PRIZES.length);
     const sliceAngle = 360 / WHEEL_PRIZES.length;
     const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle + sliceAngle / 2));
@@ -647,13 +693,13 @@ function spinWheel() {
     }
     requestAnimationFrame(animate);
 }
-
 function givePrize(prize) {
     let icon = "🎁", title = "TEBRİKLER!", text = "";
     if (prize.type === "coin") { userProgress.totalCoins += prize.value; icon = "🪙"; text = `${prize.value} Coin kazandın!`; sesDogru.play(); }
     else if (prize.type === "star") { userProgress.totalStars += prize.value; icon = "⭐"; text = `${prize.value} Yıldız kazandın!`; sesDogru.play(); }
     else if (prize.type === "joker") { icon = "✂️"; text = `1 adet Yarı Yarıya Joker kazandın!`; sesDogru.play(); }
     else if (prize.type === "respin") { userProgress.freeSpins += 1; icon = "🎡"; text = `1 Bedava Çevirme Hakkı kazandın!`; sesDogru.play(); }
+    vibrate(50);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel();
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins;
@@ -665,7 +711,6 @@ function givePrize(prize) {
     document.getElementById('prize-modal').classList.add('active');
     updateSpinTimer(); checkAchievements();
 }
-
 function closePrizeModal() { document.getElementById('prize-modal').classList.remove('active'); sesTiklama.play(); }
 
 function normalizeQuestion(q) {
@@ -700,7 +745,7 @@ function showLevelScreen() {
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
         let statusHtml = isUnlocked ? '<span>🏆</span>' : `<div class="level-coin-btn">🪙 ${levelCoinCosts[i] || 100}</div>`;
         card.innerHTML = `<div class="level-avatar-box"><div class="level-avatar-icon">${emojiData.icon}</div><div class="level-avatar-role">${emojiData.role}</div></div><div class="level-info"><div class="level-title">${catName}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${progressPercent}%"></div><div class="level-progress-text">${displayScore}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
-        card.onclick = () => { sesTiklama.play(); if (isUnlocked) startLevel(i); else openUnlockModal(i); };
+        card.onclick = () => { sesTiklama.play(); vibrate(20); if (isUnlocked) startLevel(i); else openUnlockModal(i); };
         container.appendChild(card);
     }
     if (championsData.length > 0) {
@@ -723,7 +768,7 @@ function showLevelScreen() {
             card.className = 'level-card champion-card' + (isUnlocked ? '' : ' locked');
             let statusHtml = isUnlocked ? '<span>👑</span>' : `<div class="level-coin-btn">⭐ ${requiredStars}</div>`;
             card.innerHTML = `<div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">👑</div><div class="level-avatar-role">ŞAMPİYON</div></div><div class="level-info"><div class="level-title">${champ.kategori}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${displayScore}%"></div><div class="level-progress-text">${displayScore}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
-            card.onclick = () => { sesTiklama.play(); if (isUnlocked) startChampionLevel(i); else showToast(`Bu bölüm için ${requiredStars} yıldız gerekiyor!`); };
+            card.onclick = () => { sesTiklama.play(); vibrate(20); if (isUnlocked) startChampionLevel(i); else showToast(`Bu bölüm için ${requiredStars} yıldız gerekiyor!`); };
             container.appendChild(card);
         }
     }
@@ -739,8 +784,8 @@ function startChampionLevel(champIndex) {
     if (!championsData[champIndex] || championsData[champIndex].sorular.length === 0) { showToast("Soru yok!"); return; }
     showScreen('quiz-screen'); loadChampionQuestion();
 }
-
 function loadChampionQuestion() {
+    if (isPaused) return;
     answered = false; clearInterval(timerInterval);
     updateJokerButtons();
     document.getElementById('quiz-coins-display').innerText = userProgress.totalCoins || 0;
@@ -757,12 +802,14 @@ function loadChampionQuestion() {
         const btn = document.createElement("button");
         btn.classList.add("option-btn");
         btn.innerHTML = `<span class="option-letter">${letters[index]}</span> ${option}`;
-        btn.onclick = () => { sesTiklama.play(); selectChampionOption(index, btn); };
+        btn.onclick = () => { sesTiklama.play(); vibrate(20); selectChampionOption(index, btn); };
         optionsContainer.appendChild(btn);
     });
+    saveProgress(currentLevelIndex, currentQuestionIndex);
     let timeLeft = 30;
     document.getElementById('timer-text').innerText = timeLeft + 's';
     timerInterval = setInterval(() => {
+        if (isPaused) return;
         timeLeft--; document.getElementById('timer-text').innerText = timeLeft + 's';
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
@@ -771,20 +818,19 @@ function loadChampionQuestion() {
                 const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
                 for (let btn of buttons) btn.disabled = true;
                 buttons[currentQ.dogru].classList.add("correct");
-                sesYanlis.play(); setTimeout(nextChampionQuestion, 1500);
+                sesYanlis.play(); vibrate(100); setTimeout(nextChampionQuestion, 1500);
             }
         }
     }, 1000);
 }
-
 function selectChampionOption(selectedIndex, selectedBtn) {
-    if (answered) return;
+    if (answered || isPaused) return;
     let currentQ = normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]);
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
     if (selectedIndex === currentQ.dogru) {
         answered = true; clearInterval(timerInterval);
         selectedBtn.classList.add("correct");
-        score += 100; correctCount++; sesDogru.play();
+        score += 100; correctCount++; sesDogru.play(); vibrate(50);
         updateQuestProgress('correct', 1);
         for (let btn of buttons) btn.disabled = true;
         setTimeout(nextChampionQuestion, 1200);
@@ -792,24 +838,22 @@ function selectChampionOption(selectedIndex, selectedBtn) {
         if (hasDoubleChance) {
             hasDoubleChance = false;
             selectedBtn.classList.add("incorrect"); selectedBtn.disabled = true;
-            sesYanlis.play(); updateJokerButtons();
+            sesYanlis.play(); vibrate(100); updateJokerButtons();
         } else {
             answered = true; clearInterval(timerInterval); wrongCount++;
             selectedBtn.classList.add("incorrect");
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
-            sesYanlis.play();
+            sesYanlis.play(); vibrate(100);
             for (let btn of buttons) btn.disabled = true;
             setTimeout(nextChampionQuestion, 1200);
         }
     }
 }
-
 function nextChampionQuestion() {
     if (currentQuestionIndex < championsData[currentLevelIndex].sorular.length - 1) {
         currentQuestionIndex++; loadChampionQuestion();
     } else { showChampionResults(); }
 }
-
 function showChampionResults() {
     clearInterval(timerInterval); showScreen('score-screen');
     let totalQ = championsData[currentLevelIndex].sorular.length;
@@ -836,6 +880,7 @@ function showChampionResults() {
     let coinsEarned = correctCount * 20;
     userProgress.totalCoins += coinsEarned;
     addToLeaderboard(`👑 ${championsData[currentLevelIndex].kategori}`, score);
+    clearSavedProgress();
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
@@ -871,9 +916,7 @@ function openUnlockModal(levelIndex) {
     }
     document.getElementById('unlock-modal').classList.add('active');
 }
-
 function closeUnlockModal() { document.getElementById('unlock-modal').classList.remove('active'); selectedLockedLevel = -1; }
-
 function unlockLevelWithCoins() {
     if (selectedLockedLevel === -1) return;
     let coinCost = levelCoinCosts[selectedLockedLevel] || 100;
@@ -882,7 +925,7 @@ function unlockLevelWithCoins() {
         if (!userProgress.levels[selectedLockedLevel]) userProgress.levels[selectedLockedLevel] = { stars: 0, score: 0, unlocked: true };
         else userProgress.levels[selectedLockedLevel].unlocked = true;
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-        sesDogru.play(); closeUnlockModal(); showLevelScreen(); updateTopPanel();
+        sesDogru.play(); vibrate(50); closeUnlockModal(); showLevelScreen(); updateTopPanel();
     } else { showToast("❌ Yetersiz coin!"); }
 }
 
@@ -894,8 +937,8 @@ function startLevel(index) {
     if (!levelsData[index] || levelsData[index].sorular.length === 0) { showToast("Soru yok!"); return; }
     showScreen('quiz-screen'); loadQuestion();
 }
-
 function loadQuestion() {
+    if (isPaused) return;
     answered = false; clearInterval(timerInterval);
     updateJokerButtons();
     document.getElementById('quiz-coins-display').innerText = userProgress.totalCoins || 0;
@@ -912,12 +955,14 @@ function loadQuestion() {
         const btn = document.createElement("button");
         btn.classList.add("option-btn");
         btn.innerHTML = `<span class="option-letter">${letters[index]}</span> ${option}`;
-        btn.onclick = () => { sesTiklama.play(); selectOption(index, btn); };
+        btn.onclick = () => { sesTiklama.play(); vibrate(20); selectOption(index, btn); };
         optionsContainer.appendChild(btn);
     });
+    saveProgress(currentLevelIndex, currentQuestionIndex);
     let timeLeft = 30;
     document.getElementById('timer-text').innerText = timeLeft + 's';
     timerInterval = setInterval(() => {
+        if (isPaused) return;
         timeLeft--; document.getElementById('timer-text').innerText = timeLeft + 's';
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
@@ -926,12 +971,11 @@ function loadQuestion() {
                 const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
                 for (let btn of buttons) btn.disabled = true;
                 buttons[currentQ.dogru].classList.add("correct");
-                sesYanlis.play(); setTimeout(nextQuestion, 1500);
+                sesYanlis.play(); vibrate(100); setTimeout(nextQuestion, 1500);
             }
         }
     }, 1000);
 }
-
 function updateJokerButtons() {
     const btn5050 = document.getElementById('joker-5050');
     const btnAnswer = document.getElementById('joker-answer');
@@ -944,17 +988,16 @@ function updateJokerButtons() {
     if (usedJokers["double"] && btnDouble) btnDouble.classList.add("used");
     document.getElementById('quiz-coins-display').innerText = userProgress.totalCoins || 0;
 }
-
 function useJoker(type) {
-    if (answered) return;
+    if (answered || isPaused) return;
     let price = JOKER_PRICES[type];
-    if (userProgress.totalCoins < price) { sesYanlis.play(); showToast(`❌ Yetersiz coin! ${price} 🪙 gerekiyor.`); return; }
+    if (userProgress.totalCoins < price) { sesYanlis.play(); vibrate(100); showToast(`❌ Yetersiz coin! ${price} 🪙 gerekiyor.`); return; }
     if (usedJokers[type]) return;
     userProgress.totalCoins -= price; usedJokers[type] = true;
     userProgress.totalJokersUsed = (userProgress.totalJokersUsed || 0) + 1;
     updateQuestProgress('jokers', 1);
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-    updateTopPanel(); sesTiklama.play();
+    updateTopPanel(); sesTiklama.play(); vibrate(30);
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
     let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
     if (type === "5050") {
@@ -971,15 +1014,14 @@ function useJoker(type) {
     }
     updateJokerButtons();
 }
-
 function selectOption(selectedIndex, selectedBtn) {
-    if (answered) return;
+    if (answered || isPaused) return;
     let currentQ = normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
     if (selectedIndex === currentQ.dogru) {
         answered = true; clearInterval(timerInterval);
         selectedBtn.classList.add("correct");
-        score += 100; correctCount++; sesDogru.play();
+        score += 100; correctCount++; sesDogru.play(); vibrate(50);
         updateQuestProgress('correct', 1);
         for (let btn of buttons) btn.disabled = true;
         setTimeout(nextQuestion, 1200);
@@ -987,24 +1029,22 @@ function selectOption(selectedIndex, selectedBtn) {
         if (hasDoubleChance) {
             hasDoubleChance = false;
             selectedBtn.classList.add("incorrect"); selectedBtn.disabled = true;
-            sesYanlis.play(); updateJokerButtons();
+            sesYanlis.play(); vibrate(100); updateJokerButtons();
         } else {
             answered = true; clearInterval(timerInterval); wrongCount++;
             selectedBtn.classList.add("incorrect");
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
-            sesYanlis.play();
+            sesYanlis.play(); vibrate(100);
             for (let btn of buttons) btn.disabled = true;
             setTimeout(nextQuestion, 1200);
         }
     }
 }
-
 function nextQuestion() {
     if (currentQuestionIndex < levelsData[currentLevelIndex].sorular.length - 1) {
         currentQuestionIndex++; loadQuestion();
     } else { showResults(); }
 }
-
 function showResults() {
     clearInterval(timerInterval); showScreen('score-screen');
     let totalQ = levelsData[currentLevelIndex].sorular.length;
@@ -1031,6 +1071,7 @@ function showResults() {
     userProgress.totalCoins += coinsEarned;
     updateQuestProgress('levels', 1);
     addToLeaderboard(levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`, score);
+    clearSavedProgress();
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
@@ -1045,16 +1086,54 @@ function showResults() {
     }
 }
 
-function restartLevel() { sesTiklama.play(); if (isChampionLevel) startChampionLevel(currentLevelIndex); else startLevel(currentLevelIndex); }
+function restartLevel() { sesTiklama.play(); vibrate(30); if (isChampionLevel) startChampionLevel(currentLevelIndex); else startLevel(currentLevelIndex); }
 function resetGame() { if(confirm("Tüm ilerlemen silinecek. Emin misin?")) { localStorage.removeItem('futbol_quiz_progress'); location.reload(); } }
 function watchAdForStars() {
-    sesTiklama.play(); showToast("📺 Reklam izleniyor...");
+    sesTiklama.play(); vibrate(20); showToast("📺 Reklam izleniyor...");
     setTimeout(() => {
         userProgress.totalStars += 5;
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
         checkAchievements();
     }, 1500);
+}
+
+// --- PAUSE MENÜSÜ ---
+function openPauseMenu() {
+    if (isPaused) return;
+    isPaused = true;
+    clearInterval(timerInterval);
+    // Toggle'ları güncelle
+    document.getElementById('pause-toggle-music').checked = userProgress.musicEnabled;
+    document.getElementById('pause-toggle-sound').checked = userProgress.soundEnabled;
+    document.getElementById('pause-toggle-vibration').checked = userProgress.vibrationEnabled;
+    document.getElementById('pause-modal').classList.add('active');
+    sesTiklama.play(); vibrate(20);
+}
+function resumeFromPause() {
+    document.getElementById('pause-modal').classList.remove('active');
+    isPaused = false;
+    sesTiklama.play(); vibrate(20);
+    // Kaldığı yerden devam et - timer'ı yeniden başlat
+    if (isChampionLevel) {
+        loadChampionQuestion();
+    } else {
+        loadQuestion();
+    }
+}
+function restartFromPause() {
+    document.getElementById('pause-modal').classList.remove('active');
+    isPaused = false;
+    sesTiklama.play(); vibrate(20);
+    if (isChampionLevel) startChampionLevel(currentLevelIndex);
+    else startLevel(currentLevelIndex);
+}
+function exitToMenuFromPause() {
+    document.getElementById('pause-modal').classList.remove('active');
+    isPaused = false;
+    sesTiklama.play(); vibrate(20);
+    // İlerleme zaten kaydedildi (saveProgress ile), ana menüye dön
+    showMenuScreen();
 }
 
 // --- ÖDÜL KUTUSU ---
@@ -1073,7 +1152,7 @@ function openChest() {
     else { rewardType = 'joker'; rewardText = `1 adet Yarı Yarıya Joker kazandın!`; chestIcon.innerText = '✂️'; }
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel();
-    sesDogru.play();
+    sesDogru.play(); vibrate(50);
     chestText.innerText = `🎉 ${rewardText}`;
     document.getElementById('chest-open-btn').innerText = 'TAMAM ✅';
     document.getElementById('chest-open-btn').onclick = closeChestModal;
@@ -1084,4 +1163,13 @@ function closeChestModal() {
     document.getElementById('chest-open-btn').innerText = 'AÇ 📦';
     document.getElementById('chest-open-btn').onclick = openChest;
     sesTiklama.play();
+}
+
+// --- SERVICE WORKER (PWA) ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
+            .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
+    });
             }
