@@ -1,62 +1,215 @@
-const questions = [
-    // --- LEVEL 1 (Temel Futbol Kuralları ve Genel Terimler) ---
-    { soru: "Futbol maçında bir takım sahada kaç oyuncuyla yer alır?", secenekler: ["9", "10", "11", "12"], dogru: 2 },
-    { soru: "Standart bir futbol maçı normal sürede toplam kaç dakika sürer?", secenekler: ["80", "90", "100", "120"], dogru: 1 },
-    { soru: "Futbol sahasının ortasındaki yuvarlak alanın merkezi ne olarak adlandırılır?", secenekler: ["Başlama noktası (Orta saha yuvarlağı)", "Kale sahası", "Taç çizgisi", "Ceza yayı"], dogru: 0 },
-    { soru: "Bir futbol maçında hakemin oyuncuya ihraç (oyundan atılma) amacıyla gösterdiği kartın rengi nedir?", secenekler: ["Sarı", "Kırmızı", "Mavi", "Yeşil"], dogru: 1 },
-    { soru: "El ile oynamak hariç, topun kaleye girmesini engellemekle görevli özel giysili oyuncu kimdir?", secenekler: ["Stoper", "Forvet", "Kaleci", "Libero"], dogru: 2 },
-    { soru: "Topun taç çizgisini tamamen geçmesi durumunda oyunun tekrar başlaması için hangi atış kullanılır?", secenekler: ["Korner", "Taç atışı", "Endirek serbest vuruş", "Penaltı"], dogru: 1 },
-    { soru: "Maçın orta hakeminin kararlarında ona yardımcı olan dış alandaki hakemler nasıl adlandırılır?", secenekler: ["Çizgi hakemi / Yardımcı hakem", "Masa hakemi", "Antrenör", "Gözlemci"], dogru: 0 },
-    { soru: "Topun kaleye girmesi durumunda hakemin işaret ettiği orta nokta kararı neyi bildirir?", secenekler: ["Faul", "Gol", "Ofsayt", "Endirek vuruş"], dogru: 1 },
-    { soru: "Bir futbol maçında kaleyi koruyan kalecinin ceza sahası dışında elleriyle topu tutması durumunda ne karara varılır?", secenekler: ["Devam", "Serbest vuruş / Kart", "Korner", "Taç"], dogru: 1 },
-    { soru: "Maçın berabere bitmesi ve kural gereği kazananın çıkması gerekmesi durumunda oynanan ekstra devrelerin toplam süresi genellikle ne kadardır?", secenekler: ["15 dakika", "30 dakika", "45 dakika", "10 dakika"], dogru: 1 },
+// --- GİRİŞ EKRANI KONTROLÜ ---
+// Sayfa tamamen yüklendiğinde 3 saniye bekle, sonra giriş ekranını gizle
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.style.transition = 'opacity 0.5s ease';
+            splash.style.opacity = '0'; // Yumuşak geçiş
+            setTimeout(() => {
+                splash.style.display = 'none'; // Tamamen kaldır
+            }, 500); 
+        }
+    }, 3000); // 3000ms = 3 saniye
+});
 
-    // --- LEVEL 2 (Temel Terimler ve Hakemlik) ---
-    { soru: "Hücum oyuncusunun rakip kaleye en yakın savunma oyuncusundan daha ileride top almasıyla oluşan kural dışı pozisyon nedir?", secenekler: ["Faul", "Ofsayt", "Aut", "Korner"], dogru: 1 },
-    { soru: "Savunma oyuncularının topu kendi kale çizgisinden dışarı göndermesi sonucu rakip takımın kazandığı atış hangisidir?", secenekler: ["Taç", "Köşe vuruşu (Korner)", "Endirek vuruş", "Penaltı"], dogru: 1 },
-    { soru: "Hücum oyuncusunun şutunda top kaleciden veya direkten dönüp tekrar aynı oyuncuya gelirse, ilk vuruş anında arkada kimse yoksa bu pozisyon ne ad alır?", secenekler: ["Ofsayt", "Devam / Ofsayt değil", "Faul", "Penaltı"], dogru: 1 },
-    { soru: "Ceza sahası içinde savunma oyuncusunun yaptığı ciddi kural hatası (faul) sonucu verilen ceza vuruşu nedir?", secenekler: ["Endirek serbest vuruş", "Penaltı", "Taç", "Hakem atışı"], dogru: 1 },
-    { soru: "Hakemin doğrudan kaleye vuruş yapılamayan, önce başka bir oyuncuya temas etmesi gereken durumlarda verdiği atış hangisidir?", secenekler: ["Direk serbest vuruş", "Endirek serbest vuruş", "Penaltı", "Korner"], dogru: 1 },
-    { soru: "Futbolda sarı kart gören bir oyuncunun ikinci sarı kartı görmesi durumunda göreceği kart ve ceza nedir?", secenekler: ["Doğrudan kırmızı kart ve ihraç", "Maça devam", "Sarı-kırmızı kart ile uyarı", "Para cezası"], dogru: 0 },
-    { soru: "Bir maçta oyuncu değişiklik hakkı modern futbol kurallarında genellikle kaç oyuncu ile sınırlıdır (standart resmi ligler için)?", secenekler: ["3", "5", "7", "Sınırsız"], dogru: 1 },
-    { soru: "Maçın normal süresine hakem tarafından eklenen kayıp zamanlar tabelada ne olarak gösterilir?", secenekler: ["Uzatma dakikaları", "Devre arası", "Altın gol", "Gümüş gol"], dogru: 0 },
-    { soru: "Topun tamamının taç veya kale çizgisini havadan veya yerden tamamen geçmesi durumunda ne karar verilir?", secenekler: ["Oyun devam eder", "Top taca veya auta çıkmıştır", "Faul çalınır", "Ofsayt olur"], dogru: 1 },
-    { soru: "Futbolda maçın başlamasını veya devrelerin açılışını belirten vuruşun adı nedir?", secenekler: ["Santra vuruşu", "Penaltı vuruşu", "Endirek vuruş", "Aut atışı"], dogru: 0 },
+// 40 Level - Her birinde 10 soru
+const levelsData = [];
 
-    // --- LEVEL 3 (Türkiye Süper Lig Temelleri) ---
-    { soru: "Türkiye'nin en üst seviyedeki profesyonel futbol liginin adı nedir?", secenekler: ["1. Lig", "Süper Lig", "Türkiye Kupası", "TFF 2. Lig"], dogru: 1 },
-    { soru: "Süper Lig'in kuruluş tarihi resmi olarak hangi yıldır?", secenekler: ["1923", "1959", "1967", "1980"], dogru: 1 },
-    { soru: "Galatasaray, Fenerbahçe ve Beşiktaş kulüplerinin merkezi hangi şehirde yer alır?", secenekler: ["Ankara", "İzmir", "İstanbul", "Bursa"], dogru: 2 },
-    { soru: "Trabzonspor kulübünün renkleri hangi seçenekte doğru verilmiştir?", secenekler: ["Sarı-Kırmızı", "Sarı-Lacivert", "Bordo-Mavi", "Siyah-Beyaz"], dogru: 2 },
-    { soru: "Beşiktaş'ın simgeleşmiş semt ve stat adıleşen bölgesi neresidir?", secenekler: ["Kadıköy", "Beşiktaş / Dolmabahçe", "Florya", "Ovacık"], dogru: 1 },
-    { soru: "Fenerbahçe'nin stadının adı nedir?", secenekler: ["Ali Sami Yen", "Vodafone Park", "Şükrü Saracoğlu Stadyumu", "Medical Park Stadyumu"], dogru: 2 },
-    { soru: "Galatasaray'ın iç saha maçlarını oynadığı stadyumun adı nedir?", secenekler: ["Rams Park", "Fenerbahçe Şükrü Saracoğlu", "Beşiktaş Park", "Eryaman Stadyumu"], dogru: 0 },
-    { soru: "Süper Lig tarihinde şampiyonluk yaşamış Anadolu kulüplerinden biri aşağıdakilerden hangisidir?", secenekler: ["Altay", "Bursaspor", "Göztepe", "Ankaragücü"], dogru: 1 },
-    { soru: "Bursaspor hangi yıl Süper Lig şampiyonu olarak büyük bir tarihi başarı elde etmiştir?", secenekler: ["1999-2000", "2009-2010", "2010-2011", "2015-2016"], dogru: 1 },
-    { soru: "Süper Lig'de en çok şampiyonluk kazanan takım hangisidir?", secenekler: ["Fenerbahçe", "Beşiktaş", "Galatasaray", "Trabzonspor"], dogru: 2 },
+const sampleBaseQuestions = [
+    { soru: "Futbol maçında sahada her bir takım kaç oyuncuyla yer alır?", secenekler: ["9", "10", "11", "12"], dogru: 2 },
+    { soru: "Standart bir futbol maçı normal sürede toplam kaç dakikadır?", secenekler: ["80", "90", "100", "120"], dogru: 1 },
+    { soru: "Hakemin oyuncuyu ihraç etmek için gösterdiği kartın rengi nedir?", secenekler: ["Sarı", "Kırmızı", "Mavi", "Yeşil"], dogru: 1 },
+    { soru: "Kendi ceza sahası dışındayken elleriyle topu tutabilen tek oyuncu kimdir?", secenekler: ["Stoper", "Forvet", "Kaleci", "Kaptan"], dogru: 2 },
+    { soru: "Topun taç çizgisini tamamen geçmesiyle hangi atış kullanılır?", secenekler: ["Korner", "Taç atışı", "Penaltı", "Aut"], dogru: 1 },
+    { soru: "Ofsayt kuralı hangi alanda geçerlidir?", secenekler: ["Rakip yarı alanda", "Kendi yarı alanında", "Tüm sahada", "Orta yuvarlakta"], dogru: 0 },
+    { soru: "Penaltı vuruşu kaleye kaç metre mesafeden yapılır?", secenekler: ["9 metre", "11 metre", "12 metre", "14 metre"], dogru: 1 },
+    { soru: "Süper Lig'in kuruluş yılı resmi olarak hangisidir?", secenekler: ["1923", "1959", "1967", "1980"], dogru: 1 },
+    { soru: "Şampiyonlar Ligi kupasını en çok kazanan kulüp hangisidir?", secenekler: ["AC Milan", "Barcelona", "Real Madrid", "Bayern Münih"], dogru: 2 },
+    { soru: "Dünya Kupası organizasyonu kaç yılda bir düzenlenir?", secenekler: ["2", "3", "4", "5"], dogru: 2 }
+];
 
-    // --- LEVEL 4 (Uluslararası Turnuvalar ve Kupalar) ---
-    { soru: "Dünya Kupası ilk kez hangi yıl düzenlenmiştir?", secenekler: ["1920", "1930", "1950", "1960"], dogru: 1 },
-    { soru: "İlk FIFA Dünya Kupası'na ev sahipliği yapan ve aynı zamanda finali kazanan ülke hangisidir?", secenekler: ["Brezilya", "İtalya", "Uruguay", "Arjantin"], dogru: 2 },
-    { soru: "Avrupa Futbol Şampiyonası (EURO) ilk kez hangi yıl düzenlenmiştir?", secenekler: ["1952", "1960", "1972", "1980"], dogru: 1 },
-    { soru: "UEFA Şampiyonlar Ligi'nin eski adı neydi?", secenekler: ["UEFA Kupası", "Şampiyon Kulüpler Kupası", "Kupa Galipleri Kupası", "Fuar Şehirleri Kupası"], dogru: 1 },
-    { soru: "Dünya Kupası organizasyonu kaç yılda bir düzenlenir?", secenekler: ["2", "3", "4", "5"], dogru: 2 },
-    { soru: "Milli takımlar düzeyinde Güney Amerika'nın en eski kıtasal turnuvasının adı nedir?", secenekler: ["Copa America", "Gold Cup", "Asya Kupası", "Afrika Uluslar Kupası"], dogru: 0 },
-    { soru: "UEFA Avrupa Ligi'nin eski ismi hangi seçenekte doğru verilmiştir?", secenekler: ["UEFA Kupa Galipleri Kupası", "UEFA Kupası", "Intertoto Kupası", "Süper Kupa"], dogru: 1 },
-    { soru: "Dünya Kupası tarihinde turnuvayı en çok kazanan (5 kez) ülke hangisidir?", secenekler: ["Almanya", "İtalya", "Brezilya", "Arjantin"], dogru: 2 },
-    { soru: "Avrupa Futbol Şampiyonası'nı en çok kazanan ülkeler arasında aşağıdakilerden hangisi yer alır?", secenekler: ["İspanya ve Almanya", "İngiltere ve Fransa", "Brezilya ve Arjantin", "Portekiz ve Hollanda"], dogru: 0 },
-    { soru: "FIFA'nın merkezi hangi ülkede bulunmaktadır?", secenekler: ["Fransa", "İsviçre", "İngiltere", "Almanya"], dogru: 1 },
+for (let l = 1; l <= 40; l++) {
+    let qList = [];
+    for (let q = 1; q <= 10; q++) {
+        let baseQ = sampleBaseQuestions[(q + l - 2) % sampleBaseQuestions.length];
+        qList.push({
+            soru: `[Level ${l}] ${baseQ.soru} (Soru ${q})`,
+            secenekler: baseQ.secenekler,
+            dogru: baseQ.dogru
+        });
+    }
+    levelsData.push(qList);
+}
 
-    // --- LEVEL 5 (Efsanevi Futbolcular - Giriş) ---
-    { soru: "Arjantinli efsanevi futbolcu Diego Maradona hangi ünlü golüyle tanınır?", secenekler: ["Tanrı'nın Eli", "Rövaşata Golü", "Orta Saha Golü", "Kafa Golü"], dogru: 0 },
-    { soru: "Brezilyalı efsane futbolcu Pelé'nin gerçek adı nedir?", secenekler: ["Edson Arantes do Nascimento", "Ronaldo de Assis Moreira", "Arthur Antunes Coimbra", "Ricardo Izecson dos Santos Leite"], dogru: 0 },
-    { soru: "Fransa futbolunun efsanevi orta saha oyuncusu ve Real Madrid'in eski teknik direktörü kimdir?", secenekler: ["Thierry Henry", "Zinedine Zidane", "Michel Platini", "Didier Deschamps"], dogru: 1 },
-    { soru: "Kariyerinde çok sayıda Altın Top (Ballon d'Or) ödülü bulunan Portekizli yıldız kimdir?", secenekler: ["Lionel Messi", "Cristiano Ronaldo", "Neymar Jr.", "Kylian Mbappe"], dogru: 1 },
-    { soru: "Barcelona ve Arjantin milli takımının efsanevi ismi, çok sayıda Ballon d'Or sahibi futbolcu kimdir?", secenekler: ["Lionel Messi", "Ronaldinho", "Diego Maradona", "Gabriel Batistuta"], dogru: 0 },
-    { soru: "Hollandalı efsane oyuncu ve 'Total Futbol' felsefesinin simge ismi kimdir?", secenekler: ["Marco van Basten", "Johan Cruyff", "Ruud Gullit", "Frank Rijkaard"], dogru: 1 },
-    { soru: "İngiliz futbolunun efsanevi golcüsü, uzun yıllar Manchester United forması giyen ve serbest vuruşlarıyla tanınan oyuncu kimdir?", secenekler: ["David Beckham", "Wayne Rooney", "Bobby Charlton", "Michael Owen"], dogru: 0 },
-    { soru: "İtalyan savunma efsanesi, uzun yıllar Milan forması giymiş olan ünlü stadyumda adı anılan isim kimdir?", secenekler: ["Paolo Maldini", "Gianluigi Buffon", "Fabio Cannavaro", "Alessandro Nesta"], dogru: 0 },
-    { soru: "Brezilyalı sol bek, muazzam sert frikikleriyle tanınan efsane oyuncu kimdir?", secenekler: ["Cafu", "Roberto Carlos", "Marcelo", "Dani Alves"], dogru: 1 },
-    { soru: "Fransız golcü, Arsenal efsanesi 'Titi' lakaplı futbolcu kimdir?", secenekler: ["Thierry Henry", "David Trezeguet", "Karim Benzema", "Eric Cantona"], dogru: 0 },
+let currentLevelIndex = 0;
+let currentQuestionIndex = 0;
+let score = 0;
+let answered = false;
 
-... [360 soru daha benzer şekilde 40 level olarak sisteme entegre edilebilir]
+let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {};
+
+if (!userProgress[0]) {
+    userProgress[0] = { stars: 0, score: 0, unlocked: true };
+}
+
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+function showMenuScreen() {
+    showScreen('menu-screen');
+}
+
+function showLevelScreen() {
+    const container = document.getElementById('levels-container');
+    container.innerHTML = '';
+
+    for (let i = 0; i < 40; i++) {
+        let lvlNum = i + 1;
+        let progress = userProgress[i] || { stars: 0, score: 0, unlocked: false };
+        
+        let isUnlocked = progress.unlocked || (i === 0) || (userProgress[i-1] && userProgress[i-1].stars > 0);
+
+        let card = document.createElement('div');
+        card.className = 'level-card' + (isUnlocked ? '' : ' locked');
+        
+        let avatarContent = '⚽';
+        if (i === 0) avatarContent = '🐐'; 
+        else if (i === 1) avatarContent = '🐢'; 
+        else if (i === 2) avatarContent = '🤖'; 
+        else if (i === 3) avatarContent = '👑'; 
+
+        let starsStr = '☆☆☆';
+        if (progress.stars === 1) starsStr = '⭐☆☆';
+        if (progress.stars === 2) starsStr = '⭐⭐☆';
+        if (progress.stars === 3) starsStr = '⭐⭐⭐';
+
+        let progressPercent = (progress.stars / 3) * 100; 
+
+        card.innerHTML = `
+            <div class="level-avatar">${avatarContent}</div>
+            <div class="level-info">
+                <div class="level-title">LEVEL ${lvlNum}</div>
+                <div class="level-progress-bar">
+                    <div class="level-progress-fill" style="width: ${progressPercent}%"></div>
+                </div>
+                <div class="level-stars">${starsStr}</div>
+            </div>
+            <div class="level-status">
+                ${isUnlocked ? '<span class="trophy-icon">🏆</span>' : '<span class="lock-icon">🔒</span>'}
+            </div>
+        `;
+
+        if (isUnlocked) {
+            card.onclick = () => startLevel(i);
+        } else {
+            card.onclick = () => alert("Bu level kilitli! Lütfen önceki leveli en az 1 yıldızla tamamlayın.");
+        }
+
+        container.appendChild(card);
+    }
+    showScreen('levels-screen');
+}
+
+function startLevel(levelIndex) {
+    currentLevelIndex = levelIndex;
+    currentQuestionIndex = 0;
+    score = 0;
+    showScreen('quiz-screen');
+    loadQuestion();
+}
+
+function loadQuestion() {
+    answered = false;
+    document.getElementById('next-btn').style.display = "none";
+
+    const currentQ = levelsData[currentLevelIndex][currentQuestionIndex];
+    document.getElementById('level-title-indicator').innerText = `Level ${currentLevelIndex + 1}`;
+    document.getElementById('question-counter').innerText = `Soru: ${currentQuestionIndex + 1} / 10`;
+    document.getElementById('score-display').innerText = `Puan: ${score}`;
+    document.getElementById('question-text').innerText = currentQ.soru;
+
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = "";
+
+    currentQ.secenekler.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.classList.add("option-btn");
+        btn.innerText = option;
+        btn.onclick = () => selectOption(index, btn);
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function selectOption(selectedIndex, selectedBtn) {
+    if (answered) return;
+    answered = true;
+
+    const currentQ = levelsData[currentLevelIndex][currentQuestionIndex];
+    const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
+
+    if (selectedIndex === currentQ.dogru) {
+        selectedBtn.classList.add("correct");
+        score += 10;
+        document.getElementById('score-display').innerText = `Puan: ${score}`;
+    } else {
+        selectedBtn.classList.add("incorrect");
+        buttons[currentQ.dogru].classList.add("correct");
+    }
+
+    for (let btn of buttons) {
+        btn.disabled = true;
+    }
+
+    if (currentQuestionIndex < 9) {
+        document.getElementById('next-btn').style.display = "block";
+    } else {
+        setTimeout(showResults, 1000);
+    }
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    loadQuestion();
+}
+
+function showResults() {
+    showScreen('score-screen');
+    
+    let starsEarned = 0;
+    if (score >= 30) starsEarned = 1;
+    if (score >= 70) starsEarned = 2;
+    if (score >= 100) starsEarned = 3;
+
+    let previousStars = userProgress[currentLevelIndex] ? userProgress[currentLevelIndex].stars : 0;
+    
+    if (starsEarned > previousStars) {
+        userProgress[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+    } else if (!userProgress[currentLevelIndex]) {
+        userProgress[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+    }
+
+    if (starsEarned >= 1 && currentLevelIndex + 1 < 40) {
+        if (!userProgress[currentLevelIndex + 1]) {
+            userProgress[currentLevelIndex + 1] = { stars: 0, score: 0, unlocked: true };
+        } else {
+            userProgress[currentLevelIndex + 1].unlocked = true;
+        }
+    }
+
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+
+    let starsDisplay = '☆☆☆';
+    if (starsEarned === 1) starsDisplay = '⭐☆☆';
+    if (starsEarned === 2) starsDisplay = '⭐⭐☆';
+    if (starsEarned === 3) starsDisplay = '⭐⭐⭐';
+
+    document.getElementById('result-stars').innerText = starsDisplay;
+    document.getElementById('final-score-text').innerText = `Toplam Puanınız: ${score} / 100`;
+}
+
+function restartLevel() {
+    startLevel(currentLevelIndex);
+}
