@@ -39,7 +39,7 @@ const questionBanks = {
         { q: "Bir maçta direkt kırmızı kart gören futbolcu kaç maç cezalı duruma düşer?", options: ["Kesinlikle 1 maç", "Disiplin kurulunun kararına göre değişir", "Her zaman 3 maç", "Cezası yoktur"], a: 1 },
         { q: "Standart bir futbol topunun çevresi yaklaşık olarak kaç santimetredir?", options: ["40-45 cm", "55-60 cm", "68-70 cm", "80-85 cm"], a: 2 },
         { q: "Maçın başlama vuruşu (santra) nerede gerçekleştirilir?", options: ["Taç çizgisi üzerinde", "Ceza sahası içinde", "Orta yuvarlakta", "Kaletaşı önünde"], a: 2 },
-        { q: "Kalecinin ceza sahası dışında elleriyle topu tutmasının cezası nedir?", options: ["Endirekt serbest vuruş ve kart", "Sadece taç atışı", "Devam kararı", "Korner"], a: 0 },
+        { q: "Kalecinin ceza sahası dışında elleriyle tutmasının cezası nedir?", options: ["Endirekt serbest vuruş ve kart", "Sadece taç atışı", "Devam kararı", "Korner"], a: 0 },
         { q: "Resmi bir futbol maçı kaç devre halinde oynanır?", options: ["1", "2", "3", "4"], a: 1 },
         { q: "Standart bir futbol maçının normal süresi toplam kaç dakikadır?", options: ["45 dakika", "60 dakika", "90 dakika", "120 dakika"], a: 2 },
         { q: "Futbolda saha içindeki kuralları uygulayan ve maçı yöneten ana yetkili kimdir?", options: ["Antrenör", "Hakem", "Gözlemci", "Kaptan"], a: 1 }
@@ -170,7 +170,7 @@ for (let lvl = 11; lvl <= 40; lvl++) {
     ];
 }
 
-// 40 Seviye Kartını Dinamik Olarak Ekrana Basan Garanti Fonksiyon
+// 40 Seviye Kartını Dinamik Olarak Ekrana Basan Fonksiyon
 function buildLevelsUI() {
     const container = document.getElementById("levels-container");
     if (!container) return;
@@ -309,6 +309,7 @@ function startLevel(levelNum) {
 
 function loadQuestion() {
     lockOptions = false;
+    resetOptionVisibility();
     const q = currentBank[currentQuestionIndex];
     if (!q) return;
     
@@ -319,6 +320,14 @@ function loadQuestion() {
         if (optionBtns[i]) {
             optionBtns[i].textContent = q.options[i];
             optionBtns[i].classList.remove("correct", "wrong");
+        }
+    }
+}
+
+function resetOptionVisibility() {
+    for (let i = 0; i < 4; i++) {
+        if (optionBtns[i]) {
+            optionBtns[i].style.visibility = "visible";
         }
     }
 }
@@ -353,6 +362,52 @@ function checkAnswer(selectedOptionIndex) {
             backToMenu();
         }
     }, 1500);
+}
+
+// JOKER FONKSİYONLARI
+function useFiftyFifty() {
+    if (lockOptions) return;
+    if (gameState.coins < 20) {
+        alert("🪙 Yeterli altının yok!");
+        return;
+    }
+
+    gameState.coins -= 20;
+    saveGame();
+    updateMenuUI();
+    if (gameStarValEl) gameStarValEl.textContent = gameState.stars;
+
+    const q = currentBank[currentQuestionIndex];
+    const correctIndex = q.a;
+
+    let wrongIndices = [];
+    for (let i = 0; i < 4; i++) {
+        if (i !== correctIndex) wrongIndices.push(i);
+    }
+
+    // Rastgele 2 yanlış şıkkı karıştır ve gizle
+    wrongIndices.sort(() => Math.random() - 0.5);
+    if (optionBtns[wrongIndices[0]]) optionBtns[wrongIndices[0]].style.visibility = "hidden";
+    if (optionBtns[wrongIndices[1]]) optionBtns[wrongIndices[1]].style.visibility = "hidden";
+}
+
+function useSkipQuestion() {
+    if (gameState.coins < 30) {
+        alert("🪙 Yeterli altının yok!");
+        return;
+    }
+
+    gameState.coins -= 30;
+    saveGame();
+    updateMenuUI();
+
+    currentQuestionIndex++;
+    if (currentQuestionIndex < currentBank.length) {
+        loadQuestion();
+    } else {
+        alert(`🏆 Tebrikler! Level ${currentLevel} tamamlandı!`);
+        backToMenu();
+    }
 }
 
 function backToMenu() {
