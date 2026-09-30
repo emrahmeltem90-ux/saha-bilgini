@@ -5,7 +5,6 @@ const sesTiklama = new Audio('ses_tiklama.mp3');
 const sesCark = new Audio('ses_cark.mp3');
 sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5; sesCark.volume = 0.6;
 
-// --- ÇARKIFELEK ÖDÜLLERİ ---
 const WHEEL_PRIZES = [
     { label: "10 🪙", type: "coin", value: 10, color: "#f472b6" },
     { label: "25 🪙", type: "coin", value: 25, color: "#34d399" },
@@ -101,23 +100,15 @@ function updateTopPanel() {
     document.getElementById('total-stars-display').innerText = userProgress.totalStars || 0;
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
     document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
-    let welcomeEl = document.getElementById('welcome-text');
-    if (welcomeEl) {
-        welcomeEl.innerText = `Hoş geldin, ${userProgress.profileName || "Oyuncu"}!`;
-    }
 }
 
-// --- BİLDİRİM GÖSTERME FONKSİYONU ---
 function showToast(message) {
     const toast = document.getElementById('toast-notification');
     toast.innerText = message;
     toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2500);
+    setTimeout(() => { toast.classList.remove('show'); }, 2500);
 }
 
-// --- RÜTBE HESAPLAMA ---
 function calculateRank() {
     let total = (userProgress.totalCorrect || 0) + (userProgress.totalWrong || 0);
     if (total === 0) return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: 0 };
@@ -149,6 +140,7 @@ function drawStatsCircle(percentage) {
 function showProfileScreen() {
     showScreen('profile-screen');
     document.getElementById('profile-name-input').value = userProgress.profileName || "Oyuncu";
+    document.getElementById('player-welcome').innerText = `Hoş geldin, ${userProgress.profileName || "Oyuncu"}!`;
     document.getElementById('stat-total-score').innerText = userProgress.totalScore || 0;
     document.getElementById('stat-total-correct').innerText = userProgress.totalCorrect || 0;
     document.getElementById('stat-total-wrong').innerText = userProgress.totalWrong || 0;
@@ -167,15 +159,13 @@ function saveProfileName() {
     userProgress.profileName = newName;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     sesDogru.play();
-    showToast("✅ İsim kaydedildi: " + newName); // YENİ: Tarayıcı alert yerine şık bildirim
+    showToast("✅ İsim kaydedildi: " + newName);
     updateTopPanel();
-    setTimeout(() => { showMenuScreen(); }, 800);
+    document.getElementById('player-welcome').innerText = `Hoş geldin, ${newName}!`;
 }
 
 function loadProfileName() {
     document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
-    let welcomeEl = document.getElementById('welcome-text');
-    if (welcomeEl) welcomeEl.innerText = `Hoş geldin, ${userProgress.profileName || "Oyuncu"}!`;
 }
 
 // --- ÇARKIFELEK ---
@@ -532,4 +522,4 @@ function watchAdForStars() {
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
     }, 1500);
-                      }
+}
