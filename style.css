@@ -1,5 +1,5 @@
 body {
-    /* Arka plan görseli ve şık bir gece karartması */
+    /* Arka plan görseli ve şık gece karartması */
     background: linear-gradient(rgba(5, 11, 20, 0.55), rgba(5, 11, 20, 0.55)), url('stadium-bg.jpg') no-repeat center center fixed;
     background-size: cover;
     color: #ffffff;
@@ -64,15 +64,16 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    gap: 5px;
 }
 
 .icon-btn, .badge {
     background: rgba(30, 41, 59, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 8px 14px;
+    padding: 8px 10px;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -137,7 +138,6 @@ body {
     background: rgba(51, 65, 85, 0.9);
 }
 
-/* Doğru / Yanş Durum Renkleri */
 .option-btn.correct {
     background: #27ae60 !important;
     border-color: #2ecc71 !important;
@@ -146,6 +146,11 @@ body {
 .option-btn.wrong {
     background: #c0392b !important;
     border-color: #e74c3c !important;
+}
+
+.option-btn.hidden-option {
+    opacity: 0.2;
+    pointer-events: none;
 }
 
 /* Animasyon Katmanı Stilleri */
