@@ -3,68 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saha Bilgini - Football Quiz</title>
+    <title>Saha Bilgini - Futbol Quiz</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fontleri -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- GİRİŞ VE YÜKLENME EKRANI -->
+    <!-- AÇILIŞ VE YÜKLENME EKRANI -->
     <div id="splash-screen" class="splash-container">
-        <div class="splash-content">
-            <div class="game-logo-title">FOOTBALL QUIZ</div>
-            <div class="game-year">2026</div>
-            <div class="loading-box">
-                <p id="loading-text">LOADING... 0%</p>
-                <div class="progress-bar-bg">
-                    <div id="progress-fill" class="progress-fill"></div>
-                </div>
+        <h1 class="game-logo-title">SAHA BİLGİNİ</h1>
+        <div class="game-year">2026</div>
+        <div class="loading-box">
+            <div id="loading-text">LOADING... 0%</div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-fill"></div>
             </div>
         </div>
     </div>
 
-    <!-- ANA OYUN / SEVİYE EKRANI (Başta gizli, yükleme bitince açılır) -->
+    <!-- ANA MENÜ / SEVİYE EKRANI -->
     <div id="main-menu" class="main-menu hidden">
-        <!-- Üst Bilgi Çubuğu (Para, Yıldız, Ayarlar) -->
         <div class="top-bar">
             <button id="settings-btn" class="icon-btn">⚙️</button>
-            <div class="stat-badge">⭐ <span id="total-stars">2</span></div>
-            <div class="stat-badge">🪙 <span id="total-coins">230</span></div>
+            <div class="stat-badge">⭐ <span id="star-count">2</span></div>
+            <div class="stat-badge">🪙 <span id="coin-count">230</span></div>
         </div>
 
-        <!-- Seviye Listesi -->
         <div class="levels-container">
             <!-- Level 1 -->
-            <div class="level-card unlocked" onclick="startLevel(1)">
+            <div class="level-card" onclick="startLevel(1)">
                 <div class="level-avatar player-avatar"></div>
                 <div class="level-info">
                     <h3>LEVEL 1</h3>
                     <div class="progress-bar-small"><div class="fill" style="width: 15%;"></div></div>
-                    <span>2/18</span>
+                    <span>2/18 Soru</span>
                 </div>
                 <div class="level-action">🎁</div>
             </div>
 
             <!-- Level 2 -->
-            <div class="level-card unlocked" onclick="startLevel(2)">
+            <div class="level-card" onclick="startLevel(2)">
                 <div class="level-avatar legend-avatar"></div>
                 <div class="level-info">
                     <h3>LEVEL 2</h3>
                     <div class="progress-bar-small"><div class="fill" style="width: 0%;"></div></div>
-                    <span>0/18</span>
+                    <span>0/18 Soru</span>
                 </div>
-                <div class="level-action">🎁</div>
+                <div class="level-action">➡️</div>
             </div>
 
-            <!-- Level 3 (Kilitli) -->
-            <div class="level-card locked">
+            <!-- Level 3 -->
+            <div class="level-card" onclick="startLevel(3)">
                 <div class="level-avatar coach-avatar"></div>
                 <div class="level-info">
                     <h3>LEVEL 3</h3>
-                    <span class="star-req">⭐ 22</span>
+                    <div class="progress-bar-small"><div class="fill" style="width: 0%;"></div></div>
+                    <span>0/20 Soru</span>
                 </div>
-                <div class="lock-badge">🔒 150🪙</div>
+                <div class="level-action">➡️</div>
             </div>
 
             <!-- Level 4 (Kilitli) -->
@@ -72,9 +68,28 @@
                 <div class="level-avatar club-avatar"></div>
                 <div class="level-info">
                     <h3>LEVEL 4</h3>
-                    <span class="star-req">⭐ 34</span>
+                    <span>⭐ 34 Yıldız Gerekli</span>
                 </div>
                 <div class="lock-badge">🔒 200🪙</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OYUN İÇİ SORU EKRANI -->
+    <div id="game-screen" class="game-screen hidden">
+        <div class="game-top-bar">
+            <button class="icon-btn" onclick="backToMenu()">🏠</button>
+            <div class="stat-badge">Soru: <span id="current-question-num">1</span>/5</div>
+            <div class="stat-badge">Puan: <span id="score-val">0</span></div>
+        </div>
+
+        <div class="question-container">
+            <div id="question-text" class="question-text">Soru buraya gelecek...</div>
+            <div class="options-container">
+                <button class="option-btn" onclick="checkAnswer(0)" id="opt-0">Seçenek A</button>
+                <button class="option-btn" onclick="checkAnswer(1)" id="opt-1">Seçenek B</button>
+                <button class="option-btn" onclick="checkAnswer(2)" id="opt-2">Seçenek C</button>
+                <button class="option-btn" onclick="checkAnswer(3)" id="opt-3">Seçenek D</button>
             </div>
         </div>
     </div>
@@ -82,17 +97,14 @@
     <!-- AYARLAR MODALI -->
     <div id="settings-modal" class="modal hidden">
         <div class="modal-content">
-            <button id="close-settings" class="close-btn">❌</button>
-            <h2>SETTINGS</h2>
+            <button id="close-settings" class="close-btn">X</button>
+            <h2>AYARLAR</h2>
             <div class="settings-toggles">
-                <button class="setting-toggle-btn">🎵 Müzik: Açık</button>
-                <button class="setting-toggle-btn">🔊 Efekt: Açık</button>
-                <button class="setting-toggle-btn">📳 Titreşim: Açık</button>
+                <button class="setting-toggle-btn">🔊 Ses: AÇIK</button>
+                <button class="setting-toggle-btn">🎵 Müzik: AÇIK</button>
             </div>
-            <button class="settings-main-btn">CHOOSE LANGUAGE</button>
-            <button class="settings-main-btn">STATISTICS</button>
-            <button class="settings-main-btn">RESET GAME</button>
-            <button class="settings-main-btn">RATE US</button>
+            <button class="settings-main-btn">İSTATİSTİKLERİM</button>
+            <button class="settings-main-btn">OYUNU SIFIRLA</button>
         </div>
     </div>
 
