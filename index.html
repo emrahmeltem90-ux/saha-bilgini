@@ -8,7 +8,6 @@
     <style>
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -31,7 +30,6 @@
             <div class="stats-box"><span class="stat-icon">⭐</span><span id="total-stars-display">0</span></div>
             <div class="stats-box"><span class="stat-icon">🪙</span><span id="total-coins-display">0</span></div>
         </div>
-        <p id="welcome-text">Hoş geldin, Oyuncu!</p>
         <div class="logo-container"><h1 class="game-logo">FUTBOL<br><span>BİLGİ YARIŞMASI</span></h1></div>
         <div class="menu-buttons">
             <button class="menu-btn btn-play" onclick="showLevelScreen()">▶️ OYUNA BAŞLA</button>
@@ -41,36 +39,21 @@
         </div>
     </div>
 
-    <!-- YENİ: NASIL OYNANIR EKRANI -->
     <div id="howto-screen" class="screen">
         <div class="settings-header"><h2>📖 Nasıl Oynanır?</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="howto-content">
-            <div class="howto-item">
-                <div class="howto-icon">🎯</div>
-                <div><strong>Doğru Cevap:</strong> Her doğru cevap 100 puan ve 10 coin kazandırır.</div>
-            </div>
-            <div class="howto-item">
-                <div class="howto-icon">⭐</div>
-                <div><strong>Yıldızlar:</strong> Bir leveli %30 doğruyla 1, %70 ile 2, %100 ile 3 yıldız alırsın.</div>
-            </div>
-            <div class="howto-item">
-                <div class="howto-icon">🔒</div>
-                <div><strong>Kilit Açma:</strong> Bir sonraki leveli açmak için ya yeterli yıldız topla ya da coin öde.</div>
-            </div>
-            <div class="howto-item">
-                <div class="howto-icon">🃏</div>
-                <div><strong>Jokerler:</strong> Zorlandığında joker kullan. Her jokerin bir coin maliyeti var.</div>
-            </div>
-            <div class="howto-item">
-                <div class="howto-icon">🎡</div>
-                <div><strong>Çarkıfelek:</strong> Her 4 saatte 1 ücretsiz çevirme hakkın var. Coin, yıldız veya joker kazan!</div>
-            </div>
+            <div class="howto-item"><div class="howto-icon">🎯</div><div><strong>Doğru Cevap:</strong> Her doğru cevap 100 puan ve 10 coin kazandırır.</div></div>
+            <div class="howto-item"><div class="howto-icon">⭐</div><div><strong>Yıldızlar:</strong> %30 ile 1, %70 ile 2, %100 ile 3 yıldız alırsın.</div></div>
+            <div class="howto-item"><div class="howto-icon">🔒</div><div><strong>Kilit Açma:</strong> Ya yeterli yıldız topla ya da coin öde.</div></div>
+            <div class="howto-item"><div class="howto-icon">🃏</div><div><strong>Jokerler:</strong> Zorlandığında joker kullan. Coin maliyeti vardır.</div></div>
+            <div class="howto-item"><div class="howto-icon">🎡</div><div><strong>Çarkıfelek:</strong> 4 saatte 1 ücretsiz çevirme hakkın var!</div></div>
         </div>
     </div>
 
-    <!-- YENİ: BİLDİRİM PENCERESİ -->
+    <!-- BİLDİRİM (TOAST) -->
     <div id="toast-notification" class="toast">İsim kaydedildi!</div>
 
+    <!-- PROFİL EKRANI (YENİ SIRALAMA) -->
     <div id="profile-screen" class="screen">
         <div class="profile-header">
             <h2>👤 Oyuncu Profili</h2>
@@ -80,9 +63,10 @@
             <div class="player-avatar" id="player-avatar-emoji">👤</div>
             <input type="text" id="profile-name-input" class="profile-name-input" placeholder="İsmini yaz..." maxlength="15">
             <button class="profile-save-btn" onclick="saveProfileName()">KAYDET ✅</button>
-            <div class="player-rank" id="player-rank">🏅 ACEMİ</div>
-            <div class="player-rank-desc" id="player-rank-desc">Daha yeni başlıyorsun, devam et!</div>
+            <div class="player-welcome" id="player-welcome">Hoş geldin, Oyuncu!</div>
         </div>
+
+        <!-- 1. İSTATİSTİK ÇEMBERİ -->
         <div class="stats-circle-container">
             <canvas id="stats-canvas" width="200" height="200"></canvas>
             <div class="stats-circle-center">
@@ -90,6 +74,8 @@
                 <div class="stats-circle-label">Doğruluk</div>
             </div>
         </div>
+
+        <!-- 2. İSTATİSTİK KUTULARI -->
         <div class="stats-grid">
             <div class="stat-card stat-blue"><div class="stat-card-icon">🎯</div><div class="stat-card-value" id="stat-total-score">0</div><div class="stat-card-label">Toplam Puan</div></div>
             <div class="stat-card stat-green"><div class="stat-card-icon">✅</div><div class="stat-card-value" id="stat-total-correct">0</div><div class="stat-card-label">Doğru Cevap</div></div>
@@ -97,6 +83,12 @@
             <div class="stat-card stat-gold"><div class="stat-card-icon">🏆</div><div class="stat-card-value" id="stat-high-score">0</div><div class="stat-card-label">En Yüksek Skor</div></div>
             <div class="stat-card stat-purple"><div class="stat-card-icon">📚</div><div class="stat-card-value" id="stat-levels-completed">0</div><div class="stat-card-label">Tamamlanan Level</div></div>
             <div class="stat-card stat-orange"><div class="stat-card-icon">⭐</div><div class="stat-card-value" id="stat-perfect-levels">0</div><div class="stat-card-label">Tam Puan Level</div></div>
+        </div>
+
+        <!-- 3. RÜTBE EN ALTTA -->
+        <div class="player-rank-box">
+            <div class="player-rank" id="player-rank">🏅 ACEMİ</div>
+            <div class="player-rank-desc" id="player-rank-desc">Daha yeni başlıyorsun, devam et!</div>
         </div>
     </div>
 
@@ -128,7 +120,6 @@
         <button class="ad-btn" onclick="watchAdForStars()">📺 Reklam izle (+5 ⭐ Kazan)</button>
     </div>
 
-    <!-- OYUN EKRANI (Jokerler ve coin göstergesi güncellendi) -->
     <div id="quiz-screen" class="screen">
         <div class="quiz-header">
             <span id="question-counter">Soru 1/10</span>
@@ -138,29 +129,14 @@
             </div>
         </div>
         <div class="question-box" id="question-text">Soru yükleniyor...</div>
-        
-        <!-- YENİ JOKER PANELİ -->
         <div class="jokers-panel">
             <div class="joker-info-title">JOKERLER (🪙 Coin ile alınır)</div>
             <div class="jokers-container">
-                <div class="joker-wrapper">
-                    <button class="joker-btn" id="joker-5050" onclick="useJoker('5050')">✂️</button>
-                    <div class="joker-desc">İki yanlış şıkkı siler</div>
-                    <div class="joker-price-tag">🪙 20</div>
-                </div>
-                <div class="joker-wrapper">
-                    <button class="joker-btn" id="joker-answer" onclick="useJoker('answer')">🎯</button>
-                    <div class="joker-desc">Doğru cevabı gösterir</div>
-                    <div class="joker-price-tag">🪙 40</div>
-                </div>
-                <div class="joker-wrapper">
-                    <button class="joker-btn" id="joker-double" onclick="useJoker('double')">❤️</button>
-                    <div class="joker-desc">Bir yanlış hakkı daha verir</div>
-                    <div class="joker-price-tag">🪙 60</div>
-                </div>
+                <div class="joker-wrapper"><button class="joker-btn" id="joker-5050" onclick="useJoker('5050')">✂️</button><div class="joker-desc">İki yanlış şıkkı siler</div><div class="joker-price-tag">🪙 20</div></div>
+                <div class="joker-wrapper"><button class="joker-btn" id="joker-answer" onclick="useJoker('answer')">🎯</button><div class="joker-desc">Doğru cevabı gösterir</div><div class="joker-price-tag">🪙 40</div></div>
+                <div class="joker-wrapper"><button class="joker-btn" id="joker-double" onclick="useJoker('double')">❤️</button><div class="joker-desc">Bir yanlış hakkı daha verir</div><div class="joker-price-tag">🪙 60</div></div>
             </div>
         </div>
-
         <div class="options-list" id="options-container"></div>
     </div>
 
