@@ -19,6 +19,8 @@
             <div class="loading-text">YÜKLENİYOR...</div>
             <div class="loading-percent" id="splash-percent">0%</div>
         </div>
+        <!-- YENİ: Başlamak için dokun -->
+        <button id="start-music-btn" class="start-btn" onclick="startGameWithMusic()">🎵 BAŞLAMAK İÇİN DOKUN</button>
     </div>
 
     <div id="menu-screen" class="screen active">
@@ -41,7 +43,6 @@
         </div>
     </div>
 
-    <!-- YENİ: BAŞARIMLAR EKRANI -->
     <div id="achievements-screen" class="screen">
         <div class="settings-header"><h2>🏆 Başarımlar</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <p class="ach-subtitle">Hedefleri tamamla, ödülleri kap!</p>
@@ -106,7 +107,14 @@
     <div id="settings-screen" class="screen">
         <div class="settings-header"><h2>⚙️ Ayarlar</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="settings-list">
-            <div class="setting-item"><span>Ses Efektleri</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="setting-item">
+                <span>🎵 Müzik</span>
+                <label class="switch"><input type="checkbox" id="toggle-music" onchange="toggleMusic()"><span class="slider"></span></label>
+            </div>
+            <div class="setting-item">
+                <span>🔊 Ses Efektleri</span>
+                <label class="switch"><input type="checkbox" id="toggle-sound" onchange="toggleSound()"><span class="slider"></span></label>
+            </div>
             <div class="setting-item"><span>Titreşim</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
             <div class="setting-item"><span>Verileri Sıfırla</span><button class="reset-btn" onclick="resetGame()">Sıfırla</button></div>
         </div>
