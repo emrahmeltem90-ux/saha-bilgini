@@ -38,8 +38,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 .btn-howto { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #fff; box-shadow: 0 5px 0 #14532d; }
 .btn-spin { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #4c1d95 !important; }
 
-#welcome-text { color: #cbd5e1; font-size: 1rem; font-weight: bold; text-align: center; margin-top: -10px; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-
 /* AYARLAR */
 #settings-screen { background-color: #0f172a; padding-top: 40px; }
 .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -166,13 +164,25 @@ input:checked + .slider:before { transform: translateX(24px); }
 .profile-name-input:focus { border-color: var(--accent-gold); }
 .profile-save-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; border-radius: 12px; padding: 10px 25px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #14532d; }
 .profile-save-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #14532d; }
-.player-rank { font-size: 1.3rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); letter-spacing: 2px; margin-top: 5px; }
-.player-rank-desc { font-size: 0.8rem; color: #cbd5e1; text-align: center; font-weight: bold; }
+
+/* HOŞ GELDİN YAZISI (PROFİLDE) */
+.player-welcome {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* İSTATİSTİK ÇEMBERİ */
 .stats-circle-container { position: relative; width: 200px; height: 200px; margin: 0 auto 20px auto; display: flex; justify-content: center; align-items: center; }
 #stats-canvas { position: absolute; top: 0; left: 0; }
 .stats-circle-center { position: relative; z-index: 2; text-align: center; }
 .stats-circle-value { font-size: 2rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
 .stats-circle-label { font-size: 0.8rem; font-weight: bold; color: #cbd5e1; text-transform: uppercase; }
+
+/* İSTATİSTİK KUTULARI */
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
 .stat-card { border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 0 rgba(0,0,0,0.3); position: relative; overflow: hidden; }
 .stat-card-icon { font-size: 1.5rem; margin-bottom: 5px; }
@@ -184,3 +194,29 @@ input:checked + .slider:before { transform: translateX(24px); }
 .stat-gold { background: linear-gradient(180deg, #fbbf24 0%, #b45309 100%); border: 2px solid #fde047; }
 .stat-purple { background: linear-gradient(180deg, #a855f7 0%, #6b21a8 100%); border: 2px solid #c084fc; }
 .stat-orange { background: linear-gradient(180deg, #fb923c 0%, #c2410c 100%); border: 2px solid #fdba74; }
+
+/* RÜTBE KUTUSU (EN ALTTA) */
+.player-rank-box {
+    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+    border: 3px solid var(--accent-gold);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+}
+.player-rank-box .player-rank {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+    letter-spacing: 2px;
+    margin: 0;
+}
+.player-rank-box .player-rank-desc {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 5px;
+    }
