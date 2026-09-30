@@ -3,41 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futbol Bilgi Yarışması - 40 Level</title>
+    <title>Futbol Bilgi Yarışması</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* --- GİRİŞ EKRANI ÖZEL STİLLERİ --- */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #0a192f; z-index: 99999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
-        }
-        #splash-screen img.bg {
-            width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: -1;
-        }
-        .loader-container {
-            position: absolute; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 10px;
-        }
-        .loader-circle {
-            position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center;
-        }
-        .loader-ring {
-            position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 4px solid transparent; border-top: 4px solid #a3e635; border-right: 4px solid #a3e635;
-            animation: spin 1s linear infinite;
-        }
-        .loader-ball { font-size: 2rem; z-index: 2; animation: pulse 1.5s infinite; }
-        .loading-text { color: #fff; font-family: sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; text-align: center; }
-        .loading-percent { font-size: 1.5rem; font-weight: 900; color: #a3e635; text-shadow: 0 0 10px rgba(163, 230, 53, 0.5); }
-
+        /* Giriş ekranı animasyonu */
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI -->
+    <!-- 0. GİRİŞ (SPLASH) EKRANI -->
     <div id="splash-screen">
         <img src="splash-bg.jpg" alt="Futbol Bilgini" class="bg">
         <div class="loader-container">
@@ -50,69 +26,86 @@
         </div>
     </div>
 
-    <div class="container">
-        
-        <!-- ÜST PANEL -->
+    <!-- 1. ANA MENÜ EKRANI -->
+    <div id="menu-screen" class="screen active">
         <div class="top-panel">
-            <button class="settings-btn">⚙️</button>
-            <div class="stat-box">
+            <div class="profile-box">
+                <span class="profile-icon">👤</span>
+                <span class="profile-name">Oyuncu</span>
+            </div>
+            <div class="stats-box">
                 <span class="stat-icon">⭐</span>
                 <span id="total-stars-display">0</span>
             </div>
-            <div class="stat-box">
+            <div class="stats-box">
                 <span class="stat-icon">🪙</span>
                 <span id="total-coins-display">0</span>
-                <button class="add-coin-btn">+</button>
             </div>
         </div>
 
-        <h1>⚽ Futbol Bilgi Yarışması</h1>
-
-        <!-- 1. ANA MENÜ -->
-        <div id="menu-screen" class="screen active menu-screen">
-            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;">
-                40 Farklı Level ve 400 Soruluk dev futbol arşivine hoş geldiniz!<br>
-                Bilginizi test edin, tüm yıldızları toplayın.
-            </p>
-            <button class="menu-btn" onclick="showLevelScreen()">Oyuna Başla / Level Seç</button>
+        <div class="logo-container">
+            <h1 class="game-logo">FUTBOL<br><span>BİLGİ YARIŞMASI</span></h1>
         </div>
 
-        <!-- 2. LEVEL SEÇİM -->
-        <div id="levels-screen" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <span style="font-weight: bold; color: var(--text-color); font-size: 1.1rem;">Level Seçin</span>
-                <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
-            </div>
-            <div class="levels-container" id="levels-container"></div>
-            
-            <!-- YENİ: Reklam İzle Butonu -->
-            <button class="ad-btn" onclick="watchAdForStars()">📺 Reklam izle (+5 ⭐ Kazan)</button>
+        <div class="menu-buttons">
+            <button class="menu-btn btn-play" onclick="showLevelScreen()">▶️ OYUNA BAŞLA</button>
+            <button class="menu-btn btn-settings" onclick="showSettingsScreen()">⚙️ AYARLAR</button>
+            <button class="menu-btn btn-howto" onclick="alert('Her levelde 10 soru vardır. Doğru cevaplarla yıldız ve coin kazan, sonraki levelleri aç!')">📖 NASIL OYNANIR</button>
         </div>
+    </div>
 
-        <!-- 3. OYUN / QUIZ -->
-        <div id="quiz-screen" class="screen">
-            <div class="quiz-info">
-                <span id="level-title-indicator">Level 1</span>
-                <span id="question-counter">Soru: 1 / 10</span>
-                <span id="score-display">Puan: 0</span>
+    <!-- 2. AYARLAR EKRANI -->
+    <div id="settings-screen" class="screen">
+        <div class="settings-header">
+            <h2>⚙️ Ayarlar</h2>
+            <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
+        </div>
+        <div class="settings-list">
+            <div class="setting-item">
+                <span>Ses Efektleri</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
             </div>
-            <div class="question-box" id="question-text">Soru yükleniyor...</div>
-            <div class="options-list" id="options-container"></div>
-            <div class="footer-nav">
-                <button class="back-menu-btn" onclick="showLevelScreen()">Levellere Dön</button>
-                <button class="action-btn" id="next-btn" onclick="nextQuestion()">Sonraki Soru</button>
+            <div class="setting-item">
+                <span>Titreşim</span>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-item">
+                <span>Verileri Sıfırla</span>
+                <button class="reset-btn" onclick="resetGame()">Sıfırla</button>
             </div>
         </div>
+    </div>
 
-        <!-- 4. SONUÇ -->
-        <div id="score-screen" class="screen score-card">
-            <h2>Level Tamamlandı!</h2>
+    <!-- 3. LEVEL SEÇİM EKRANI -->
+    <div id="levels-screen" class="screen">
+        <div class="screen-header">
+            <span style="font-weight: bold; color: #fff;">Level Seçin</span>
+            <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
+        </div>
+        <div class="levels-container" id="levels-container"></div>
+        <button class="ad-btn" onclick="watchAdForStars()">📺 Reklam izle (+5 ⭐ Kazan)</button>
+    </div>
+
+    <!-- 4. OYUN / QUIZ EKRANI -->
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <span id="question-counter">Soru 1/10</span>
+            <div class="timer-circle">
+                <span id="timer-text">30s</span>
+            </div>
+        </div>
+        <div class="question-box" id="question-text">Soru yükleniyor...</div>
+        <div class="options-list" id="options-container"></div>
+    </div>
+
+    <!-- 5. SONUÇ EKRANI -->
+    <div id="score-screen" class="screen">
+        <div class="score-content">
             <div class="big-stars" id="result-stars">⭐⭐⭐</div>
-            <p id="final-score-text" style="font-size: 1.1rem; margin-bottom: 10px;"></p>
-            <div class="result-actions">
-                <button class="back-menu-btn" onclick="showLevelScreen()">Level Listesi</button>
-                <button class="action-btn" style="display:inline-block;" onclick="restartLevel()">Tekrar Oyna</button>
-            </div>
+            <h2 id="final-score-text">SKOR: 0</h2>
+            <p id="final-correct-text">Doğru Sayısı: 0/10</p>
+            <button class="menu-btn btn-play" onclick="restartLevel()">🔄 TEKRAR OYNA</button>
+            <button class="menu-btn btn-settings" onclick="showMenuScreen()">🏠 ANA MENÜ</button>
         </div>
     </div>
 
