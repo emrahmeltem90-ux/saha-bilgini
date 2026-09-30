@@ -201,7 +201,6 @@ function showToast(message) {
     setTimeout(() => { toast.classList.remove('show'); }, 2500);
 }
 
-// --- TİTREŞİM ---
 function vibrate(duration) {
     if (userProgress.vibrationEnabled && navigator.vibrate) {
         navigator.vibrate(duration);
@@ -1103,7 +1102,6 @@ function openPauseMenu() {
     if (isPaused) return;
     isPaused = true;
     clearInterval(timerInterval);
-    // Toggle'ları güncelle
     document.getElementById('pause-toggle-music').checked = userProgress.musicEnabled;
     document.getElementById('pause-toggle-sound').checked = userProgress.soundEnabled;
     document.getElementById('pause-toggle-vibration').checked = userProgress.vibrationEnabled;
@@ -1114,7 +1112,6 @@ function resumeFromPause() {
     document.getElementById('pause-modal').classList.remove('active');
     isPaused = false;
     sesTiklama.play(); vibrate(20);
-    // Kaldığı yerden devam et - timer'ı yeniden başlat
     if (isChampionLevel) {
         loadChampionQuestion();
     } else {
@@ -1132,7 +1129,6 @@ function exitToMenuFromPause() {
     document.getElementById('pause-modal').classList.remove('active');
     isPaused = false;
     sesTiklama.play(); vibrate(20);
-    // İlerleme zaten kaydedildi (saveProgress ile), ana menüye dön
     showMenuScreen();
 }
 
@@ -1172,4 +1168,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-            }
+}
