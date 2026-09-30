@@ -1,19 +1,34 @@
 // --- GİRİŞ EKRANI KONTROLÜ ---
 document.addEventListener("DOMContentLoaded", function() {
-    // 3 saniye sonra giriş ekranını gizle
-    setTimeout(function() {
-        var splash = document.getElementById('splash-screen');
-        if (splash) {
-            splash.style.opacity = '0';
-            setTimeout(function() {
-                splash.style.display = 'none';
-            }, 500); // Geçiş animasyonu için bekle
+    let percent = 0;
+    const percentDisplay = document.getElementById('splash-percent');
+    
+    // Yüzdeyi 0'dan 100'e çıkar
+    const interval = setInterval(() => {
+        percent += Math.floor(Math.random() * 5) + 1; // Rastgele artış
+        if (percent >= 100) {
+            percent = 100;
+            clearInterval(interval);
+            // Yükleme bitince giriş ekranını kapat ve level ekranını aç
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                        showLevelScreen(); // Direkt level seçim ekranı
+                    }, 500);
+                }
+            }, 500);
         }
-    }, 3000); // 3000ms = 3 saniye
+        if(percentDisplay) percentDisplay.innerText = percent + '%';
+    }, 100); // 100ms'de bir artar
 });
 
 // 40 Level - Her birinde 10 soru
 const levelsData = [];
+
+// Daha kaliteli ve gerçekçi örnek sorular
 const sampleBaseQuestions = [
     { soru: "Futbol maçında sahada her bir takım kaç oyuncuyla yer alır?", secenekler: ["9", "10", "11", "12"], dogru: 2 },
     { soru: "Standart bir futbol maçı normal sürede toplam kaç dakikadır?", secenekler: ["80", "90", "100", "120"], dogru: 1 },
@@ -27,12 +42,13 @@ const sampleBaseQuestions = [
     { soru: "Dünya Kupası organizasyonu kaç yılda bir düzenlenir?", secenekler: ["2", "3", "4", "5"], dogru: 2 }
 ];
 
+// 40 leveli otomatik doldur
 for (let l = 1; l <= 40; l++) {
     let qList = [];
     for (let q = 1; q <= 10; q++) {
         let baseQ = sampleBaseQuestions[(q + l - 2) % sampleBaseQuestions.length];
         qList.push({
-            soru: `[Level ${l}] ${baseQ.soru} (Soru ${q})`,
+            soru: baseQ.soru, // Artık sadece soru metni var, başında [Level X] yok
             secenekler: baseQ.secenekler,
             dogru: baseQ.dogru
         });
