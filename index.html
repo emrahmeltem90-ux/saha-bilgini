@@ -14,13 +14,12 @@
 
     <div id="splash-screen">
         <img src="splash-bg.jpg" alt="Futbol Bilgini" class="bg">
-        <div class="loader-container">
+        <div class="loader-container" id="loader-container">
             <div class="loader-circle"><div class="loader-ring"></div><div class="loader-ball">⚽</div></div>
             <div class="loading-text">YÜKLENİYOR...</div>
             <div class="loading-percent" id="splash-percent">0%</div>
         </div>
-        <!-- YENİ: Başlamak için dokun -->
-        <button id="start-music-btn" class="start-btn" onclick="startGameWithMusic()">🎵 BAŞLAMAK İÇİN DOKUN</button>
+        <button id="start-music-btn" class="start-btn" onclick="startGameWithMusic()" style="display: none;">BAŞLAMAK İÇİN DOKUNUN</button>
     </div>
 
     <div id="menu-screen" class="screen active">
