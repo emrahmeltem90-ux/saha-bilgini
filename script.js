@@ -17,6 +17,18 @@ const WHEEL_PRIZES = [
 ];
 let isSpinning = false;
 
+// --- GÜNLÜK ÖDÜL AYARLARI ---
+const DAILY_REWARDS = [
+    { day: 1, coin: 50, star: 0 },
+    { day: 2, coin: 100, star: 0 },
+    { day: 3, coin: 150, star: 0 },
+    { day: 4, coin: 200, star: 0 },
+    { day: 5, coin: 250, star: 0 },
+    { day: 6, coin: 300, star: 0 },
+    { day: 7, coin: 500, star: 5 }
+];
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 document.addEventListener("DOMContentLoaded", function() {
     let percent = 0;
     const percentDisplay = document.getElementById('splash-percent');
@@ -61,7 +73,8 @@ const JOKER_PRICES = { "5050": 20, "answer": 40, "double": 60 };
 
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {}, totalStars: 0, totalCoins: 100,
-    profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0
+    profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0,
+    lastDailyClaim: 0, dailyStreak: 0
 };
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
@@ -72,6 +85,8 @@ if (userProgress.totalCorrect === undefined) userProgress.totalCorrect = 0;
 if (userProgress.totalWrong === undefined) userProgress.totalWrong = 0;
 if (userProgress.highScore === undefined) userProgress.highScore = 0;
 if (userProgress.perfectLevels === undefined) userProgress.perfectLevels = 0;
+if (userProgress.lastDailyClaim === undefined) userProgress.lastDailyClaim = 0;
+if (userProgress.dailyStreak === undefined) userProgress.dailyStreak = 0;
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -109,6 +124,100 @@ function showToast(message) {
     setTimeout(() => { toast.classList.remove('show'); }, 2500);
 }
 
+// --- GÜNLÜK ÖDÜL SİSTEMİ ---
+function checkDailyReward() {
+    let now = Date.now();
+    let lastClaim = userProgress.lastDailyClaim || 0;
+    let timePassed = now - lastClaim;
+    if (timePassed >= ONE_DAY_MS || lastClaim === 0) {
+        return true; // Ödül alınabilir
+    }
+    return false;
+}
+
+function getDailyStreak() {
+    let now = Date.now();
+    let lastClaim = userProgress.lastDailyClaim || 0;
+    let timePassed = now - lastClaim;
+    // Eğer 48 saatten fazla geçtiyse seri bozulur
+    if (timePassed > 2 * ONE_DAY_MS) {
+        userProgress.dailyStreak = 0;
+        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    }
+    return userProgress.dailyStreak || 0;
+}
+
+function showDailyScreen() {
+    showScreen('daily-screen');
+    renderDailyGrid();
+}
+
+function renderDailyGrid() {
+    const grid = document.getElementById('daily-grid');
+    grid.innerHTML = '';
+    let currentStreak = getDailyStreak();
+    let canClaim = checkDailyReward();
+
+    for (let i = 0; i < DAILY_REWARDS.length; i++) {
+        let reward = DAILY_REWARDS[i];
+        let card = document.createElement('div');
+        card.className = 'daily-card';
+
+        if (i < currentStreak) {
+            card.classList.add('claimed'); // Alınmış
+        } else if (i === currentStreak && canClaim) {
+            card.classList.add('today'); // Bugün alınabilir
+        }
+
+        let rewardText = `${reward.coin} 🪙`;
+        if (reward.star > 0) rewardText += ` + ${reward.star} ⭐`;
+
+        card.innerHTML = `
+            <div class="daily-day">${reward.day}. Gün</div>
+            <div class="daily-reward">${rewardText}</div>
+        `;
+        grid.appendChild(card);
+    }
+
+    let btn = document.getElementById('daily-claim-btn');
+    let status = document.getElementById('daily-status');
+
+    if (canClaim) {
+        btn.disabled = false;
+        btn.innerText = 'ÖDÜLÜ AL 🎁';
+        status.innerText = `Bugünkü ödülünü alabilirsin! (Seri: ${currentStreak + 1}/7)`;
+    } else {
+        btn.disabled = true;
+        let remaining = ONE_DAY_MS - (Date.now() - (userProgress.lastDailyClaim || 0));
+        let hours = Math.floor(remaining / (1000 * 60 * 60));
+        let minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        btn.innerText = 'YARIN TEKRAR GEL';
+        status.innerText = `Sonraki ödül: ${hours} saat ${minutes} dakika sonra`;
+    }
+}
+
+function claimDailyReward() {
+    if (!checkDailyReward()) return;
+    let currentStreak = getDailyStreak();
+    if (currentStreak >= 7) currentStreak = 0; // 7. günden sonra başa dön
+
+    let reward = DAILY_REWARDS[currentStreak];
+    userProgress.totalCoins += reward.coin;
+    if (reward.star > 0) userProgress.totalStars += reward.star;
+    userProgress.dailyStreak = currentStreak + 1;
+    userProgress.lastDailyClaim = Date.now();
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+
+    sesDogru.play();
+    let msg = `🎁 ${reward.coin} Coin`;
+    if (reward.star > 0) msg += ` + ${reward.star} Yıldız`;
+    msg += " kazandın!";
+    showToast(msg);
+    updateTopPanel();
+    renderDailyGrid();
+}
+
+// --- RÜTBE HESAPLAMA ---
 function calculateRank() {
     let total = (userProgress.totalCorrect || 0) + (userProgress.totalWrong || 0);
     if (total === 0) return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: 0 };
