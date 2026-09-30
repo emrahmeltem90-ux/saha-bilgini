@@ -2,7 +2,8 @@
 const sesDogru = new Audio('ses_dogru.mp3');
 const sesYanlis = new Audio('ses_yanlis.mp3');
 const sesTiklama = new Audio('ses_tiklama.mp3');
-sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5;
+const sesCark = new Audio('ses_cark.mp3');
+sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5; sesCark.volume = 0.6;
 
 // --- ÇARKIFELEK ÖDÜLLERİ ---
 const WHEEL_PRIZES = [
@@ -61,7 +62,7 @@ const JOKER_PRICES = { "5050": 20, "answer": 40, "double": 60 };
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || { levels: {}, totalStars: 0, totalCoins: 100 };
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
-if (userProgress.freeSpins === undefined) userProgress.freeSpins = 1; // Başlangıçta 1 ücretsiz hak
+if (userProgress.freeSpins === undefined) userProgress.freeSpins = 1;
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -89,7 +90,7 @@ function updateTopPanel() {
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
 }
 
-// --- ÇARKIFELEK FONKSİYONLARI ---
+// --- ÇARKIFELEK ---
 function showSpinScreen() {
     showScreen('spin-screen');
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins || 0;
@@ -105,31 +106,16 @@ function drawWheel() {
     const centerY = canvas.height / 2;
     const radius = canvas.width / 2 - 10;
     const sliceAngle = (2 * Math.PI) / WHEEL_PRIZES.length;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     for (let i = 0; i < WHEEL_PRIZES.length; i++) {
         const startAngle = i * sliceAngle;
         const endAngle = startAngle + sliceAngle;
-
-        // Dilim
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
+        ctx.beginPath(); ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.closePath();
-        ctx.fillStyle = WHEEL_PRIZES[i].color;
-        ctx.fill();
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Yazı
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + sliceAngle / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 14px sans-serif";
+        ctx.closePath(); ctx.fillStyle = WHEEL_PRIZES[i].color; ctx.fill();
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.save(); ctx.translate(centerX, centerY); ctx.rotate(startAngle + sliceAngle / 2);
+        ctx.textAlign = "right"; ctx.fillStyle = "#fff"; ctx.font = "bold 14px sans-serif";
         ctx.fillText(WHEEL_PRIZES[i].label, radius - 15, 5);
         ctx.restore();
     }
@@ -138,11 +124,10 @@ function drawWheel() {
 function updateSpinTimer() {
     let now = Date.now();
     let lastSpin = userProgress.lastSpinTime || 0;
-    let cooldown = 4 * 60 * 60 * 1000; // 4 saat
+    let cooldown = 4 * 60 * 60 * 1000;
     let timePassed = now - lastSpin;
     let timerText = document.getElementById('spin-timer-text');
     let spinBtn = document.getElementById('spin-btn');
-
     if (userProgress.freeSpins > 0) {
         timerText.innerText = `Ücretsiz Çevirme: ${userProgress.freeSpins} hak`;
         spinBtn.disabled = false;
@@ -167,47 +152,41 @@ function spinWheel() {
     const spinBtn = document.getElementById('spin-btn');
     spinBtn.disabled = true;
 
-    // Ücretsiz hak kontrolü
     if (userProgress.freeSpins > 0) {
         userProgress.freeSpins--;
     } else {
-        // Coin ile çevirme (50 coin)
         if (userProgress.totalCoins >= 50) {
             userProgress.totalCoins -= 50;
             updateTopPanel();
         } else {
             alert("Yetersiz coin! Çevirmek için 50 🪙 gerekiyor.");
-            isSpinning = false;
-            spinBtn.disabled = false;
-            return;
+            isSpinning = false; spinBtn.disabled = false; return;
         }
     }
 
-    // Rastgele bir dilim seç
+    // Çark sesini çal
+    sesCark.currentTime = 0;
+    sesCark.play();
+
     const randomIndex = Math.floor(Math.random() * WHEEL_PRIZES.length);
     const sliceAngle = 360 / WHEEL_PRIZES.length;
-    // Ok yukarıyı gösteriyor. Seçilen dilimin ortası yukarıya gelsin.
     const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle + sliceAngle / 2));
 
     const canvas = document.getElementById('wheel-canvas');
     let currentRotation = 0;
     let startTime = null;
-    const duration = 4000; // 4 saniye
+    const duration = 4000;
 
     function animate(timestamp) {
         if (!startTime) startTime = timestamp;
         let progress = (timestamp - startTime) / duration;
         if (progress > 1) progress = 1;
-        // Yavaşlama efekti (easeOutCubic)
         let easeOut = 1 - Math.pow(1 - progress, 3);
         let rotation = easeOut * targetAngle;
-
         canvas.style.transform = `rotate(${rotation}deg)`;
-
         if (progress < 1) {
             requestAnimationFrame(animate);
         } else {
-            // Çark durdu, ödülü ver
             isSpinning = false;
             givePrize(WHEEL_PRIZES[randomIndex]);
             userProgress.lastSpinTime = Date.now();
@@ -219,32 +198,40 @@ function spinWheel() {
 }
 
 function givePrize(prize) {
-    let message = "";
+    let icon = "🎁";
+    let title = "TEBRİKLER!";
+    let text = "";
+
     if (prize.type === "coin") {
         userProgress.totalCoins += prize.value;
-        message = `Tebrikler! ${prize.value} 🪙 kazandın!`;
-        sesDogru.play();
+        icon = "🪙"; text = `${prize.value} Coin kazandın!`; sesDogru.play();
     } else if (prize.type === "star") {
         userProgress.totalStars += prize.value;
-        message = `Tebrikler! ${prize.value} ⭐ kazandın!`;
-        sesDogru.play();
+        icon = "⭐"; text = `${prize.value} Yıldız kazandın!`; sesDogru.play();
     } else if (prize.type === "joker") {
-        // Bedava joker ver (şimdilik sadece bildirim)
-        message = `Tebrikler! 1 adet ✂️ Yarı Yarıya joker kazandın!`;
-        sesDogru.play();
+        icon = "✂️"; text = `1 adet Yarı Yarıya Joker kazandın!`; sesDogru.play();
     } else if (prize.type === "respin") {
         userProgress.freeSpins += 1;
-        message = `Tebrikler! 1 bedava çevirme hakkı kazandın! 🎡`;
-        sesDogru.play();
+        icon = "🎡"; text = `1 Bedava Çevirme Hakkı kazandın!`; sesDogru.play();
     }
 
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel();
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins;
-    alert(message);
-    drawWheel(); // Çarkı başa döndür
-    canvas.style.transform = `rotate(0deg)`;
+
+    const canvas = document.getElementById('wheel-canvas');
+    if (canvas) canvas.style.transform = `rotate(0deg)`;
+
+    document.getElementById('prize-icon').innerText = icon;
+    document.getElementById('prize-title').innerText = title;
+    document.getElementById('prize-text').innerText = text;
+    document.getElementById('prize-modal').classList.add('active');
     updateSpinTimer();
+}
+
+function closePrizeModal() {
+    document.getElementById('prize-modal').classList.remove('active');
+    sesTiklama.play();
 }
 
 // --- OYUN MANTIĞI ---
@@ -271,17 +258,13 @@ function showLevelScreen() {
         let catId = catData.kategori_id || (i+1);
         let isUnlocked = progress.unlocked || (i === 0) || (userProgress.levels[i-1] && userProgress.levels[i-1].stars > 0);
         let emojiData = getCategoryEmoji(catId);
-
         let starsStr = '☆☆☆';
         if (progress.stars === 1) starsStr = '⭐☆☆';
         if (progress.stars === 2) starsStr = '⭐⭐☆';
         if (progress.stars === 3) starsStr = '⭐⭐⭐';
-
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
-
         let statusHtml = isUnlocked ? '<span>🏆</span>' : `<div class="level-coin-btn">🪙 ${levelCoinCosts[i] || 100}</div>`;
-
         card.innerHTML = `
             <div class="level-avatar-box"><div class="level-avatar-icon">${emojiData.icon}</div><div class="level-avatar-role">${emojiData.role}</div></div>
             <div class="level-info">
@@ -290,12 +273,7 @@ function showLevelScreen() {
                 <div class="level-stars">${starsStr}</div>
             </div>
             <div class="level-status">${statusHtml}</div>`;
-
-        card.onclick = () => {
-            sesTiklama.play();
-            if (isUnlocked) startLevel(i);
-            else openUnlockModal(i);
-        };
+        card.onclick = () => { sesTiklama.play(); if (isUnlocked) startLevel(i); else openUnlockModal(i); };
         container.appendChild(card);
     }
     showScreen('levels-screen');
@@ -491,4 +469,4 @@ function watchAdForStars() {
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel(); alert("Tebrikler! 5 yıldız kazandın. ⭐"); showLevelScreen();
     }, 1500);
-               }
+                                                  }
