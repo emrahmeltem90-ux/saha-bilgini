@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", function() {
             percent = 100; 
             clearInterval(interval);
             if(percentDisplay) percentDisplay.innerText = percent + '%';
-            
             setTimeout(() => {
                 if (loaderContainer) {
                     loaderContainer.style.opacity = '0';
@@ -98,7 +97,7 @@ let currentLevelIndex = 0, currentQuestionIndex = 0, score = 0, correctCount = 0
 let selectedLockedLevel = -1;
 let usedJokers = { "5050": false, "answer": false, "double": false };
 let hasDoubleChance = false;
-const JOKER_PRICES = { "5050": 20, "answer": 40, "double": 60 };
+const JOKER_PRICES = { "5050": 30, "answer": 70, "double": 50 };
 
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {}, totalStars: 0, totalCoins: 100,
@@ -163,12 +162,9 @@ function showToast(message) {
     setTimeout(() => { toast.classList.remove('show'); }, 2500);
 }
 
-// --- MÜZİK KONTROLÜ ---
 function startGameWithMusic() {
     if (userProgress.musicEnabled) {
-        muzikArkaplan.play().then(() => {
-            muzikCaliniyor = true;
-        }).catch(err => console.log("Müzik hatası:", err));
+        muzikArkaplan.play().then(() => { muzikCaliniyor = true; }).catch(err => console.log("Müzik hatası:", err));
     }
     const splash = document.getElementById('splash-screen');
     splash.style.opacity = '0';
@@ -199,7 +195,6 @@ function toggleSound() {
     }
 }
 
-// --- BAŞARIM KONTROLÜ ---
 function checkAchievements() {
     let newUnlocks = [];
     ACHIEVEMENTS.forEach(ach => {
@@ -224,10 +219,7 @@ function checkAchievements() {
     }
 }
 
-function showAchievementsScreen() {
-    showScreen('achievements-screen');
-    renderAchievements();
-}
+function showAchievementsScreen() { showScreen('achievements-screen'); renderAchievements(); }
 
 function renderAchievements() {
     const list = document.getElementById('ach-list');
@@ -249,7 +241,6 @@ function renderAchievements() {
     });
 }
 
-// --- GÜNLÜK ÖDÜL ---
 function checkDailyReward() {
     let now = Date.now();
     let lastClaim = userProgress.lastDailyClaim || 0;
@@ -269,10 +260,7 @@ function getDailyStreak() {
     return userProgress.dailyStreak || 0;
 }
 
-function showDailyScreen() {
-    showScreen('daily-screen');
-    renderDailyGrid();
-}
+function showDailyScreen() { showScreen('daily-screen'); renderDailyGrid(); }
 
 function renderDailyGrid() {
     const grid = document.getElementById('daily-grid');
@@ -284,20 +272,11 @@ function renderDailyGrid() {
         let reward = DAILY_REWARDS[i];
         let card = document.createElement('div');
         card.className = 'daily-card';
-
-        if (i < currentStreak) {
-            card.classList.add('claimed');
-        } else if (i === currentStreak && canClaim) {
-            card.classList.add('today');
-        }
-
+        if (i < currentStreak) card.classList.add('claimed');
+        else if (i === currentStreak && canClaim) card.classList.add('today');
         let rewardText = `${reward.coin} 🪙`;
         if (reward.star > 0) rewardText += ` + ${reward.star} ⭐`;
-
-        card.innerHTML = `
-            <div class="daily-day">${reward.day}. Gün</div>
-            <div class="daily-reward">${rewardText}</div>
-        `;
+        card.innerHTML = `<div class="daily-day">${reward.day}. Gün</div><div class="daily-reward">${rewardText}</div>`;
         grid.appendChild(card);
     }
 
@@ -322,14 +301,12 @@ function claimDailyReward() {
     if (!checkDailyReward()) return;
     let currentStreak = getDailyStreak();
     if (currentStreak >= 7) currentStreak = 0;
-
     let reward = DAILY_REWARDS[currentStreak];
     userProgress.totalCoins += reward.coin;
     if (reward.star > 0) userProgress.totalStars += reward.star;
     userProgress.dailyStreak = currentStreak + 1;
     userProgress.lastDailyClaim = Date.now();
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-
     sesDogru.play();
     let msg = `🎁 ${reward.coin} Coin`;
     if (reward.star > 0) msg += ` + ${reward.star} Yıldız`;
@@ -732,7 +709,7 @@ function showResults() {
         userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
         userProgress.totalStars += starsEarned;
     }
-    let coinsEarned = correctCount * 10;
+    let coinsEarned = correctCount * 5;
     userProgress.totalCoins += coinsEarned;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
 
@@ -756,4 +733,4 @@ function watchAdForStars() {
         updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
         checkAchievements();
     }, 1500);
-        }
+            }
