@@ -15,11 +15,13 @@
             --border-color: #334155;
             --danger-color: #ef4444;
             --star-color: #f59e0b;
+            --locked-bg: #1e293b;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 70%);
             color: var(--text-color);
             margin: 0;
             padding: 15px;
@@ -31,12 +33,12 @@
 
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 600px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
             box-sizing: border-box;
         }
 
@@ -44,76 +46,135 @@
             text-align: center;
             color: var(--primary-color);
             margin-bottom: 20px;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Ekranlar Arort Ortak Stiller */
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
+        .screen { display: none; }
+        .screen.active { display: block; }
 
         /* Ana Menü */
-        .menu-screen {
-            text-align: center;
-            padding: 20px 0;
-        }
+        .menu-screen { text-align: center; padding: 30px 0; }
         .menu-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #059669);
             color: #0f172a;
             border: none;
-            padding: 14px 28px;
+            padding: 16px 28px;
             font-size: 1.2rem;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            margin-top: 15px;
-            transition: opacity 0.2s;
+            margin-top: 20px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
-        .menu-btn:hover { opacity: 0.9; }
+        .menu-btn:hover { transform: scale(1.02); }
 
-        /* Level Seçim Grid */
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            max-height: 350px;
-            overflow-y: auto;
-            padding: 10px 0;
-            margin-bottom: 20px;
-        }
-        .level-btn {
-            background-color: #2e3b4e;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 12px 5px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.95rem;
+        /* Level Seçim - Yeni Kart Tasarımı */
+        .levels-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.2s;
-        }
-        .level-btn:hover {
-            border-color: var(--primary-color);
-            background-color: #3b4d66;
-        }
-        .level-btn.completed {
-            background-color: rgba(16, 185, 129, 0.15);
-            border-color: var(--primary-color);
-        }
-        .stars-container {
-            font-size: 0.75rem;
-            color: var(--star-color);
+            gap: 12px;
+            max-height: 65vh; /* Ekrana sığması için kaydırma */
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 15px;
         }
 
-        /* Quiz Ekranı */
+        /* Scrollbar Güzelleştirme */
+        .levels-container::-webkit-scrollbar { width: 6px; }
+        .levels-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        .level-card {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, #2e3b4e 0%, #1e293b 100%);
+            border: 2px solid #3b4d66;
+            border-radius: 12px;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 70px;
+        }
+        .level-card:active { transform: scale(0.98); }
+
+        /* Kilitli Kart Görünümü */
+        .level-card.locked {
+            filter: grayscale(0.8);
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: #1e293b;
+            border-color: #334155;
+        }
+        .level-card.locked:hover { transform: none; }
+
+        /* Karakter İkonu (Sol Taraf) */
+        .level-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
+            background-color: #0f172a;
+            border: 2px solid #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .level-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Orta Kısım - Bilgi */
+        .level-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .level-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #f8fafc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .level-progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .level-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        .level-stars {
+            font-size: 0.8rem;
+            color: var(--star-color);
+            letter-spacing: 2px;
+        }
+
+        /* Sağ Taraf - Kilit veya Ödül */
+        .level-status {
+            width: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            margin-left: 10px;
+        }
+        .lock-icon { color: #64748b; }
+        .trophy-icon { color: #f59e0b; }
+
+        /* Quiz Ekranı (Aynı kaldı) */
         .quiz-info {
             display: flex;
             justify-content: space-between;
@@ -128,45 +189,26 @@
             margin-bottom: 20px;
             font-weight: 600;
             line-height: 1.4;
+            min-height: 60px;
         }
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+        .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         .option-btn {
             background-color: #2e3b4e;
             color: var(--text-color);
             border: 1px solid var(--border-color);
-            padding: 12px 16px;
+            padding: 14px 16px;
             border-radius: 10px;
             cursor: pointer;
             text-align: left;
-            font-size: 0.95rem;
+            font-size: 1rem;
             transition: all 0.2s ease;
         }
-        .option-btn:hover:not(:disabled) {
-            background-color: #3b4d66;
-            border-color: var(--primary-color);
-        }
-        .option-btn.correct {
-            background-color: rgba(16, 185, 129, 0.25);
-            border-color: var(--primary-color);
-            color: #34d399;
-        }
-        .option-btn.incorrect {
-            background-color: rgba(239, 68, 68, 0.25);
-            border-color: var(--danger-color);
-            color: #f87171;
-        }
+        .option-btn:hover:not(:disabled) { background-color: #3b4d66; border-color: var(--primary-color); }
+        .option-btn.correct { background-color: rgba(16, 185, 129, 0.25); border-color: var(--primary-color); color: #34d399; }
+        .option-btn.incorrect { background-color: rgba(239, 68, 68, 0.25); border-color: var(--danger-color); color: #f87171; }
         .option-btn:disabled { cursor: default; }
 
-        .footer-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
         .action-btn {
             background-color: var(--primary-color);
             color: #0f172a;
@@ -190,25 +232,10 @@
         .back-menu-btn:hover { color: var(--text-color); border-color: var(--text-color); }
 
         /* Sonuç Ekranı */
-        .score-card {
-            text-align: center;
-        }
-        .score-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-        .big-stars {
-            font-size: 2rem;
-            color: var(--star-color);
-            margin: 15px 0;
-        }
-        .result-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+        .score-card { text-align: center; }
+        .score-card h2 { font-size: 1.8rem; margin-bottom: 10px; color: var(--primary-color); }
+        .big-stars { font-size: 2.5rem; color: var(--star-color); margin: 15px 0; }
+        .result-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -218,17 +245,22 @@
 
         <!-- 1. ANA MENÜ EKRANI -->
         <div id="menu-screen" class="screen active menu-screen">
-            <p style="color: var(--text-muted); margin-bottom: 30px;">40 Farklı Level ve 400 Soruluk dev futbol arşivine hoş geldiniz! Bilginizi test edin, tüm yıldızları toplayın.</p>
+            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;">
+                40 Farklı Level ve 400 Soruluk dev futbol arşivine hoş geldiniz!<br>
+                Bilginizi test edin, tüm yıldızları toplayın.
+            </p>
             <button class="menu-btn" onclick="showLevelScreen()">Oyuna Başla / Level Seç</button>
         </div>
 
-        <!-- 2. LEVEL SEÇİM EKRANI -->
+        <!-- 2. LEVEL SEÇİM EKRANI (YENİ TASARIM) -->
         <div id="levels-screen" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-weight: bold; color: var(--text-muted);">Level Seçin (1 - 40)</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; color: var(--text-color); font-size: 1.1rem;">Level Seçin</span>
                 <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
             </div>
-            <div class="levels-grid" id="levels-grid"></div>
+            
+            <!-- Level Kartlarının Geleceği Yer -->
+            <div class="levels-container" id="levels-container"></div>
         </div>
 
         <!-- 3. OYUN / QUIZ EKRANI -->
@@ -259,8 +291,7 @@
     </div>
 
     <script>
-        // 40 Level - Her birinde 10 soru (Toplam 400 Soru Altyapısı)
-        // Kolaydan zora doğru kurgulanmış örnek veri yapısı
+        // 40 Level - Her birinde 10 soru
         const levelsData = [];
         
         const sampleBaseQuestions = [
@@ -276,7 +307,6 @@
             { soru: "Dünya Kupası organizasyonu kaç yılda bir düzenlenir?", secenekler: ["2", "3", "4", "5"], dogru: 2 }
         ];
 
-        // 40 leveli otomatik ve kademeli çeşitlendirerek dolduruyoruz (Toplam 400 soru)
         for (let l = 1; l <= 40; l++) {
             let qList = [];
             for (let q = 1; q <= 10; q++) {
@@ -295,8 +325,14 @@
         let score = 0;
         let answered = false;
         
-        // Kullanıcı ilerleme ve yıldız kayıtları (LocalStorage)
+        // Kullanıcı ilerleme kayıtları (LocalStorage)
+        // Yapı: { "0": { stars: 3, score: 100, unlocked: true }, "1": { stars: 0, score: 0, unlocked: false } }
         let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {};
+
+        // İlk level her zaman açık
+        if (!userProgress[0]) {
+            userProgress[0] = { stars: 0, score: 0, unlocked: true };
+        }
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -308,25 +344,56 @@
         }
 
         function showLevelScreen() {
-            const grid = document.getElementById('levels-grid');
-            grid.innerHTML = '';
+            const container = document.getElementById('levels-container');
+            container.innerHTML = '';
 
             for (let i = 0; i < 40; i++) {
                 let lvlNum = i + 1;
-                let btn = document.createElement('button');
-                btn.className = 'level-btn';
+                let progress = userProgress[i] || { stars: 0, score: 0, unlocked: false };
                 
-                let starsCount = userProgress[i] ? userProgress[i].stars : 0;
-                if (starsCount > 0) btn.classList.add('completed');
+                // Eğer önceki level 1 yıldız bile alsa bir sonrakini açar
+                let isUnlocked = progress.unlocked || (i === 0) || (userProgress[i-1] && userProgress[i-1].stars > 0);
 
+                let card = document.createElement('div');
+                card.className = 'level-card' + (isUnlocked ? '' : ' locked');
+                
+                // Karakter İkonu (Örnek: İlk 4 seviye için farklı ikonlar)
+                let avatarContent = '⚽';
+                if (i === 0) avatarContent = '🐐'; // GOAT
+                else if (i === 1) avatarContent = '🐢'; // Mbappe tarzı
+                else if (i === 2) avatarContent = '🤖'; // Haaland tarzı
+                else if (i === 3) avatarContent = '👑'; // Kral
+
+                // Yıldız Gösterimi
                 let starsStr = '☆☆☆';
-                if (starsCount === 1) starsStr = '⭐☆☆';
-                if (starsCount === 2) starsStr = '⭐⭐☆';
-                if (starsCount === 3) starsStr = '⭐⭐⭐';
+                if (progress.stars === 1) starsStr = '⭐☆☆';
+                if (progress.stars === 2) starsStr = '⭐⭐☆';
+                if (progress.stars === 3) starsStr = '⭐⭐⭐';
 
-                btn.innerHTML = `<span>Lvl ${lvlNum}</span><span class="stars-container">${starsStr}</span>`;
-                btn.onclick = () => startLevel(i);
-                grid.appendChild(btn);
+                // İlerleme Çubuğu Yüzdesi (Örnek: 10 sorunun kaçını yaptı)
+                let progressPercent = (progress.stars / 3) * 100; 
+
+                card.innerHTML = `
+                    <div class="level-avatar">${avatarContent}</div>
+                    <div class="level-info">
+                        <div class="level-title">LEVEL ${lvlNum}</div>
+                        <div class="level-progress-bar">
+                            <div class="level-progress-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                        <div class="level-stars">${starsStr}</div>
+                    </div>
+                    <div class="level-status">
+                        ${isUnlocked ? '<span class="trophy-icon">🏆</span>' : '<span class="lock-icon">🔒</span>'}
+                    </div>
+                `;
+
+                if (isUnlocked) {
+                    card.onclick = () => startLevel(i);
+                } else {
+                    card.onclick = () => alert("Bu level kilitli! Lütfen önceki leveli en az 1 yıldızla tamamlayın.");
+                }
+
+                container.appendChild(card);
             }
             showScreen('levels-screen');
         }
@@ -395,15 +462,33 @@
 
         function showResults() {
             showScreen('score-screen');
-            let starsEarned = 1;
+            
+            // Yıldız Hesaplama
+            let starsEarned = 0;
+            if (score >= 30) starsEarned = 1;
             if (score >= 70) starsEarned = 2;
             if (score >= 100) starsEarned = 3;
 
-            // Kaydet
-            if (!userProgress[currentLevelIndex] || userProgress[currentLevelIndex].stars < starsEarned) {
-                userProgress[currentLevelIndex] = { stars: starsEarned, score: score };
-                localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+            // Kaydetme ve Kilit Açma Mantığı
+            let previousStars = userProgress[currentLevelIndex] ? userProgress[currentLevelIndex].stars : 0;
+            
+            // Yeni yıldız daha yüksekse kaydet
+            if (starsEarned > previousStars) {
+                userProgress[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+            } else if (!userProgress[currentLevelIndex]) {
+                userProgress[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
             }
+
+            // Bir sonraki leveli aç (eğer en az 1 yıldız alındıysa)
+            if (starsEarned >= 1 && currentLevelIndex + 1 < 40) {
+                if (!userProgress[currentLevelIndex + 1]) {
+                    userProgress[currentLevelIndex + 1] = { stars: 0, score: 0, unlocked: true };
+                } else {
+                    userProgress[currentLevelIndex + 1].unlocked = true;
+                }
+            }
+
+            localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
 
             let starsDisplay = '☆☆☆';
             if (starsEarned === 1) starsDisplay = '⭐☆☆';
