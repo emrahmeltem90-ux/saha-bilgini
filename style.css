@@ -34,9 +34,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
 }
-[data-theme="light"] body {
-    background-image: url('stadium-bg-light.jpg');
-}
+[data-theme="light"] body { background-image: url('stadium-bg-light.jpg'); }
 body::before {
     content: '';
     position: fixed;
@@ -91,6 +89,7 @@ body::before {
 .btn-ach { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #78350f !important; }
 .btn-share { background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #082f49 !important; margin-top: 10px; }
 .btn-invite { background: linear-gradient(180deg, #ec4899 0%, #be185d 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #831843 !important; }
+.btn-resume { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #14532d !important; }
 
 /* GÜNLÜK HATIRLATICI */
 .daily-reminder { background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); color: #fff; padding: 10px 20px; border-radius: 30px; font-weight: bold; font-size: 0.9rem; margin-top: 10px; text-align: center; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 20px rgba(251, 191, 36, 0.8); animation: pulse 2s infinite; width: 100%; }
@@ -186,6 +185,8 @@ input:checked + .slider:before { transform: translateX(24px); }
 .quiz-stats { display: flex; align-items: center; gap: 10px; }
 .quiz-coin-display { background: rgba(0,0,0,0.4); border: 2px solid var(--accent-gold); border-radius: 20px; padding: 5px 12px; font-weight: bold; font-size: 1rem; color: var(--accent-gold); }
 .timer-circle { width: 50px; height: 50px; border-radius: 50%; border: 4px solid var(--accent-gold); display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 1rem; color: var(--accent-gold); background-color: rgba(0,0,0,0.3); }
+.pause-btn { width: 50px; height: 50px; border-radius: 50%; border: 4px solid var(--accent-gold); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; background-color: rgba(0,0,0,0.3); cursor: pointer; color: var(--accent-gold); transition: transform 0.2s; }
+.pause-btn:active { transform: scale(0.9); }
 .question-box { background-color: var(--question-bg); border: 3px solid #3b82f6; border-radius: 16px; padding: 25px 20px; font-size: 1.2rem; font-weight: bold; text-align: center; min-height: 100px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); color: var(--question-text); animation: floatIn 0.3s ease; }
 
 /* JOKER PANELİ */
@@ -237,6 +238,17 @@ input:checked + .slider:before { transform: translateX(24px); }
 .modal-unlock-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
 .modal-unlock-btn:disabled { background: #475569; box-shadow: 0 6px 0 #1e293b; cursor: not-allowed; opacity: 0.7; }
 .modal-coin-status { font-size: 0.85rem; color: #f87171; font-weight: bold; margin-top: 15px; margin-bottom: 0; }
+
+/* PAUSE MENÜSÜ */
+.pause-content { border-color: var(--accent-gold) !important; }
+.pause-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+.pause-menu-btn { padding: 15px; border-radius: 15px; font-size: 1rem; font-weight: bold; border: 3px solid #fff; cursor: pointer; transition: transform 0.1s; text-align: center; }
+.pause-menu-btn:active { transform: scale(0.97); }
+.btn-resume { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; box-shadow: 0 5px 0 #14532d; }
+.btn-restart { background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); color: #fff; box-shadow: 0 5px 0 #78350f; }
+.btn-menu { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; box-shadow: 0 5px 0 #1e3a8a; }
+.pause-toggles { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155; }
+.pause-toggle-item { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.9rem; color: var(--text-main); }
 
 /* ÇARKIFELEK */
 #spin-screen { padding-top: 30px; align-items: center; justify-content: flex-start; }
