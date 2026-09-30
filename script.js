@@ -1,14 +1,15 @@
 // --- GİRİŞ EKRANI KONTROLÜ ---
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
+document.addEventListener("DOMContentLoaded", function() {
+    // 3 saniye sonra giriş ekranını gizle
+    setTimeout(function() {
+        var splash = document.getElementById('splash-screen');
         if (splash) {
             splash.style.opacity = '0';
-            setTimeout(() => {
+            setTimeout(function() {
                 splash.style.display = 'none';
-            }, 500);
+            }, 500); // Geçiş animasyonu için bekle
         }
-    }, 3000); // 3 saniye
+    }, 3000); // 3000ms = 3 saniye
 });
 
 // 40 Level - Her birinde 10 soru
@@ -44,19 +45,16 @@ let currentQuestionIndex = 0;
 let score = 0;
 let answered = false;
 
-// Kullanıcı İlerlemesi ve Ekonomi Sistemi
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {},
     totalStars: 0,
     totalCoins: 0
 };
 
-// İlk level her zaman açık
 if (!userProgress.levels[0]) {
     userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 }
 
-// Roller ve İkonlar (Görseldeki gibi)
 const levelRoles = [
     { role: "PLAYER", icon: "👤" },
     { role: "LEGEND", icon: "🌟" },
@@ -76,7 +74,6 @@ function showMenuScreen() {
     showScreen('menu-screen');
 }
 
-// Üst Paneldeki Yıldız ve Coin'i Güncelle
 function updateTopPanel() {
     document.getElementById('total-stars-display').innerText = userProgress.totalStars || 0;
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
@@ -90,24 +87,18 @@ function showLevelScreen() {
     for (let i = 0; i < 40; i++) {
         let lvlNum = i + 1;
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
-        
-        // Kilit Açma Mantığı: İlk level VEYA önceki levelden en az 1 yıldız alınmışsa
         let isUnlocked = progress.unlocked || (i === 0) || (userProgress.levels[i-1] && userProgress.levels[i-1].stars > 0);
 
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
-        
-        // Rol ve İkon Seçimi (Döngüsel)
         let roleData = levelRoles[i % levelRoles.length];
 
-        // Yıldız Gösterimi (3 Yıldız Sistemi)
         let starsStr = '☆☆☆';
         if (progress.stars === 1) starsStr = '⭐☆☆';
         if (progress.stars === 2) starsStr = '⭐⭐☆';
         if (progress.stars === 3) starsStr = '⭐⭐⭐';
 
-        // İlerleme Çubuğu (10 Soru Bazlı)
-        let progressPercent = (progress.score / 100) * 100; // Puan 100 üzerinden
+        let progressPercent = (progress.score / 100) * 100;
         let progressText = `${progress.score}/100`;
 
         card.innerHTML = `
@@ -133,7 +124,6 @@ function showLevelScreen() {
         } else {
             card.onclick = () => alert("Bu level kilitli! Lütfen önceki leveli en az 1 yıldızla tamamlayın.");
         }
-
         container.appendChild(card);
     }
     showScreen('levels-screen');
@@ -150,7 +140,6 @@ function startLevel(levelIndex) {
 function loadQuestion() {
     answered = false;
     document.getElementById('next-btn').style.display = "none";
-
     const currentQ = levelsData[currentLevelIndex][currentQuestionIndex];
     document.getElementById('level-title-indicator').innerText = `Level ${currentLevelIndex + 1}`;
     document.getElementById('question-counter').innerText = `Soru: ${currentQuestionIndex + 1} / 10`;
@@ -172,7 +161,6 @@ function loadQuestion() {
 function selectOption(selectedIndex, selectedBtn) {
     if (answered) return;
     answered = true;
-
     const currentQ = levelsData[currentLevelIndex][currentQuestionIndex];
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
 
@@ -185,9 +173,7 @@ function selectOption(selectedIndex, selectedBtn) {
         buttons[currentQ.dogru].classList.add("correct");
     }
 
-    for (let btn of buttons) {
-        btn.disabled = true;
-    }
+    for (let btn of buttons) { btn.disabled = true; }
 
     if (currentQuestionIndex < 9) {
         document.getElementById('next-btn').style.display = "block";
@@ -203,18 +189,14 @@ function nextQuestion() {
 
 function showResults() {
     showScreen('score-screen');
-    
     let starsEarned = 0;
     if (score >= 30) starsEarned = 1;
     if (score >= 70) starsEarned = 2;
     if (score >= 100) starsEarned = 3;
 
     let previousStars = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].stars : 0;
-    let previousScore = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].score : 0;
     
-    // Yıldızları ve Puanı Kaydet
     if (starsEarned > previousStars) {
-        // Yeni yıldız sayısı eskisinden fazlaysa farkı ekle
         let diff = starsEarned - previousStars;
         userProgress.totalStars = (userProgress.totalStars || 0) + diff;
         userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
@@ -223,11 +205,9 @@ function showResults() {
         userProgress.totalStars = (userProgress.totalStars || 0) + starsEarned;
     }
 
-    // Coin Kazanımı (Her 10 puana 1 coin)
     let coinsEarned = Math.floor(score / 10);
     userProgress.totalCoins = (userProgress.totalCoins || 0) + coinsEarned;
 
-    // Bir sonraki leveli aç
     if (starsEarned >= 1 && currentLevelIndex + 1 < 40) {
         if (!userProgress.levels[currentLevelIndex + 1]) {
             userProgress.levels[currentLevelIndex + 1] = { stars: 0, score: 0, unlocked: true };
