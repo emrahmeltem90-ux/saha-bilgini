@@ -134,3 +134,42 @@ input:checked + .slider:before { transform: translateX(24px); }
 .spin-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #78350f; }
 .spin-btn:disabled { background: #475569; box-shadow: 0 6px 0 #1e293b; cursor: not-allowed; opacity: 0.7; }
 .spin-timer { font-size: 1rem; font-weight: bold; color: #cbd5e1; margin-top: 10px; }
+
+/* YENİ: ÖDÜL KAZANMA PENCERESİ */
+.prize-content {
+    text-align: center;
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 40px rgba(251, 191, 36, 0.8) !important;
+}
+.prize-icon {
+    font-size: 5rem;
+    margin-bottom: 15px;
+    animation: pulse 1.5s infinite;
+    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+}
+.prize-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+    margin: 0 0 10px 0;
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+}
+.prize-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin: 0 0 25px 0;
+}
+.prize-collect-btn {
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    border: 3px solid #fff;
+    border-radius: 15px;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #14532d;
+    text-transform: uppercase;
+}
+.prize-collect-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
