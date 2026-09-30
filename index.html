@@ -30,6 +30,7 @@
             <div class="stats-box"><span class="stat-icon">⭐</span><span id="total-stars-display">0</span></div>
             <div class="stats-box"><span class="stat-icon">🪙</span><span id="total-coins-display">0</span></div>
         </div>
+        <p id="welcome-text">Hoş geldin, Oyuncu!</p>
         <div class="logo-container"><h1 class="game-logo">FUTBOL<br><span>BİLGİ YARIŞMASI</span></h1></div>
         <div class="menu-buttons">
             <button class="menu-btn btn-play" onclick="showLevelScreen()">▶️ OYUNA BAŞLA</button>
@@ -39,39 +40,59 @@
         </div>
     </div>
 
-    <!-- YENİ: PROFİL EKRANI -->
+    <!-- YENİ: PROFİL EKRANI (OYUNCU KARTI) -->
     <div id="profile-screen" class="screen">
         <div class="profile-header">
-            <h2>👤 Profil</h2>
+            <h2>👤 Oyuncu Profili</h2>
             <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
         </div>
-        <div class="profile-info">
-            <div class="profile-avatar">👤</div>
+        
+        <div class="player-card">
+            <div class="player-avatar" id="player-avatar-emoji">👤</div>
             <input type="text" id="profile-name-input" class="profile-name-input" placeholder="İsmini yaz..." maxlength="15">
             <button class="profile-save-btn" onclick="saveProfileName()">KAYDET ✅</button>
+            <div class="player-rank" id="player-rank">🏅 ACEMİ</div>
+            <div class="player-rank-desc" id="player-rank-desc">Daha yeni başlıyorsun, devam et!</div>
         </div>
+
+        <!-- İSTATİSTİK ÇEMBERİ -->
+        <div class="stats-circle-container">
+            <canvas id="stats-canvas" width="200" height="200"></canvas>
+            <div class="stats-circle-center">
+                <div class="stats-circle-value" id="stats-percentage">0%</div>
+                <div class="stats-circle-label">Doğruluk</div>
+            </div>
+        </div>
+
+        <!-- RENKLİ İSTATİSTİK KUTULARI -->
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card stat-blue">
+                <div class="stat-card-icon">🎯</div>
                 <div class="stat-card-value" id="stat-total-score">0</div>
                 <div class="stat-card-label">Toplam Puan</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-green">
+                <div class="stat-card-icon">✅</div>
                 <div class="stat-card-value" id="stat-total-correct">0</div>
                 <div class="stat-card-label">Doğru Cevap</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-red">
+                <div class="stat-card-icon">❌</div>
                 <div class="stat-card-value" id="stat-total-wrong">0</div>
                 <div class="stat-card-label">Yanlış Cevap</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-gold">
+                <div class="stat-card-icon">🏆</div>
                 <div class="stat-card-value" id="stat-high-score">0</div>
                 <div class="stat-card-label">En Yüksek Skor</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-purple">
+                <div class="stat-card-icon">📚</div>
                 <div class="stat-card-value" id="stat-levels-completed">0</div>
                 <div class="stat-card-label">Tamamlanan Level</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-orange">
+                <div class="stat-card-icon">⭐</div>
                 <div class="stat-card-value" id="stat-perfect-levels">0</div>
                 <div class="stat-card-label">Tam Puan Level</div>
             </div>
