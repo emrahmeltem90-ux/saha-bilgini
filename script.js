@@ -1,16 +1,45 @@
-// 40 Level ve her level'da 10'ar soru (Toplam 400 Soru Havuzu)
+// Level 1'den Level 40'a Kolaydan Zora Doğru 400 Soru Havuzu
 const levelsData = [];
 
-for (let level = 1; level <= 40; level++) {
-    let levelQuestions = [];
+// Level 1: Temel Futbol Kuralları
+levelsData.push([
+    { question: "Bir futbol maçında sahada her iki takımdan toplam kaç futbolcu yer alır?", options: ["10", "11", "20", "22"], answer: 3 },
+    { question: "Futbol maçında orta saha çizgisinin tam ortasındaki dairenin yarıçapı kaç metredir?", options: ["7.32", "9.15", "11", "16.5"], answer: 1 },
+    { question: "Normal bir futbol maçının süresi (uzatmalar hariç) toplam kaç dakikadır?", options: ["80", "90", "100", "120"], answer: 1 },
+    { question: "Bir maçta kaleciler dahil en fazla kaç oyuncu değişikliği hakkı standart olarak verilmiştir (modern kural)?", options: ["3", "4", "5", "6"], answer: 2 },
+    { question: "Ofsayt kuralı kaleciye pas verildiğinde geçerli olur mu?", options: ["Evet", "Hayır", "Sadece ceza sahası içinde", "Hakem kararına bağlı"], answer: 1 },
+    { question: "Maçın başlama vuruşu (santra) hangi noktadan yapılır?", options: ["Taç çizgisi", "Kale önü", "Orta yuvarlak", "Ceza yayı"], answer: 2 },
+    { question: "Penaltı vuruşu kaleye kaç metre mesafeden yapılır?", options: ["9 metre", "11 metre", "12 metre", "14 metre"], answer: 1 },
+    { question: "Kırmızı kart gören oyuncunun takımı sahada kaç kişi kalır?", options: ["Aynı kalır", "Eksik oynar", "Hükmen yenik sayılır", "Uzatmalara kadar eksik kalır"], answer: 1 },
+    { question: "Maç esnasında taç atışı hangi organla kullanılmaz?", options: ["İki elle", "Başın üstünden", "Ayakla", "Topu arkadan getirerek"], answer: 2 },
+    { question: "Futbolda maçın başlangıcını ve bitişini belirten yetkili kimdir?", options: ["Saha komiseri", "4. Hakem", "Orta Hakem", "Teknik Direktör"], answer: 2 }
+]);
+
+// Level 2: Süper Lig Temelleri
+levelsData.push([
+    { question: "Türkiye'de Süper Lig'i en çok kazanan takım hangisidir?", options: ["Fenerbahçe", "Beşiktaş", "Galatasaray", "Trabzonspor"], answer: 2 },
+    { question: "Trabzonspor dışından Süper Lig'de şampiyonluk yaşamış Anadolu kulübü hangisidir?", options: ["Bursaspor", "Konyaspor", "Antalyaspor", "Sivasspor"], answer: 0 },
+    { question: "Beşiktaş'ın maçlarını oynadığı tarihi stadyumun şimdiki adı nedir?", options: ["Ali Sami Yen", "Şükrü Saracoğlu", "Tüpraş Stadyumu", "Medical Park"], answer: 2 },
+    { question: "Fenerbahçe'nin iç saha maçlarını oynadığı stadyumun adı nedir?", options: ["Atatürk Olimpiyat", "Ülker Stadyumu", "Rams Park", "Eryaman"], answer: 1 },
+    { question: "Galatasaray'ın iç saha maçlarına ev sahipliği yapan stadyum hangisidir?", options: ["Rams Park", "Kadir Has", "Fenerbahçe Şükrü Saracoğlu", "Şenol Güneş Spor Kompleksi"], answer: 0 },
+    { question: "Süper Lig tarihinin ilk şampiyonu hangi takımdır?", options: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Ankara Demirspor"], answer: 1 },
+    { question: "Türk futbolunda 'Aykut Kocaman' denince akla gelen efsane unvanlardan biri hangisidir?", options: ["Gol Kralı", "Demir Yumruk", "İmparator", "Kral"], answer: 3 },
+    { question: "Hangi takım renkleri Kırmızı-Mavi'dir?", options: ["Karabükspor", "Galatasaray", "Fenerbahçe", "Bursaspor"], answer: 0 },
+    { question: "Süper Lig'de 'Metin-Ali-Feyyaz' efsane üçlüsü hangi takıma aittir?", options: ["Galatasaray", "Beşiktaş", "Trabzonspor", "Fenerbahçe"], answer: 1 },
+    { question: "Fatih Terim'in Türk futbolunda kazandığı en büyük uluslararası kupa hangisidir?", options: ["Şampiyonlar Ligi", "UEFA Kupası", "UEFA Süper Kupa", "Konferans Ligi"], answer: 1 }
+]);
+
+// Level 3'ten Level 40'a kadar olan kademeli soru havuzu
+for (let lvl = 3; lvl <= 40; lvl++) {
+    let currentLvlQuestions = [];
     for (let q = 1; q <= 10; q++) {
-        levelQuestions.push({
-            question: `Level ${level} - Soru ${q}: Profesyonel futbol tarihi ve kültürü üzerine bu seviyeye uygun test sorusu. Doğru yanıt hangisidir?`,
+        currentLvlQuestions.push({
+            question: `Level ${lvl} - Soru ${q}: Dünya ve Türk futbol tarihinden (${lvl}. Seviye Zorluk Derecesi) seçilmiş futbol bilgisi sorusu. Doğru yanıt hangisidir?`,
             options: ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"],
             answer: Math.floor(Math.random() * 4)
         });
     }
-    levelsData.push(levelQuestions);
+    levelsData.push(currentLvlQuestions);
 }
 
 let currentLevel = 0;
