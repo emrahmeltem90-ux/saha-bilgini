@@ -38,15 +38,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 .btn-howto { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #fff; box-shadow: 0 5px 0 #14532d; }
 .btn-spin { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #4c1d95 !important; }
 
-#welcome-text {
-    color: #cbd5e1;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    margin-top: -10px;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
+#welcome-text { color: #cbd5e1; font-size: 1rem; font-weight: bold; text-align: center; margin-top: -10px; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
 /* AYARLAR */
 #settings-screen { background-color: #0f172a; padding-top: 40px; }
@@ -61,6 +53,16 @@ input:checked + .slider { background-color: var(--accent-green); }
 input:checked + .slider:before { transform: translateX(24px); }
 .reset-btn { background-color: var(--accent-red); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
+/* NASIL OYNANIR */
+#howto-screen { background-color: #0f172a; padding-top: 40px; overflow-y: auto; }
+.howto-content { display: flex; flex-direction: column; gap: 15px; }
+.howto-item { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.4; }
+.howto-icon { font-size: 2rem; flex-shrink: 0; }
+
+/* BİLDİRİM (TOAST) */
+.toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 15px 30px; border-radius: 12px; font-weight: bold; box-shadow: 0 6px 0 #14532d; z-index: 999999; transition: top 0.4s ease; border: 3px solid #fff; font-size: 1rem; }
+.toast.show { top: 30px; }
+
 /* LEVEL SEÇİM */
 #levels-screen { background-color: #0f172a; padding-top: 30px; }
 .screen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -68,11 +70,9 @@ input:checked + .slider:before { transform: translateX(24px); }
 .levels-container { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; max-height: 70vh; padding-right: 5px; }
 .levels-container::-webkit-scrollbar { width: 5px; }
 .levels-container::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-
 .level-card { display: flex; align-items: center; background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 16px; padding: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 0 #0f172a; position: relative; }
 .level-card:active:not(.locked) { transform: translateY(4px); box-shadow: 0 0 0 #0f172a; }
 .level-card.locked { filter: grayscale(0.7); opacity: 0.8; cursor: pointer; }
-
 .level-avatar-box { width: 60px; height: 60px; background-color: #0f172a; border: 2px solid var(--accent-gold); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-right: 12px; flex-shrink: 0; overflow: hidden; }
 .level-avatar-icon { font-size: 1.8rem; }
 .level-avatar-role { font-size: 0.5rem; font-weight: bold; color: var(--accent-gold); text-transform: uppercase; margin-top: -3px; }
@@ -83,25 +83,28 @@ input:checked + .slider:before { transform: translateX(24px); }
 .level-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; font-weight: bold; color: #fff; }
 .level-stars { font-size: 0.8rem; color: var(--accent-gold); letter-spacing: 2px; }
 .level-status { width: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 1.5rem; margin-left: 10px; }
-
 .level-coin-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 2px solid #fff; border-radius: 10px; padding: 4px 8px; font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 3px; box-shadow: 0 3px 0 #14532d; }
-
 .ad-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; padding: 14px; border-radius: 30px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; box-shadow: 0 5px 0 #14532d; }
 
 /* OYUN EKRANI */
 #quiz-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; }
 .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 #question-counter { font-size: 1.2rem; font-weight: bold; color: #fff; }
+.quiz-stats { display: flex; align-items: center; gap: 10px; }
+.quiz-coin-display { background: rgba(0,0,0,0.4); border: 2px solid var(--accent-gold); border-radius: 20px; padding: 5px 12px; font-weight: bold; font-size: 1rem; color: var(--accent-gold); display: flex; align-items: center; gap: 5px; }
 .timer-circle { width: 50px; height: 50px; border-radius: 50%; border: 4px solid var(--accent-gold); display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 1rem; color: var(--accent-gold); background-color: rgba(0,0,0,0.3); }
 .question-box { background-color: #0f172a; border: 3px solid #3b82f6; border-radius: 16px; padding: 25px 20px; font-size: 1.2rem; font-weight: bold; text-align: center; min-height: 100px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
 
-/* JOKER BUTONLARI */
-.jokers-container { display: flex; justify-content: space-around; gap: 10px; margin-bottom: 20px; }
-.joker-btn { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); color: #fff; border: 2px solid var(--accent-gold); border-radius: 12px; padding: 10px 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: 0.2s; flex: 1; box-shadow: 0 4px 0 #0f172a; }
-.joker-btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 #0f172a; }
-.joker-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: 0 4px 0 #0f172a; }
-.joker-btn.used { background: linear-gradient(180deg, #475569 0%, #1e293b 100%); border-color: #64748b; }
-.joker-price { font-size: 0.7rem; color: var(--accent-gold); font-weight: 900; }
+/* JOKER PANELİ */
+.jokers-panel { background: rgba(15, 23, 42, 0.7); border: 2px solid #334155; border-radius: 15px; padding: 12px; margin-bottom: 20px; }
+.joker-info-title { font-size: 0.7rem; font-weight: bold; color: #94a3b8; text-transform: uppercase; text-align: center; margin-bottom: 10px; letter-spacing: 1px; }
+.jokers-container { display: flex; justify-content: space-between; gap: 8px; }
+.joker-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid var(--accent-gold); border-radius: 12px; padding: 8px 5px; box-shadow: 0 4px 0 #0f172a; }
+.joker-wrapper .joker-btn { background: transparent; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; box-shadow: none; width: auto; }
+.joker-wrapper .joker-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.joker-wrapper .joker-btn.used { filter: grayscale(1); }
+.joker-desc { font-size: 0.55rem; text-align: center; color: #cbd5e1; line-height: 1.1; font-weight: bold; min-height: 22px; }
+.joker-price-tag { font-size: 0.7rem; font-weight: 900; color: var(--accent-gold); background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 10px; }
 
 .options-list { display: flex; flex-direction: column; gap: 12px; }
 .option-btn { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); color: #fff; border: 2px solid #3b82f6; padding: 15px 20px; border-radius: 12px; font-size: 1rem; font-weight: bold; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
@@ -153,134 +156,28 @@ input:checked + .slider:before { transform: translateX(24px); }
 .prize-collect-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; border-radius: 15px; padding: 15px 40px; font-size: 1.2rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 0 #14532d; text-transform: uppercase; }
 .prize-collect-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
 
-/* ============================================ */
-/* PROFİL EKRANI - YENİ TASARIM (OYUNCU KARTI) */
-/* ============================================ */
+/* PROFİL EKRANI */
 #profile-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; overflow-y: auto; }
 .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .profile-header h2 { color: #fff; margin: 0; }
-
-/* OYUNCU KARTI */
-.player-card {
-    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
-    border: 3px solid var(--accent-gold);
-    border-radius: 20px;
-    padding: 25px 20px;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
-}
-.player-avatar {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%);
-    border: 3px solid var(--accent-gold);
-    display: flex; justify-content: center; align-items: center;
-    font-size: 2.5rem; box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-}
-.profile-name-input {
-    background-color: rgba(15, 23, 42, 0.9);
-    border: 2px solid #3b82f6;
-    border-radius: 12px;
-    padding: 10px 20px;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    width: 80%;
-    max-width: 250px;
-    outline: none;
-}
+.player-card { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 3px solid var(--accent-gold); border-radius: 20px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px; box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); }
+.player-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); border: 3px solid var(--accent-gold); display: flex; justify-content: center; align-items: center; font-size: 2.5rem; box-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
+.profile-name-input { background-color: rgba(15, 23, 42, 0.9); border: 2px solid #3b82f6; border-radius: 12px; padding: 10px 20px; color: #fff; font-size: 1rem; font-weight: bold; text-align: center; width: 80%; max-width: 250px; outline: none; }
 .profile-name-input:focus { border-color: var(--accent-gold); }
-.profile-save-btn {
-    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
-    color: #fff; border: 3px solid #fff; border-radius: 12px;
-    padding: 10px 25px; font-size: 0.9rem; font-weight: bold;
-    cursor: pointer; box-shadow: 0 4px 0 #14532d;
-}
+.profile-save-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; border-radius: 12px; padding: 10px 25px; font-size: 0.9rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #14532d; }
 .profile-save-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #14532d; }
-
-/* RÜTBE */
-.player-rank {
-    font-size: 1.3rem;
-    font-weight: 900;
-    color: var(--accent-gold);
-    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-    letter-spacing: 2px;
-    margin-top: 5px;
-}
-.player-rank-desc {
-    font-size: 0.8rem;
-    color: #cbd5e1;
-    text-align: center;
-    font-weight: bold;
-}
-
-/* İSTATİSTİK ÇEMBERİ */
-.stats-circle-container {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#stats-canvas {
-    position: absolute;
-    top: 0; left: 0;
-}
-.stats-circle-center {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-}
-.stats-circle-value {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--accent-gold);
-    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-}
-.stats-circle-label {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #cbd5e1;
-    text-transform: uppercase;
-}
-
-/* RENKLİ İSTATİSTİK KUTULARI */
-.stats-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 12px; 
-    margin-bottom: 20px;
-}
-.stat-card { 
-    border-radius: 15px; 
-    padding: 15px; 
-    text-align: center; 
-    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
-    position: relative;
-    overflow: hidden;
-}
-.stat-card-icon {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-}
-.stat-card-value { 
-    font-size: 1.5rem; 
-    font-weight: 900; 
-    color: #fff; 
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-.stat-card-label { 
-    font-size: 0.7rem; 
-    font-weight: bold; 
-    color: rgba(255,255,255,0.9); 
-    text-transform: uppercase; 
-    margin-top: 3px; 
-}
-
-/* RENKLİ KARTLAR */
+.player-rank { font-size: 1.3rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); letter-spacing: 2px; margin-top: 5px; }
+.player-rank-desc { font-size: 0.8rem; color: #cbd5e1; text-align: center; font-weight: bold; }
+.stats-circle-container { position: relative; width: 200px; height: 200px; margin: 0 auto 20px auto; display: flex; justify-content: center; align-items: center; }
+#stats-canvas { position: absolute; top: 0; left: 0; }
+.stats-circle-center { position: relative; z-index: 2; text-align: center; }
+.stats-circle-value { font-size: 2rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
+.stats-circle-label { font-size: 0.8rem; font-weight: bold; color: #cbd5e1; text-transform: uppercase; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.stat-card { border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 0 rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+.stat-card-icon { font-size: 1.5rem; margin-bottom: 5px; }
+.stat-card-value { font-size: 1.5rem; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.stat-card-label { font-size: 0.7rem; font-weight: bold; color: rgba(255,255,255,0.9); text-transform: uppercase; margin-top: 3px; }
 .stat-blue { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); border: 2px solid #60a5fa; }
 .stat-green { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); border: 2px solid #4ade80; }
 .stat-red { background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%); border: 2px solid #f87171; }
