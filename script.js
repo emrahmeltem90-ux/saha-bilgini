@@ -141,4 +141,157 @@ function showLevelScreen() {
 function openUnlockModal(levelIndex) {
     selectedLockedLevel = levelIndex;
     let requiredStars = 0; // Bu level için gereken yıldız sayısı
-    for (let i = 1; i <= levelIndex; i++) requiredStars += 3; // Bas
+    for (let i = 1; i <= levelIndex; i++) requiredStars += 3; // Basit hesap: her level 3 yıldız ister
+    let coinCost = levelCoinCosts[levelIndex] || 100;
+
+    document.getElementById('modal-required-stars').innerText = requiredStars;
+    document.getElementById('modal-coin-cost').innerText = coinCost;
+
+    let btn = document.getElementById('modal-unlock-btn');
+    let statusText = document.getElementById('modal-coin-status');
+
+    if (userProgress.totalCoins >= coinCost) {
+        btn.disabled = false;
+        statusText.innerText = `Mevcut Coin: ${userProgress.totalCoins} 🪙`;
+        statusText.style.color = '#22c55e';
+    } else {
+        btn.disabled = true;
+        statusText.innerText = `Yetersiz Coin! Gereken: ${coinCost} 🪙, Mevcut: ${userProgress.totalCoins} 🪙`;
+        statusText.style.color = '#f87171';
+    }
+
+    document.getElementById('unlock-modal').classList.add('active');
+}
+
+function closeUnlockModal() {
+    document.getElementById('unlock-modal').classList.remove('active');
+    selectedLockedLevel = -1;
+}
+
+function unlockLevelWithCoins() {
+    if (selectedLockedLevel === -1) return;
+    let coinCost = levelCoinCosts[selectedLockedLevel] || 100;
+
+    if (userProgress.totalCoins >= coinCost) {
+        userProgress.totalCoins -= coinCost;
+        if (!userProgress.levels[selectedLockedLevel]) {
+            userProgress.levels[selectedLockedLevel] = { stars: 0, score: 0, unlocked: true };
+        } else {
+            userProgress.levels[selectedLockedLevel].unlocked = true;
+        }
+        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+        sesDogru.play();
+        closeUnlockModal();
+        showLevelScreen(); // Level listesini yenile
+        updateTopPanel();
+    } else {
+        sesYanlis.play();
+        alert("Yetersiz coin!");
+    }
+}
+
+// --- OYUN MANTIĞI ---
+function startLevel(index) {
+    currentLevelIndex = index; currentQuestionIndex = 0; score = 0; correctCount = 0;
+    if (!levelsData[index] || levelsData[index].sorular.length === 0) { alert("Soru yok!"); return; }
+    showScreen('quiz-screen'); loadQuestion();
+}
+
+function loadQuestion() {
+    answered = false; clearInterval(timerInterval);
+    let currentCategory = levelsData[currentLevelIndex];
+    let questions = currentCategory.sorular;
+    if (currentQuestionIndex >= questions.length) currentQuestionIndex = 0;
+    const currentQ = normalizeQuestion(questions[currentQuestionIndex]);
+
+    document.getElementById('question-counter').innerText = `Soru ${currentQuestionIndex + 1}/${questions.length}`;
+    document.getElementById('question-text').innerText = currentQ.soru;
+
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = "";
+    const letters = ['A', 'B', 'C', 'D'];
+    currentQ.secenekler.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.classList.add("option-btn");
+        btn.innerHTML = `<span class="option-letter">${letters[index]}</span> ${option}`;
+        btn.onclick = () => { sesTiklama.play(); selectOption(index, btn); };
+        optionsContainer.appendChild(btn);
+    });
+
+    let timeLeft = 30;
+    document.getElementById('timer-text').innerText = timeLeft + 's';
+    timerInterval = setInterval(() => {
+        timeLeft--; document.getElementById('timer-text').innerText = timeLeft + 's';
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            if (!answered) {
+                answered = true;
+                const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
+                for (let btn of buttons) btn.disabled = true;
+                buttons[currentQ.dogru].classList.add("correct");
+                sesYanlis.play(); setTimeout(nextQuestion, 1500);
+            }
+        }
+    }, 1000);
+}
+
+function selectOption(selectedIndex, selectedBtn) {
+    if (answered) return; answered = true; clearInterval(timerInterval);
+    let currentQ = normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
+    const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
+    if (selectedIndex === currentQ.dogru) {
+        selectedBtn.classList.add("correct"); score += 100; correctCount++; sesDogru.play();
+    } else {
+        selectedBtn.classList.add("incorrect");
+        if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
+        sesYanlis.play();
+    }
+    for (let btn of buttons) btn.disabled = true;
+    setTimeout(nextQuestion, 1200);
+}
+
+function nextQuestion() {
+    if (currentQuestionIndex < levelsData[currentLevelIndex].sorular.length - 1) { currentQuestionIndex++; loadQuestion(); }
+    else { showResults(); }
+}
+
+function showResults() {
+    clearInterval(timerInterval); showScreen('score-screen');
+    let totalQ = levelsData[currentLevelIndex].sorular.length;
+    let totalPossible = totalQ * 100;
+    let percentage = (score / totalPossible) * 100;
+    let starsEarned = 0;
+    if (percentage >= 30) starsEarned = 1;
+    if (percentage >= 70) starsEarned = 2;
+    if (percentage >= 100) starsEarned = 3;
+
+    let prevStars = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].stars : 0;
+    if (starsEarned > prevStars) {
+        userProgress.totalStars += (starsEarned - prevStars);
+        userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+    } else if (!userProgress.levels[currentLevelIndex]) {
+        userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+        userProgress.totalStars += starsEarned;
+    }
+    userProgress.totalCoins += Math.floor(score / 100);
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+
+    let starsDisplay = '☆☆☆';
+    if (starsEarned === 1) starsDisplay = '⭐☆☆';
+    if (starsEarned === 2) starsDisplay = '⭐⭐☆';
+    if (starsEarned === 3) starsDisplay = '⭐⭐⭐';
+    document.getElementById('result-stars').innerText = starsDisplay;
+    document.getElementById('final-score-text').innerText = `SKOR: ${score}`;
+    document.getElementById('final-correct-text').innerText = `Doğru Sayısı: ${correctCount}/${totalQ}`;
+}
+
+function restartLevel() { sesTiklama.play(); startLevel(currentLevelIndex); }
+function resetGame() { if(confirm("Tüm ilerlemen silinecek. Emin misin?")) { localStorage.removeItem('futbol_quiz_progress'); location.reload(); } }
+function watchAdForStars() {
+    sesTiklama.play(); alert("Reklam izleniyor... (Simülasyon)");
+    setTimeout(() => {
+        userProgress.totalStars += 5;
+        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+        updateTopPanel(); alert("Tebrikler! 5 yıldız kazandın. ⭐"); showLevelScreen();
+    }, 1500);
+}
