@@ -5,14 +5,23 @@
     --text-color: #f8fafc;
     --text-muted: #94a3b8;
     --border-color: #334155;
+    --danger-color: #ef4444;
+    --star-color: #f59e0b;
+    --locked-bg: #1e293b;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-color);
+    /* ARKA PLAN GÖRSELİ EKLENDİ */
+    background-image: url('stadium-bg.jpg');
+    background-size: cover;         /* Resmi ekrana tam sığdırır */
+    background-position: center;    /* Resmi ortalar */
+    background-repeat: no-repeat;   /* Tekrar etmesini engeller */
+    background-attachment: fixed;   /* Sayfa kaydırılsa bile arka plan sabit kalır */
+    
     color: var(--text-color);
     margin: 0;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,21 +30,149 @@ body {
 
 .container {
     width: 100%;
-    max-width: 700px;
-    background-color: var(--card-bg);
+    max-width: 600px;
+    /* Kutunun içini hafif şeffaf yaptım ki arkadaki stadyum hafifçe görünsün */
+    background-color: rgba(30, 41, 59, 0.92); 
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
+    backdrop-filter: blur(5px); /* Arka planı hafif bulanıklaştırır, yazılar daha okunaklı olur */
 }
 
 h1 {
     text-align: center;
     color: var(--primary-color);
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     font-size: 1.8rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
+/* --- EKRAN GEÇİŞLERİ --- */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* --- 1. ANA MENÜ --- */
+.menu-screen { text-align: center; padding: 30px 0; }
+.menu-btn {
+    background: linear-gradient(135deg, var(--primary-color), #059669);
+    color: #0f172a;
+    border: none;
+    padding: 16px 28px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+.menu-btn:hover { transform: scale(1.02); }
+
+/* --- 2. LEVEL SEÇİM EKRANI (KARTLAR) --- */
+.levels-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: 5px;
+    margin-bottom: 15px;
+}
+.levels-container::-webkit-scrollbar { width: 6px; }
+.levels-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+.level-card {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, #2e3b4e 0%, #1e293b 100%);
+    border: 2px solid #3b4d66;
+    border-radius: 12px;
+    padding: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 70px;
+}
+.level-card:active { transform: scale(0.98); }
+
+/* Kilitli Kart Görünümü */
+.level-card.locked {
+    filter: grayscale(0.8);
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: #1e293b;
+    border-color: #334155;
+}
+.level-card.locked:hover { transform: none; }
+
+/* Karakter İkonu */
+.level-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 8px;
+    background-color: #0f172a;
+    border: 2px solid #f59e0b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.level-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Orta Kısım */
+.level-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.level-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #f8fafc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.level-progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.level-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.3s;
+}
+.level-stars {
+    font-size: 0.8rem;
+    color: var(--star-color);
+    letter-spacing: 2px;
+}
+
+/* Sağ Taraf - Kilit */
+.level-status {
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    margin-left: 10px;
+}
+.lock-icon { color: #64748b; }
+.trophy-icon { color: #f59e0b; }
+
+/* --- 3. QUIZ (SORU) EKRANI --- */
 .quiz-info {
     display: flex;
     justify-content: space-between;
@@ -45,21 +182,19 @@ h1 {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
 }
-
 .question-box {
     font-size: 1.2rem;
     margin-bottom: 20px;
     font-weight: 600;
     line-height: 1.5;
+    min-height: 60px;
 }
-
 .options-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-bottom: 25px;
 }
-
 .option-btn {
     background-color: #2e3b4e;
     color: var(--text-color);
@@ -71,33 +206,23 @@ h1 {
     font-size: 1rem;
     transition: all 0.2s ease;
 }
-
 .option-btn:hover:not(:disabled) {
     background-color: #3b4d66;
     border-color: var(--primary-color);
 }
-
 .option-btn.correct {
     background-color: rgba(16, 185, 129, 0.2);
     border-color: #10b981;
     color: #34d399;
 }
-
 .option-btn.incorrect {
     background-color: rgba(239, 68, 68, 0.2);
     border-color: #ef4444;
     color: #f87171;
 }
+.option-btn:disabled { cursor: default; }
 
-.option-btn:disabled {
-    cursor: default;
-}
-
-.footer-nav {
-    display: flex;
-    justify-content: flex-end;
-}
-
+.footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 10px;}
 .next-btn {
     background-color: var(--primary-color);
     color: #0f172a;
@@ -110,21 +235,23 @@ h1 {
     transition: opacity 0.2s;
     display: none;
 }
+.next-btn:hover { opacity: 0.9; }
 
-.next-btn:hover {
-    opacity: 0.9;
+.back-menu-btn {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
 }
+.back-menu-btn:hover { color: var(--text-color); border-color: var(--text-color); }
 
-.score-card {
-    text-align: center;
-}
-
-.score-card h2 {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-}
-
+/* --- 4. SONUÇ EKRANI --- */
+.score-card { text-align: center; }
+.score-card h2 { font-size: 2rem; margin-bottom: 15px; color: var(--primary-color); }
+.big-stars { font-size: 2.5rem; color: var(--star-color); margin: 15px 0; }
 .restart-btn {
     background-color: var(--primary-color);
     color: #0f172a;
