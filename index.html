@@ -37,6 +37,7 @@
             <button class="menu-btn btn-daily" onclick="showDailyScreen()">🎁 GÜNLÜK ÖDÜL</button>
             <button class="menu-btn btn-ach" onclick="showAchievementsScreen()">🏆 BAŞARIMLAR</button>
             <button class="menu-btn btn-spin" onclick="showSpinScreen()">🎡 ÇARKIFELEK</button>
+            <button class="menu-btn btn-invite" onclick="shareGameForStars()">📤 ARKADAŞINI DAVET ET (+10 ⭐)</button>
             <button class="menu-btn btn-settings" onclick="showSettingsScreen()">⚙️ AYARLAR</button>
             <button class="menu-btn btn-howto" onclick="showHowToScreen()">📖 NASIL OYNANIR</button>
         </div>
@@ -59,13 +60,15 @@
     <div id="howto-screen" class="screen">
         <div class="settings-header"><h2>📖 Nasıl Oynanır?</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="howto-content">
-            <div class="howto-item"><div class="howto-icon">🎯</div><div><strong>Doğru Cevap:</strong> Her doğru cevap 100 puan ve 10 coin kazandırır.</div></div>
+            <div class="howto-item"><div class="howto-icon">🎯</div><div><strong>Doğru Cevap:</strong> Her doğru cevap 100 puan ve 5 coin kazandırır.</div></div>
             <div class="howto-item"><div class="howto-icon">⭐</div><div><strong>Yıldızlar:</strong> %30 ile 1, %70 ile 2, %100 ile 3 yıldız alırsın.</div></div>
             <div class="howto-item"><div class="howto-icon">🔒</div><div><strong>Kilit Açma:</strong> Ya yeterli yıldız topla ya da coin öde.</div></div>
-            <div class="howto-item"><div class="howto-icon">🃏</div><div><strong>Jokerler:</strong> Zorlandığında joker kullan. Coin maliyeti vardır.</div></div>
+            <div class="howto-item"><div class="howto-icon">🃏</div><div><strong>Jokerler:</strong> ✂️ 30, 🎯 70, ❤️ 50 coin.</div></div>
             <div class="howto-item"><div class="howto-icon">🎡</div><div><strong>Çarkıfelek:</strong> 4 saatte 1 ücretsiz çevirme hakkın var!</div></div>
             <div class="howto-item"><div class="howto-icon">🎁</div><div><strong>Günlük Ödül:</strong> Her gün gel, artan ödüller kazan!</div></div>
             <div class="howto-item"><div class="howto-icon">🏆</div><div><strong>Başarımlar:</strong> Hedefleri tamamla, büyük ödüller kazan!</div></div>
+            <div class="howto-item"><div class="howto-icon">👑</div><div><strong>Şampiyonlar Ligi:</strong> 60+ yıldız toplayınca özel bölüm açılır!</div></div>
+            <div class="howto-item"><div class="howto-icon">📤</div><div><strong>Paylaş & Kazan:</strong> Oyunu paylaş, her gün +10 ⭐ kazan!</div></div>
         </div>
     </div>
 
@@ -101,6 +104,7 @@
             <div class="player-rank" id="player-rank">🏅 ACEMİ</div>
             <div class="player-rank-desc" id="player-rank-desc">Daha yeni başlıyorsun, devam et!</div>
         </div>
+        <button class="menu-btn btn-share" onclick="shareProfile()">📤 PROFİLİMİ PAYLAŞ</button>
     </div>
 
     <div id="settings-screen" class="screen">
@@ -150,9 +154,9 @@
         <div class="jokers-panel">
             <div class="joker-info-title">JOKERLER (🪙 Coin ile alınır)</div>
             <div class="jokers-container">
-                <div class="joker-wrapper"><button class="joker-btn" id="joker-5050" onclick="useJoker('5050')">✂️</button><div class="joker-desc">İki yanlış şıkkı siler</div><div class="joker-price-tag">🪙 20</div></div>
-                <div class="joker-wrapper"><button class="joker-btn" id="joker-answer" onclick="useJoker('answer')">🎯</button><div class="joker-desc">Doğru cevabı gösterir</div><div class="joker-price-tag">🪙 40</div></div>
-                <div class="joker-wrapper"><button class="joker-btn" id="joker-double" onclick="useJoker('double')">❤️</button><div class="joker-desc">Bir yanlış hakkı daha verir</div><div class="joker-price-tag">🪙 60</div></div>
+                <div class="joker-wrapper"><button class="joker-btn" id="joker-5050" onclick="useJoker('5050')">✂️</button><div class="joker-desc">İki yanlış şıkkı siler</div><div class="joker-price-tag">🪙 30</div></div>
+                <div class="joker-wrapper"><button class="joker-btn" id="joker-answer" onclick="useJoker('answer')">🎯</button><div class="joker-desc">Doğru cevabı gösterir</div><div class="joker-price-tag">🪙 70</div></div>
+                <div class="joker-wrapper"><button class="joker-btn" id="joker-double" onclick="useJoker('double')">❤️</button><div class="joker-desc">Bir yanlış hakkı daha verir</div><div class="joker-price-tag">🪙 50</div></div>
             </div>
         </div>
         <div class="options-list" id="options-container"></div>
@@ -163,8 +167,11 @@
             <div class="big-stars" id="result-stars">⭐⭐⭐</div>
             <h2 id="final-score-text">SKOR: 0</h2>
             <p id="final-correct-text">Doğru Sayısı: 0/10</p>
-            <button class="menu-btn btn-play" onclick="restartLevel()">🔄 TEKRAR OYNA</button>
-            <button class="menu-btn btn-settings" onclick="showLevelScreen()">📋 LEVEL LİSTESİ</button>
+            <div class="score-actions">
+                <button class="menu-btn btn-play" onclick="restartLevel()">🔄 TEKRAR OYNA</button>
+                <button class="menu-btn btn-share" onclick="shareScore()">📤 PAYLAŞ</button>
+                <button class="menu-btn btn-settings" onclick="showLevelScreen()">📋 LEVEL LİSTESİ</button>
+            </div>
         </div>
     </div>
 
