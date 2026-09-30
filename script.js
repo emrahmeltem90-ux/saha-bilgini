@@ -5,13 +5,11 @@ const sesTiklama = new Audio('ses_tiklama.mp3');
 const sesCark = new Audio('ses_cark.mp3');
 sesDogru.volume = 0.7; sesYanlis.volume = 0.7; sesTiklama.volume = 0.5; sesCark.volume = 0.6;
 
-// --- ARKA PLAN MÜZİĞİ ---
 const muzikArkaplan = new Audio('muzik_arkaplan.mp3');
 muzikArkaplan.loop = true;
 muzikArkaplan.volume = 0.3;
 let muzikCaliniyor = false;
 
-// --- ÇARKIFELEK ÖDÜLLERİ ---
 const WHEEL_PRIZES = [
     { label: "10 🪙", type: "coin", value: 10, color: "#f472b6" },
     { label: "25 🪙", type: "coin", value: 25, color: "#34d399" },
@@ -45,7 +43,8 @@ const ACHIEVEMENTS = [
     { id: 'daily_7', icon: '📅', title: 'Sadık Oyuncu', desc: '7 gün üst üste giriş yap', reward: '1000 🪙 + 10 ⭐', coin: 1000, star: 10, check: (p) => (p.dailyStreak || 0) >= 7 },
     { id: 'spin_10', icon: '🎡', title: 'Şanslı', desc: '10 kez çark çevir', reward: '200 🪙', coin: 200, star: 0, check: (p) => (p.totalSpins || 0) >= 10 },
     { id: 'joker_5', icon: '🃏', title: 'Jokerci', desc: '5 kez joker kullan', reward: '150 🪙', coin: 150, star: 0, check: (p) => (p.totalJokersUsed || 0) >= 5 },
-    { id: 'score_1000', icon: '💯', title: 'Binlik', desc: 'Toplam 1000 puana ulaş', reward: '300 🪙', coin: 300, star: 0, check: (p) => (p.totalScore || 0) >= 1000 }
+    { id: 'score_1000', icon: '💯', title: 'Binlik', desc: 'Toplam 1000 puana ulaş', reward: '300 🪙', coin: 300, star: 0, check: (p) => (p.totalScore || 0) >= 1000 },
+    { id: 'sharer', icon: '📤', title: 'Paylaşımcı', desc: 'Oyunu bir kez paylaş', reward: '50 🪙', coin: 50, star: 0, check: (p) => (p.totalShares || 0) >= 1 }
 ];
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -53,12 +52,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const percentDisplay = document.getElementById('splash-percent');
     const loaderContainer = document.getElementById('loader-container');
     const startBtn = document.getElementById('start-music-btn');
-    
     const interval = setInterval(() => {
         percent += Math.floor(Math.random() * 5) + 1;
         if (percent >= 100) {
-            percent = 100; 
-            clearInterval(interval);
+            percent = 100; clearInterval(interval);
             if(percentDisplay) percentDisplay.innerText = percent + '%';
             setTimeout(() => {
                 if (loaderContainer) {
@@ -81,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 let levelsData = [];
 let championsData = [];
-
 async function loadAllQuestions() {
     const files = ['sorular_1.json', 'sorular_2.json', 'sorular_3.json', 'sorular_4.json'];
     try {
@@ -93,8 +89,6 @@ async function loadAllQuestions() {
             levelsData = levelsData.concat(kategoriler);
         }
     } catch (error) { console.error("Hata:", error); }
-    
-    // Şampiyonlar Ligi sorularını yükle
     try {
         const response = await fetch('sorular_5.json');
         if (response.ok) {
@@ -116,7 +110,7 @@ let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {}, totalStars: 0, totalCoins: 100,
     profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0,
     lastDailyClaim: 0, dailyStreak: 0, totalSpins: 0, totalJokersUsed: 0, unlockedAchievements: [],
-    musicEnabled: true, soundEnabled: true
+    musicEnabled: true, soundEnabled: true, lastShareDate: "", totalShares: 0
 };
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
@@ -134,6 +128,8 @@ if (userProgress.totalJokersUsed === undefined) userProgress.totalJokersUsed = 0
 if (userProgress.unlockedAchievements === undefined) userProgress.unlockedAchievements = [];
 if (userProgress.musicEnabled === undefined) userProgress.musicEnabled = true;
 if (userProgress.soundEnabled === undefined) userProgress.soundEnabled = true;
+if (userProgress.lastShareDate === undefined) userProgress.lastShareDate = "";
+if (userProgress.totalShares === undefined) userProgress.totalShares = 0;
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -181,10 +177,7 @@ function startGameWithMusic() {
     }
     const splash = document.getElementById('splash-screen');
     splash.style.opacity = '0';
-    setTimeout(() => {
-        splash.style.display = 'none';
-        showMenuScreen();
-    }, 500);
+    setTimeout(() => { splash.style.display = 'none'; showMenuScreen(); }, 500);
 }
 
 function toggleMusic() {
@@ -192,10 +185,7 @@ function toggleMusic() {
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     if (userProgress.musicEnabled) {
         muzikArkaplan.play().then(() => { muzikCaliniyor = true; }).catch(err => console.log(err));
-    } else {
-        muzikArkaplan.pause();
-        muzikCaliniyor = false;
-    }
+    } else { muzikArkaplan.pause(); muzikCaliniyor = false; }
 }
 
 function toggleSound() {
@@ -224,10 +214,7 @@ function checkAchievements() {
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel();
         newUnlocks.forEach((ach, index) => {
-            setTimeout(() => {
-                sesDogru.play();
-                showToast(`🏆 Başarım: ${ach.title} (+${ach.coin}🪙)`);
-            }, index * 1200);
+            setTimeout(() => { sesDogru.play(); showToast(`🏆 Başarım: ${ach.title} (+${ach.coin}🪙)`); }, index * 1200);
         });
     }
 }
@@ -241,35 +228,93 @@ function renderAchievements() {
         let done = userProgress.unlockedAchievements.includes(ach.id);
         let card = document.createElement('div');
         card.className = 'ach-card' + (done ? ' done' : '');
-        card.innerHTML = `
-            <div class="ach-icon">${ach.icon}</div>
-            <div class="ach-info">
-                <div class="ach-title">${ach.title}</div>
-                <div class="ach-desc">${ach.desc}</div>
-                <div class="ach-reward">Ödül: ${ach.reward}</div>
-            </div>
-            <div class="ach-status">${done ? '✅' : '🔒'}</div>
-        `;
+        card.innerHTML = `<div class="ach-icon">${ach.icon}</div><div class="ach-info"><div class="ach-title">${ach.title}</div><div class="ach-desc">${ach.desc}</div><div class="ach-reward">Ödül: ${ach.reward}</div></div><div class="ach-status">${done ? '✅' : '🔒'}</div>`;
         list.appendChild(card);
     });
+}
+
+// --- PAYLAŞIM FONKSİYONLARI ---
+function shareGameForStars() {
+    let today = new Date().toDateString();
+    if (userProgress.lastShareDate === today) {
+        showToast("⏳ Bugünkü paylaşım ödülünü zaten aldın! Yarın tekrar gel.");
+        return;
+    }
+    let shareText = `⚽ Futbol Bilgi Yarışması'nı oyna ve futbol bilgini test et! 🏆 Şu an ${userProgress.totalStars} yıldızım var. Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    if (navigator.share) {
+        navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        .then(() => {
+            userProgress.totalStars += 10;
+            userProgress.lastShareDate = today;
+            userProgress.totalShares = (userProgress.totalShares || 0) + 1;
+            localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+            updateTopPanel();
+            sesDogru.play();
+            showToast("⭐ Tebrikler! 10 yıldız kazandın!");
+            checkAchievements();
+        })
+        .catch((err) => { console.log("Paylaşım iptal edildi:", err); });
+    } else {
+        // Web Share API desteklenmiyorsa, WhatsApp ve X butonları
+        let choice = confirm("WhatsApp'ta paylaşmak için Tamam, X (Twitter)'da paylaşmak için İptal'e bas.");
+        let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
+        let text = encodeURIComponent(shareText);
+        if (choice) { window.open(`https://wa.me/?text=${text}`, '_blank'); }
+        else { window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank'); }
+        userProgress.totalStars += 10;
+        userProgress.lastShareDate = today;
+        userProgress.totalShares = (userProgress.totalShares || 0) + 1;
+        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+        updateTopPanel(); sesDogru.play();
+        showToast("⭐ Tebrikler! 10 yıldız kazandın!");
+        checkAchievements();
+    }
+}
+
+function shareScore() {
+    let levelName = isChampionLevel ? championsData[currentLevelIndex].kategori : (levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`);
+    let totalQ = isChampionLevel ? championsData[currentLevelIndex].sorular.length : levelsData[currentLevelIndex].sorular.length;
+    let shareText = `⚽ Futbol Bilgi Yarışması'nda "${levelName}" bölümünü ${score} puan ve ${correctCount}/${totalQ} doğruyla bitirdim! 🏆 Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    if (navigator.share) {
+        navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        .catch((err) => { console.log("Paylaşım iptal edildi:", err); });
+    } else {
+        let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
+        let text = encodeURIComponent(shareText);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    userProgress.totalShares = (userProgress.totalShares || 0) + 1;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    checkAchievements();
+}
+
+function shareProfile() {
+    let rank = calculateRank();
+    let shareText = `⚽ Futbol Bilgi Yarışması'nda ${userProgress.profileName} adlı oyuncunun profili! 🏆 Rütbe: ${rank.name} | Toplam Puan: ${userProgress.totalScore} | Doğruluk: ${rank.percentage}% Sen de katıl! 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    if (navigator.share) {
+        navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        .catch((err) => { console.log("Paylaşım iptal edildi:", err); });
+    } else {
+        let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
+        let text = encodeURIComponent(shareText);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    userProgress.totalShares = (userProgress.totalShares || 0) + 1;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    checkAchievements();
 }
 
 function checkDailyReward() {
     let now = Date.now();
     let lastClaim = userProgress.lastDailyClaim || 0;
-    let timePassed = now - lastClaim;
-    if (timePassed >= ONE_DAY_MS || lastClaim === 0) return true;
+    if (now - lastClaim >= ONE_DAY_MS || lastClaim === 0) return true;
     return false;
 }
 
 function getDailyStreak() {
     let now = Date.now();
     let lastClaim = userProgress.lastDailyClaim || 0;
-    let timePassed = now - lastClaim;
-    if (timePassed > 2 * ONE_DAY_MS) {
-        userProgress.dailyStreak = 0;
-        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-    }
+    if (now - lastClaim > 2 * ONE_DAY_MS) { userProgress.dailyStreak = 0; localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress)); }
     return userProgress.dailyStreak || 0;
 }
 
@@ -280,7 +325,6 @@ function renderDailyGrid() {
     grid.innerHTML = '';
     let currentStreak = getDailyStreak();
     let canClaim = checkDailyReward();
-
     for (let i = 0; i < DAILY_REWARDS.length; i++) {
         let reward = DAILY_REWARDS[i];
         let card = document.createElement('div');
@@ -292,13 +336,10 @@ function renderDailyGrid() {
         card.innerHTML = `<div class="daily-day">${reward.day}. Gün</div><div class="daily-reward">${rewardText}</div>`;
         grid.appendChild(card);
     }
-
     let btn = document.getElementById('daily-claim-btn');
     let status = document.getElementById('daily-status');
-
     if (canClaim) {
-        btn.disabled = false;
-        btn.innerText = 'ÖDÜLÜ AL 🎁';
+        btn.disabled = false; btn.innerText = 'ÖDÜLÜ AL 🎁';
         status.innerText = `Bugünkü ödülünü alabilirsin! (Seri: ${currentStreak + 1}/7)`;
     } else {
         btn.disabled = true;
@@ -324,10 +365,7 @@ function claimDailyReward() {
     let msg = `🎁 ${reward.coin} Coin`;
     if (reward.star > 0) msg += ` + ${reward.star} Yıldız`;
     msg += " kazandın!";
-    showToast(msg);
-    updateTopPanel();
-    renderDailyGrid();
-    checkAchievements();
+    showToast(msg); updateTopPanel(); renderDailyGrid(); checkAchievements();
 }
 
 function calculateRank() {
@@ -392,8 +430,7 @@ function loadProfileName() {
 function showSpinScreen() {
     showScreen('spin-screen');
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins || 0;
-    updateSpinTimer();
-    drawWheel();
+    updateSpinTimer(); drawWheel();
 }
 
 function drawWheel() {
@@ -496,8 +533,7 @@ function givePrize(prize) {
     document.getElementById('prize-title').innerText = title;
     document.getElementById('prize-text').innerText = text;
     document.getElementById('prize-modal').classList.add('active');
-    updateSpinTimer();
-    checkAchievements();
+    updateSpinTimer(); checkAchievements();
 }
 
 function closePrizeModal() { document.getElementById('prize-modal').classList.remove('active'); sesTiklama.play(); }
@@ -517,8 +553,6 @@ function showLevelScreen() {
     const container = document.getElementById('levels-container');
     container.innerHTML = ''; updateTopPanel();
     if (levelsData.length === 0) { container.innerHTML = "<p style='color:#fff;'>Yükleniyor...</p>"; return; }
-    
-    // Normal 40 level
     for (let i = 0; i < 40; i++) {
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
         let catData = levelsData[i] || { kategori: `LEVEL ${i+1}` };
@@ -533,29 +567,18 @@ function showLevelScreen() {
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
         let statusHtml = isUnlocked ? '<span>🏆</span>' : `<div class="level-coin-btn">🪙 ${levelCoinCosts[i] || 100}</div>`;
-        card.innerHTML = `
-            <div class="level-avatar-box"><div class="level-avatar-icon">${emojiData.icon}</div><div class="level-avatar-role">${emojiData.role}</div></div>
-            <div class="level-info">
-                <div class="level-title">${catName}</div>
-                <div class="level-progress-bar"><div class="level-progress-fill" style="width:${(progress.score / 100) * 100}%"></div><div class="level-progress-text">${progress.score}/100</div></div>
-                <div class="level-stars">${starsStr}</div>
-            </div>
-            <div class="level-status">${statusHtml}</div>`;
+        card.innerHTML = `<div class="level-avatar-box"><div class="level-avatar-icon">${emojiData.icon}</div><div class="level-avatar-role">${emojiData.role}</div></div><div class="level-info"><div class="level-title">${catName}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${(progress.score / 100) * 100}%"></div><div class="level-progress-text">${progress.score}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
         card.onclick = () => { sesTiklama.play(); if (isUnlocked) startLevel(i); else openUnlockModal(i); };
         container.appendChild(card);
     }
-
-    // Şampiyonlar Ligi (Level 41-50)
     if (championsData.length > 0) {
-        // Başlık
         let header = document.createElement('div');
         header.className = 'champion-header';
         header.innerHTML = `<span>👑 ŞAMPİYONLAR LİGİ</span>`;
         container.appendChild(header);
-
         for (let i = 0; i < championsData.length; i++) {
             let champ = championsData[i];
-            let levelIndex = 40 + i; // 41'den başlar
+            let levelIndex = 40 + i;
             let progress = userProgress.levels[levelIndex] || { stars: 0, score: 0, unlocked: false };
             let requiredStars = champ.gereken_yildiz || 100;
             let isUnlocked = (userProgress.totalStars || 0) >= requiredStars;
@@ -563,18 +586,10 @@ function showLevelScreen() {
             if (progress.stars === 1) starsStr = '⭐☆☆';
             if (progress.stars === 2) starsStr = '⭐⭐☆';
             if (progress.stars === 3) starsStr = '⭐⭐⭐';
-
             let card = document.createElement('div');
             card.className = 'level-card champion-card' + (isUnlocked ? '' : ' locked');
             let statusHtml = isUnlocked ? '<span>👑</span>' : `<div class="level-coin-btn">⭐ ${requiredStars}</div>`;
-            card.innerHTML = `
-                <div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">👑</div><div class="level-avatar-role">ŞAMPİYON</div></div>
-                <div class="level-info">
-                    <div class="level-title">${champ.kategori}</div>
-                    <div class="level-progress-bar"><div class="level-progress-fill" style="width:${(progress.score / 100) * 100}%"></div><div class="level-progress-text">${progress.score}/100</div></div>
-                    <div class="level-stars">${starsStr}</div>
-                </div>
-                <div class="level-status">${statusHtml}</div>`;
+            card.innerHTML = `<div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">👑</div><div class="level-avatar-role">ŞAMPİYON</div></div><div class="level-info"><div class="level-title">${champ.kategori}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${(progress.score / 100) * 100}%"></div><div class="level-progress-text">${progress.score}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
             card.onclick = () => { sesTiklama.play(); if (isUnlocked) startChampionLevel(i); else showToast(`Bu bölüm için ${requiredStars} yıldız gerekiyor!`); };
             container.appendChild(card);
         }
@@ -582,7 +597,6 @@ function showLevelScreen() {
     showScreen('levels-screen');
 }
 
-// Şampiyonlar Ligi'ni başlat
 function startChampionLevel(champIndex) {
     isChampionLevel = true;
     currentLevelIndex = champIndex;
@@ -643,12 +657,10 @@ function selectChampionOption(selectedIndex, selectedBtn) {
     } else {
         if (hasDoubleChance) {
             hasDoubleChance = false;
-            selectedBtn.classList.add("incorrect");
-            selectedBtn.disabled = true;
+            selectedBtn.classList.add("incorrect"); selectedBtn.disabled = true;
             sesYanlis.play(); updateJokerButtons();
         } else {
-            answered = true; clearInterval(timerInterval);
-            wrongCount++;
+            answered = true; clearInterval(timerInterval); wrongCount++;
             selectedBtn.classList.add("incorrect");
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
             sesYanlis.play();
@@ -673,13 +685,11 @@ function showChampionResults() {
     if (percentage >= 30) starsEarned = 1;
     if (percentage >= 70) starsEarned = 2;
     if (percentage >= 100) starsEarned = 3;
-
     userProgress.totalScore = (userProgress.totalScore || 0) + score;
     userProgress.totalCorrect = (userProgress.totalCorrect || 0) + correctCount;
     userProgress.totalWrong = (userProgress.totalWrong || 0) + wrongCount;
     if (score > (userProgress.highScore || 0)) userProgress.highScore = score;
     if (starsEarned === 3) userProgress.perfectLevels = (userProgress.perfectLevels || 0) + 1;
-
     let levelIndex = 40 + currentLevelIndex;
     let prevStars = userProgress.levels[levelIndex] ? userProgress.levels[levelIndex].stars : 0;
     if (starsEarned > prevStars) {
@@ -689,10 +699,9 @@ function showChampionResults() {
         userProgress.levels[levelIndex] = { stars: starsEarned, score: score, unlocked: true };
         userProgress.totalStars += starsEarned;
     }
-    let coinsEarned = correctCount * 20; // Şampiyonlar Ligi'nde 20 coin
+    let coinsEarned = correctCount * 20;
     userProgress.totalCoins += coinsEarned;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
     if (starsEarned === 2) starsDisplay = '⭐⭐☆';
@@ -808,9 +817,7 @@ function useJoker(type) {
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel(); sesTiklama.play();
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
-    let currentQ = isChampionLevel 
-        ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex])
-        : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
+    let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
     if (type === "5050") {
         let wrongIndices = [];
         for (let i = 0; i < 4; i++) { if (i !== currentQ.dogru) wrongIndices.push(i); }
@@ -839,12 +846,10 @@ function selectOption(selectedIndex, selectedBtn) {
     } else {
         if (hasDoubleChance) {
             hasDoubleChance = false;
-            selectedBtn.classList.add("incorrect");
-            selectedBtn.disabled = true;
+            selectedBtn.classList.add("incorrect"); selectedBtn.disabled = true;
             sesYanlis.play(); updateJokerButtons();
         } else {
-            answered = true; clearInterval(timerInterval);
-            wrongCount++;
+            answered = true; clearInterval(timerInterval); wrongCount++;
             selectedBtn.classList.add("incorrect");
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
             sesYanlis.play();
@@ -869,13 +874,11 @@ function showResults() {
     if (percentage >= 30) starsEarned = 1;
     if (percentage >= 70) starsEarned = 2;
     if (percentage >= 100) starsEarned = 3;
-
     userProgress.totalScore = (userProgress.totalScore || 0) + score;
     userProgress.totalCorrect = (userProgress.totalCorrect || 0) + correctCount;
     userProgress.totalWrong = (userProgress.totalWrong || 0) + wrongCount;
     if (score > (userProgress.highScore || 0)) userProgress.highScore = score;
     if (starsEarned === 3) userProgress.perfectLevels = (userProgress.perfectLevels || 0) + 1;
-
     let prevStars = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].stars : 0;
     if (starsEarned > prevStars) {
         userProgress.totalStars += (starsEarned - prevStars);
@@ -887,7 +890,6 @@ function showResults() {
     let coinsEarned = correctCount * 5;
     userProgress.totalCoins += coinsEarned;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
     if (starsEarned === 2) starsDisplay = '⭐⭐☆';
@@ -908,4 +910,4 @@ function watchAdForStars() {
         updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
         checkAchievements();
     }, 1500);
-             }
+}
