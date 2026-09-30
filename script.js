@@ -1,4 +1,3 @@
-// Level 1'den Level 40'a Kolaydan Zora Doğru 400 Soru Havuzu
 const levelsData = [];
 
 // Level 1: Temel Futbol Kuralları
@@ -48,7 +47,9 @@ let score = 0;
 let isAnswerLocked = false;
 
 const mainMenu = document.getElementById('main-menu');
+const loadingScreen = document.getElementById('loading-screen');
 const gameScreen = document.getElementById('game-screen');
+const progressBar = document.getElementById('progress-bar');
 const startBtn = document.getElementById('start-btn');
 const homeBtn = document.getElementById('home-btn');
 const questionText = document.getElementById('question-text');
@@ -59,7 +60,7 @@ const scoreDisplay = document.getElementById('score-display');
 const fiftyJokerBtn = document.getElementById('fifty-joker');
 const passJokerBtn = document.getElementById('pass-joker');
 
-startBtn.addEventListener('click', startGame);
+startBtn.addEventListener('click', startLoadingSequence);
 homeBtn.addEventListener('click', goHome);
 
 optionBtns.forEach(btn => {
@@ -69,17 +70,28 @@ optionBtns.forEach(btn => {
 fiftyJokerBtn.addEventListener('click', useFiftyJoker);
 passJokerBtn.addEventListener('click', usePassJoker);
 
-function startGame() {
+function startLoadingSequence() {
     mainMenu.style.display = 'none';
-    gameScreen.style.display = 'flex';
-    currentLevel = 0;
-    currentQuestionIndex = 0;
-    score = 0;
-    loadQuestion();
+    loadingScreen.style.display = 'flex';
+    progressBar.style.width = '0%';
+
+    setTimeout(() => {
+        progressBar.style.width = '100%';
+    }, 100);
+
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        gameScreen.style.display = 'flex';
+        currentLevel = 0;
+        currentQuestionIndex = 0;
+        score = 0;
+        loadQuestion();
+    }, 1300);
 }
 
 function goHome() {
     gameScreen.style.display = 'none';
+    loadingScreen.style.display = 'none';
     mainMenu.style.display = 'flex';
 }
 
