@@ -35,7 +35,6 @@ async function loadAllQuestions() {
             if (!response.ok) throw new Error(`${file} yüklenemedi`);
             const data = await response.json();
             
-            // JSON'un yapısını kontrol et: "kategoriler" anahtarı var mı?
             let kategoriler = [];
             if (data.kategoriler && Array.isArray(data.kategoriler)) {
                 kategoriler = data.kategoriler;
@@ -43,20 +42,17 @@ async function loadAllQuestions() {
                 kategoriler = data;
             }
             
-            // Gelen kategorileri ana listeye ekle
             levelsData = levelsData.concat(kategoriler);
         }
         console.log("Tüm sorular başarıyla yüklendi! Toplam kategori:", levelsData.length);
     } catch (error) {
         console.error("Sorular yüklenirken hata oluştu:", error);
-        // Hata durumunda eski örnek soruları kullan (yedek)
         levelsData = [
             { kategori: "Yedek Kategori", sorular: [{ soru: "Yedek Soru?", secenekler: ["A", "B", "C", "D"], dogru: 0 }] }
         ];
     }
 }
 
-// Sayfa yüklendiğinde soruları çek
 loadAllQuestions();
 
 let currentLevelIndex = 0;
@@ -74,29 +70,36 @@ if (!userProgress.levels[0]) {
     userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 }
 
-// Kategorilere göre rol ve ikon eşleştirmesi
-const levelRoles = [
-    { role: "DÜNYA KUPASI", icon: "🏆" },
-    { role: "ŞAMPİYONLAR LİGİ", icon: "⭐" },
-    { role: "TÜRK FUTBOLU", icon: "🇹🇷" },
-    { role: "PREMIER LİG", icon: "🦁" },
-    { role: "LA LIGA", icon: "🇪🇸" },
-    { role: "SERIE A", icon: "🇮🇹" },
-    { role: "BUNDESLIGA", icon: "🇩🇪" },
-    { role: "LIGUE 1", icon: "🇫🇷" },
-    { role: "BALLON D'OR", icon: "🥇" },
-    { role: "AVRUPA LİGİ", icon: "🏅" },
-    { role: "MİLLİ TAKIMLAR", icon: "🌍" },
-    { role: "DÜNYA KUPASI 2022", icon: "🇶🇦" },
-    { role: "EFSANE FUTBOLCULAR", icon: "👑" },
-    { role: "GENÇ YETENEKLER", icon: "🌱" },
-    { role: "KALECİ EFSANELERİ", icon: "🧤" },
-    { role: "DEFANS EFSANELERİ", icon: "🛡️" },
-    { role: "ORTA SAHA", icon: "🎩" },
-    { role: "FORVET YILDIZLARI", icon: "⚽" },
-    { role: "TEKNİK DİREKTÖRLER", icon: "📋" },
-    { role: "KURALLAR", icon: "📜" }
-];
+// --- İKON EŞLEŞTİRME ---
+// Her kategori ID'sine karşılık gelen ikon dosyasını ve rol adını burada tanımlıyoruz.
+const categoryIcons = {
+    1: { icon: "icon_dunya_kupasi.jpg", role: "DÜNYA KUPASI" },
+    2: { icon: "icon_sampiyonlar.jpg", role: "ŞAMPİYONLAR LİGİ" },
+    3: { icon: "icon_turk_futbolu.jpg", role: "TÜRK FUTBOLU" },
+    4: { icon: "icon_premier_lig.jpg", role: "PREMIER LİG" },
+    5: { icon: "icon_la_liga.jpg", role: "LA LIGA" },
+    6: { icon: "icon_serie_a.jpg", role: "SERIE A" },
+    7: { icon: "icon_bundesliga.jpg", role: "BUNDESLIGA" },
+    8: { icon: "icon_ligue_1.jpg", role: "LIGUE 1" },
+    9: { icon: "icon_ballon_dor.jpg", role: "BALLON D'OR" },
+    10: { icon: "icon_avrupa_ligi.jpg", role: "AVRUPA LİGİ" },
+    11: { icon: "icon_milli_takimlar.jpg", role: "MİLLİ TAKIMLAR" },
+    12: { icon: "icon_dunya_kupasi_2022.jpg", role: "DÜNYA KUPASI 2022" },
+    13: { icon: "icon_efsaneler.jpg", role: "EFSANELER" },
+    14: { icon: "icon_genc_yetenekler.jpg", role: "GENÇ YETENEKLER" },
+    15: { icon: "icon_kaleci.jpg", role: "KALECİ EFSANELERİ" },
+    16: { icon: "icon_defans.jpg", role: "DEFANS EFSANELERİ" },
+    17: { icon: "icon_orta_saha.jpg", role: "ORTA SAHA" },
+    18: { icon: "icon_forvet.jpg", role: "FORVET YILDIZLARI" },
+    19: { icon: "icon_teknik_direktor.jpg", role: "TEKNİK DİREKTÖRLER" },
+    20: { icon: "icon_kurallar.jpg", role: "KURALLAR" },
+    // Diğer kategoriler için de aynı şekilde ekleyebilirsin
+};
+
+// Eğer tanımlı bir ikon yoksa varsayılan ikonu kullan
+function getCategoryIcon(categoryId) {
+    return categoryIcons[categoryId] || { icon: "icon_dunya_kupasi.jpg", role: "FUTBOL" };
+}
 
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -113,18 +116,15 @@ function updateTopPanel() {
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
 }
 
-// --- SORU FORMATINI STANDARTLAŞTIRAN YARDIMCI FONKSİYON ---
 function normalizeQuestion(q) {
     let soruMetni = q.soru;
     let secenekler = [];
     let dogruIndex = 0;
 
-    // Format 1: secenekler bir dizi ve dogru bir sayı (0,1,2,3)
     if (Array.isArray(q.secenekler)) {
         secenekler = q.secenekler;
         dogruIndex = q.dogru;
     } 
-    // Format 2: secenekler bir obje (A,B,C,D) ve dogru_cevap bir harf
     else if (typeof q.secenekler === 'object' && q.secenekler !== null) {
         secenekler = [q.secenekler.A, q.secenekler.B, q.secenekler.C, q.secenekler.D];
         const harf = q.dogru_cevap;
@@ -151,25 +151,23 @@ function showLevelScreen() {
         return;
     }
 
-    // Toplam level sayısı (40 level göstereceğiz)
     let totalLevels = 40;
 
     for (let i = 0; i < totalLevels; i++) {
         let lvlNum = i + 1;
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
         
-        // Kategori verisi var mı?
         let categoryData = levelsData[i] || { kategori: "Gelecek Kategori", kategori_adi: "Gelecek Kategori", sorular: [] };
         let categoryName = categoryData.kategori || categoryData.kategori_adi || `LEVEL ${lvlNum}`;
+        let categoryId = categoryData.kategori_id || (i + 1); // Kategori ID'sini al
 
-        // Kilit kontrolü (Basit: Bir önceki levelden 1 yıldız alınca açılır)
         let isUnlocked = (i === 0) || (userProgress.levels[i-1] && userProgress.levels[i-1].stars > 0);
 
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
         
-        // Rol ve ikon (Kategoriye göre)
-        let roleData = levelRoles[i % levelRoles.length];
+        // --- YENİ: İkon ve Rol Eşleştirmesi ---
+        let iconData = getCategoryIcon(categoryId);
 
         let starsStr = '☆☆☆';
         if (progress.stars === 1) starsStr = '⭐☆☆';
@@ -181,8 +179,8 @@ function showLevelScreen() {
 
         card.innerHTML = `
             <div class="level-avatar-box">
-                <div class="level-avatar-icon">${roleData.icon}</div>
-                <div class="level-avatar-role">${roleData.role}</div>
+                <img src="${iconData.icon}" alt="${iconData.role}" class="level-avatar-img">
+                <div class="level-avatar-role">${iconData.role}</div>
             </div>
             <div class="level-info">
                 <div class="level-title">${categoryName}</div>
@@ -212,7 +210,6 @@ function startLevel(levelIndex) {
     currentQuestionIndex = 0;
     score = 0;
     
-    // Kategori verisi var mı kontrol et
     if (!levelsData[levelIndex] || !levelsData[levelIndex].sorular || levelsData[levelIndex].sorular.length === 0) {
         alert("Bu level için henüz soru eklenmemiş. Lütfen daha sonra tekrar dene.");
         return;
@@ -233,7 +230,6 @@ function loadQuestion() {
         currentQuestionIndex = currentQuestionIndex % questionsInCategory.length;
     }
     
-    // Soruyu normalize et (eski veya yeni formatı standart hale getir)
     const rawQ = questionsInCategory[currentQuestionIndex];
     const currentQ = normalizeQuestion(rawQ);
     
@@ -337,7 +333,6 @@ function restartLevel() {
     startLevel(currentLevelIndex);
 }
 
-// Reklam İzle Fonksiyonu
 function watchAdForStars() {
     alert("Reklam izleniyor... (Simülasyon)");
     setTimeout(() => {
