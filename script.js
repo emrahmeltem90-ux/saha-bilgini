@@ -24,7 +24,6 @@ const WHEEL_PRIZES = [
 ];
 let isSpinning = false;
 
-// --- GÜNLÜK ÖDÜL AYARLARI ---
 const DAILY_REWARDS = [
     { day: 1, coin: 50, star: 0 }, { day: 2, coin: 100, star: 0 },
     { day: 3, coin: 150, star: 0 }, { day: 4, coin: 200, star: 0 },
@@ -33,7 +32,6 @@ const DAILY_REWARDS = [
 ];
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-// --- BAŞARIM TANIMLARI ---
 const ACHIEVEMENTS = [
     { id: 'first_blood', icon: '🩸', title: 'İlk Kan', desc: 'İlk doğru cevabını ver', reward: '50 🪙', coin: 50, star: 0, check: (p) => (p.totalCorrect || 0) >= 1 },
     { id: 'ten_correct', icon: '🥉', title: 'Çaylak', desc: '10 doğru cevap yap', reward: '100 🪙', coin: 100, star: 0, check: (p) => (p.totalCorrect || 0) >= 10 },
@@ -52,10 +50,28 @@ const ACHIEVEMENTS = [
 document.addEventListener("DOMContentLoaded", function() {
     let percent = 0;
     const percentDisplay = document.getElementById('splash-percent');
+    const loaderContainer = document.getElementById('loader-container');
+    const startBtn = document.getElementById('start-music-btn');
+    
     const interval = setInterval(() => {
         percent += Math.floor(Math.random() * 5) + 1;
         if (percent >= 100) {
-            percent = 100; clearInterval(interval);
+            percent = 100; 
+            clearInterval(interval);
+            if(percentDisplay) percentDisplay.innerText = percent + '%';
+            
+            setTimeout(() => {
+                if (loaderContainer) {
+                    loaderContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        loaderContainer.style.display = 'none';
+                        if (startBtn) {
+                            startBtn.style.display = 'block';
+                            setTimeout(() => { startBtn.classList.add('show'); }, 50);
+                        }
+                    }, 500);
+                }
+            }, 500);
         }
         if(percentDisplay) percentDisplay.innerText = percent + '%';
     }, 100);
@@ -129,7 +145,6 @@ function showScreen(screenId) {
 function showMenuScreen() { showScreen('menu-screen'); updateTopPanel(); checkAchievements(); }
 function showSettingsScreen() {
     showScreen('settings-screen');
-    // Switch durumlarını güncelle
     document.getElementById('toggle-music').checked = userProgress.musicEnabled;
     document.getElementById('toggle-sound').checked = userProgress.soundEnabled;
 }
@@ -150,13 +165,11 @@ function showToast(message) {
 
 // --- MÜZİK KONTROLÜ ---
 function startGameWithMusic() {
-    // Müziği başlat
     if (userProgress.musicEnabled) {
         muzikArkaplan.play().then(() => {
             muzikCaliniyor = true;
         }).catch(err => console.log("Müzik hatası:", err));
     }
-    // Splash ekranını gizle
     const splash = document.getElementById('splash-screen');
     splash.style.opacity = '0';
     setTimeout(() => {
@@ -327,7 +340,6 @@ function claimDailyReward() {
     checkAchievements();
 }
 
-// --- RÜTBE HESAPLAMA ---
 function calculateRank() {
     let total = (userProgress.totalCorrect || 0) + (userProgress.totalWrong || 0);
     if (total === 0) return { name: "🏅 ACEMİ", desc: "Daha yeni başlıyorsun, devam et!", percentage: 0 };
@@ -387,7 +399,6 @@ function loadProfileName() {
     document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
 }
 
-// --- ÇARKIFELEK ---
 function showSpinScreen() {
     showScreen('spin-screen');
     document.getElementById('spin-coins-display').innerText = userProgress.totalCoins || 0;
@@ -501,7 +512,6 @@ function givePrize(prize) {
 
 function closePrizeModal() { document.getElementById('prize-modal').classList.remove('active'); sesTiklama.play(); }
 
-// --- OYUN MANTIĞI ---
 function normalizeQuestion(q) {
     let secenekler = [], dogruIndex = 0;
     if (Array.isArray(q.secenekler)) { secenekler = q.secenekler; dogruIndex = q.dogru; }
