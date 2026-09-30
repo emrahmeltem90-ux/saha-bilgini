@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saha Bilgini - Futbol Bilgi Yarışması</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>SAHA BİLGİNİ</h1>
+            <div class="stats">
+                <span>Puan: <strong id="score">0</strong></span>
+                <span>Soru: <strong id="question-count">1/400</strong></span>
+            </div>
+        </header>
+
+        <div class="quiz-box">
+            <div id="question-text" class="question">Soru yükleniyor...</div>
+            <div class="options-grid" id="options-container">
+                <!-- Şıklar buraya dinamik gelecek -->
+            </div>
+        </div>
+
+        <button id="next-btn" class="next-btn" style="display: none;">Sonraki Soru</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
