@@ -8,10 +8,14 @@
     <style>
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes floatIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); } 50% { box-shadow: 0 0 30px rgba(251, 191, 36, 1); } }
     </style>
 </head>
 <body>
 
+    <!-- SPLASH -->
     <div id="splash-screen">
         <img src="splash-bg.jpg" alt="Futbol Bilgini" class="bg">
         <div class="loader-container" id="loader-container">
@@ -22,6 +26,7 @@
         <button id="start-music-btn" class="start-btn" onclick="startGameWithMusic()" style="display: none;">BAŞLAMAK İÇİN DOKUNUN</button>
     </div>
 
+    <!-- ANA MENÜ -->
     <div id="menu-screen" class="screen active">
         <div class="top-panel">
             <div class="profile-box" onclick="showProfileScreen()" style="cursor:pointer;">
@@ -31,10 +36,15 @@
             <div class="stats-box"><span class="stat-icon">⭐</span><span id="total-stars-display">0</span></div>
             <div class="stats-box"><span class="stat-icon">🪙</span><span id="total-coins-display">0</span></div>
         </div>
+        <!-- Günlük hatırlatıcı -->
+        <div id="daily-reminder-banner" class="daily-reminder" style="display:none;" onclick="showDailyScreen()">
+            <span>🎁 Günlük ödülünü almayı unutma!</span>
+        </div>
         <div class="logo-container"><h1 class="game-logo">FUTBOL<br><span>BİLGİ YARIŞMASI</span></h1></div>
         <div class="menu-buttons">
             <button class="menu-btn btn-play" onclick="showLevelScreen()">▶️ OYUNA BAŞLA</button>
             <button class="menu-btn btn-daily" onclick="showDailyScreen()">🎁 GÜNLÜK ÖDÜL</button>
+            <button class="menu-btn btn-daily-quest" onclick="showQuestsScreen()">🔥 GÜNLÜK GÖREVLER</button>
             <button class="menu-btn btn-ach" onclick="showAchievementsScreen()">🏆 BAŞARIMLAR</button>
             <button class="menu-btn btn-spin" onclick="showSpinScreen()">🎡 ÇARKIFELEK</button>
             <button class="menu-btn btn-invite" onclick="shareGameForStars()">📤 ARKADAŞINI DAVET ET (+10 ⭐)</button>
@@ -43,12 +53,21 @@
         </div>
     </div>
 
+    <!-- BAŞARIMLAR -->
     <div id="achievements-screen" class="screen">
         <div class="settings-header"><h2>🏆 Başarımlar</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <p class="ach-subtitle">Hedefleri tamamla, ödülleri kap!</p>
         <div class="ach-list" id="ach-list"></div>
     </div>
 
+    <!-- GÜNLÜK GÖREVLER -->
+    <div id="quests-screen" class="screen">
+        <div class="settings-header"><h2>🔥 Günlük Görevler</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
+        <p class="ach-subtitle">Bugünün hedeflerini tamamla, ekstra ödüller kazan!</p>
+        <div class="ach-list" id="quests-list"></div>
+    </div>
+
+    <!-- GÜNLÜK ÖDÜL -->
     <div id="daily-screen" class="screen">
         <div class="settings-header"><h2>🎁 Günlük Ödül</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <p class="daily-subtitle">Her gün gel, ödülünü al! Seri bozulursa başa döner.</p>
@@ -57,6 +76,14 @@
         <p class="daily-status" id="daily-status"></p>
     </div>
 
+    <!-- LİDERLİK TABLOSU -->
+    <div id="leaderboard-screen" class="screen">
+        <div class="settings-header"><h2>🥇 Liderlik Tablosu</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
+        <p class="ach-subtitle">En yüksek skorların!</p>
+        <div class="ach-list" id="leaderboard-list"></div>
+    </div>
+
+    <!-- NASIL OYNANIR -->
     <div id="howto-screen" class="screen">
         <div class="settings-header"><h2>📖 Nasıl Oynanır?</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="howto-content">
@@ -66,14 +93,17 @@
             <div class="howto-item"><div class="howto-icon">🃏</div><div><strong>Jokerler:</strong> ✂️ 30, 🎯 70, ❤️ 50 coin.</div></div>
             <div class="howto-item"><div class="howto-icon">🎡</div><div><strong>Çarkıfelek:</strong> 4 saatte 1 ücretsiz çevirme hakkın var!</div></div>
             <div class="howto-item"><div class="howto-icon">🎁</div><div><strong>Günlük Ödül:</strong> Her gün gel, artan ödüller kazan!</div></div>
+            <div class="howto-item"><div class="howto-icon">🔥</div><div><strong>Günlük Görevler:</strong> Bugünün hedeflerini tamamla, ekstra kazan!</div></div>
             <div class="howto-item"><div class="howto-icon">🏆</div><div><strong>Başarımlar:</strong> Hedefleri tamamla, büyük ödüller kazan!</div></div>
             <div class="howto-item"><div class="howto-icon">👑</div><div><strong>Şampiyonlar Ligi:</strong> 60+ yıldız toplayınca özel bölüm açılır!</div></div>
             <div class="howto-item"><div class="howto-icon">📤</div><div><strong>Paylaş & Kazan:</strong> Oyunu paylaş, her gün +10 ⭐ kazan!</div></div>
         </div>
     </div>
 
+    <!-- TOAST -->
     <div id="toast-notification" class="toast">İsim kaydedildi!</div>
 
+    <!-- PROFİL -->
     <div id="profile-screen" class="screen">
         <div class="profile-header">
             <h2>👤 Oyuncu Profili</h2>
@@ -107,6 +137,7 @@
         <button class="menu-btn btn-share" onclick="shareProfile()">📤 PROFİLİMİ PAYLAŞ</button>
     </div>
 
+    <!-- AYARLAR -->
     <div id="settings-screen" class="screen">
         <div class="settings-header"><h2>⚙️ Ayarlar</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="settings-list">
@@ -118,11 +149,17 @@
                 <span>🔊 Ses Efektleri</span>
                 <label class="switch"><input type="checkbox" id="toggle-sound" onchange="toggleSound()"><span class="slider"></span></label>
             </div>
+            <div class="setting-item">
+                <span>🌗 Tema</span>
+                <button class="theme-btn" onclick="toggleTheme()" id="theme-toggle-btn">🌙 KOYU</button>
+            </div>
             <div class="setting-item"><span>Titreşim</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="setting-item"><span>🥇 Liderlik Tablosu</span><button class="theme-btn" onclick="showLeaderboardScreen()">GÖRÜNTÜLE</button></div>
             <div class="setting-item"><span>Verileri Sıfırla</span><button class="reset-btn" onclick="resetGame()">Sıfırla</button></div>
         </div>
     </div>
 
+    <!-- ÇARKIFELEK -->
     <div id="spin-screen" class="screen">
         <div class="spin-header">
             <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
@@ -136,12 +173,14 @@
         <p class="spin-timer" id="spin-timer-text">Ücretsiz Çevirme: Hazır!</p>
     </div>
 
+    <!-- LEVEL SEÇİM -->
     <div id="levels-screen" class="screen">
         <div class="screen-header"><span>Level Seçin</span><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="levels-container" id="levels-container"></div>
         <button class="ad-btn" onclick="watchAdForStars()">📺 Reklam izle (+5 ⭐ Kazan)</button>
     </div>
 
+    <!-- OYUN EKRANI -->
     <div id="quiz-screen" class="screen">
         <div class="quiz-header">
             <span id="question-counter">Soru 1/10</span>
@@ -162,6 +201,7 @@
         <div class="options-list" id="options-container"></div>
     </div>
 
+    <!-- SONUÇ -->
     <div id="score-screen" class="screen">
         <div class="score-content">
             <div class="big-stars" id="result-stars">⭐⭐⭐</div>
@@ -175,6 +215,7 @@
         </div>
     </div>
 
+    <!-- UNLOCK MODAL -->
     <div id="unlock-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close" onclick="closeUnlockModal()">✖</button>
@@ -187,12 +228,24 @@
         </div>
     </div>
 
+    <!-- PRIZE MODAL -->
     <div id="prize-modal" class="modal-overlay">
         <div class="modal-content prize-content">
             <div class="prize-icon" id="prize-icon">🎁</div>
             <h2 class="prize-title" id="prize-title">TEBRİKLER!</h2>
             <p class="prize-text" id="prize-text">Ödülünüz...</p>
             <button class="prize-collect-btn" onclick="closePrizeModal()">TOPLA ✅</button>
+        </div>
+    </div>
+
+    <!-- ÖDÜL KUTUSU MODAL -->
+    <div id="chest-modal" class="modal-overlay">
+        <div class="modal-content chest-content">
+            <button class="modal-close" onclick="closeChestModal()">✖</button>
+            <h2 class="modal-title">🏆 ÖDÜL KUTUSU!</h2>
+            <div class="chest-icon" id="chest-icon">📦</div>
+            <p class="chest-text" id="chest-text">Kutuyu açmak için dokun!</p>
+            <button class="chest-open-btn" id="chest-open-btn" onclick="openChest()">AÇ 📦</button>
         </div>
     </div>
 
