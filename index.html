@@ -45,7 +45,6 @@
         </div>
     </div>
 
-    <!-- YENİ: ÇARKIFELEK EKRANI -->
     <div id="spin-screen" class="screen">
         <div class="spin-header">
             <button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button>
@@ -95,6 +94,16 @@
             <p class="modal-subtext">TO UNLOCK THIS LEVEL</p>
             <button class="modal-unlock-btn" id="modal-unlock-btn" onclick="unlockLevelWithCoins()">UNLOCK NOW 🪙 <span id="modal-coin-cost">0</span></button>
             <p class="modal-coin-status" id="modal-coin-status"></p>
+        </div>
+    </div>
+
+    <!-- YENİ: ÖDÜL KAZANMA PENCERESİ -->
+    <div id="prize-modal" class="modal-overlay">
+        <div class="modal-content prize-content">
+            <div class="prize-icon" id="prize-icon">🎁</div>
+            <h2 class="prize-title" id="prize-title">TEBRİKLER!</h2>
+            <p class="prize-text" id="prize-text">Ödülünüz...</p>
+            <button class="prize-collect-btn" onclick="closePrizeModal()">TOPLA ✅</button>
         </div>
     </div>
 
