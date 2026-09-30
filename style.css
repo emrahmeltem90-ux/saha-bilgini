@@ -7,18 +7,17 @@
     --border-color: #334155;
     --danger-color: #ef4444;
     --star-color: #f59e0b;
+    --coin-color: #fbbf24;
     --locked-bg: #1e293b;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* ARKA PLAN GÖRSELİ EKLENDİ */
     background-image: url('stadium-bg.jpg');
-    background-size: cover;         /* Resmi ekrana tam sığdırır */
-    background-position: center;    /* Resmi ortalar */
-    background-repeat: no-repeat;   /* Tekrar etmesini engeller */
-    background-attachment: fixed;   /* Sayfa kaydırılsa bile arka plan sabit kalır */
-    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: var(--text-color);
     margin: 0;
     padding: 15px;
@@ -28,17 +27,68 @@ body {
     min-height: 100vh;
 }
 
+/* --- GİRİŞ EKRANI --- */
+#splash-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #0f172a; z-index: 9999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease;
+}
+#splash-screen img {
+    width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: -1;
+}
+.splash-loading {
+    position: absolute; bottom: 60px; text-align: center; width: 100%;
+}
+.splash-loading p {
+    color: #fff; font-weight: bold; font-family: sans-serif; letter-spacing: 2px; text-shadow: 0 2px 4px #000;
+}
+
+/* --- ANA KAPSAYICI --- */
 .container {
     width: 100%;
     max-width: 600px;
-    /* Kutunun içini hafif şeffaf yaptım ki arkadaki stadyum hafifçe görünsün */
     background-color: rgba(30, 41, 59, 0.92); 
     border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     box-sizing: border-box;
-    backdrop-filter: blur(5px); /* Arka planı hafif bulanıklaştırır, yazılar daha okunaklı olur */
+    backdrop-filter: blur(5px);
+    position: relative;
+}
+
+/* --- ÜST PANEL (Yıldız/Coin) --- */
+.top-panel {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.stat-box {
+    background-color: #0f172a;
+    border: 2px solid #3b4d66;
+    border-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+.stat-icon { font-size: 1.2rem; }
+#total-stars-display { color: var(--star-color); }
+#total-coins-display { color: var(--coin-color); }
+.add-coin-btn {
+    background-color: var(--primary-color);
+    color: #0f172a;
+    border: none;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-weight: bold; cursor: pointer;
+    display: flex; justify-content: center; align-items: center;
+    margin-left: 5px;
 }
 
 h1 {
@@ -84,167 +134,122 @@ h1 {
 .levels-container::-webkit-scrollbar { width: 6px; }
 .levels-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
+/* YENİ LEVEL KART TASARIMI */
 .level-card {
     display: flex;
     align-items: center;
     background: linear-gradient(90deg, #2e3b4e 0%, #1e293b 100%);
     border: 2px solid #3b4d66;
     border-radius: 12px;
-    padding: 10px;
+    padding: 8px 12px;
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
-    min-height: 70px;
+    min-height: 80px;
 }
-.level-card:active { transform: scale(0.98); }
+.level-card:active:not(.locked) { transform: scale(0.98); }
 
-/* Kilitli Kart Görünümü */
-.level-card.locked {
-    filter: grayscale(0.8);
-    opacity: 0.7;
-    cursor: not-allowed;
-    background: #1e293b;
-    border-color: #334155;
-}
-.level-card.locked:hover { transform: none; }
-
-/* Karakter İkonu */
-.level-avatar {
-    width: 55px;
-    height: 55px;
-    border-radius: 8px;
+/* Sol Taraf - Karakter */
+.level-avatar-box {
+    width: 60px; height: 65px;
     background-color: #0f172a;
     border: 2px solid #f59e0b;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    margin-right: 12px;
-    flex-shrink: 0;
-    overflow: hidden;
+    border-radius: 8px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin-right: 15px; flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
 }
-.level-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.level-avatar-icon { font-size: 1.8rem; }
+.level-avatar-role { font-size: 0.6rem; font-weight: bold; color: #f59e0b; text-transform: uppercase; margin-top: 2px;}
 
-/* Orta Kısım */
+/* Orta Kısım - Bilgi */
 .level-info {
     flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    display: flex; flex-direction: column; gap: 5px;
 }
 .level-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #f8fafc;
-    text-transform: uppercase;
+    font-size: 1.2rem; font-weight: 900;
+    color: #ffffff; text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 1px 1px 2px #000;
 }
 .level-progress-bar {
-    width: 100%;
-    height: 12px;
+    width: 100%; height: 16px;
     background-color: #0f172a;
     border-radius: 10px;
-    overflow: hidden;
-    position: relative;
+    overflow: hidden; position: relative;
+    border: 1px solid #334155;
 }
 .level-progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #10b981, #34d399);
-    width: 0%;
-    border-radius: 10px;
+    width: 0%; border-radius: 10px;
     transition: width 0.3s;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
 }
+.level-progress-text {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 0.7rem; font-weight: bold; color: #fff; text-shadow: 1px 1px 1px #000;
+}
+
+/* Yıldız Gösterimi */
 .level-stars {
-    font-size: 0.8rem;
-    color: var(--star-color);
+    font-size: 1rem; color: var(--star-color);
     letter-spacing: 2px;
 }
 
-/* Sağ Taraf - Kilit */
+/* Sağ Taraf - Kilit veya Ödül */
 .level-status {
-    width: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8rem;
-    margin-left: 10px;
+    width: 45px; display: flex; justify-content: center; align-items: center;
+    font-size: 2rem; margin-left: 10px;
 }
-.lock-icon { color: #64748b; }
-.trophy-icon { color: #f59e0b; }
+.lock-icon { color: #64748b; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
 
-/* --- 3. QUIZ (SORU) EKRANI --- */
+/* Kilitli Kart Görünümü */
+.level-card.locked {
+    filter: grayscale(0.8); opacity: 0.8;
+    cursor: not-allowed;
+    background: #1e293b; border-color: #334155;
+}
+.level-card.locked .level-avatar-box { border-color: #64748b; box-shadow: none; }
+.level-card.locked .level-title { color: #94a3b8; text-shadow: none; }
+
+/* --- QUIZ EKRANI --- */
 .quiz-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    border-bottom: 1px solid var(--border-color);
+    display: flex; justify-content: space-between;
+    margin-bottom: 20px; color: var(--text-muted);
+    font-size: 0.95rem; border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
 }
 .question-box {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    font-weight: 600;
-    line-height: 1.5;
-    min-height: 60px;
+    font-size: 1.2rem; margin-bottom: 20px;
+    font-weight: 600; line-height: 1.5; min-height: 60px;
 }
-.options-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 25px;
-}
+.options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
 .option-btn {
-    background-color: #2e3b4e;
-    color: var(--text-color);
+    background-color: #2e3b4e; color: var(--text-color);
     border: 1px solid var(--border-color);
-    padding: 14px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 1rem;
+    padding: 14px 18px; border-radius: 10px;
+    cursor: pointer; text-align: left; font-size: 1rem;
     transition: all 0.2s ease;
 }
-.option-btn:hover:not(:disabled) {
-    background-color: #3b4d66;
-    border-color: var(--primary-color);
-}
-.option-btn.correct {
-    background-color: rgba(16, 185, 129, 0.2);
-    border-color: #10b981;
-    color: #34d399;
-}
-.option-btn.incorrect {
-    background-color: rgba(239, 68, 68, 0.2);
-    border-color: #ef4444;
-    color: #f87171;
-}
+.option-btn:hover:not(:disabled) { background-color: #3b4d66; border-color: var(--primary-color); }
+.option-btn.correct { background-color: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; }
+.option-btn.incorrect { background-color: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #f87171; }
 .option-btn:disabled { cursor: default; }
 
 .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 10px;}
-.next-btn {
-    background-color: var(--primary-color);
-    color: #0f172a;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    display: none;
+.action-btn {
+    background-color: var(--primary-color); color: #0f172a; border: none;
+    padding: 12px 24px; font-size: 1rem; font-weight: bold;
+    border-radius: 8px; cursor: pointer; transition: opacity 0.2s; display: none;
 }
-.next-btn:hover { opacity: 0.9; }
-
 .back-menu-btn {
-    background-color: transparent;
-    color: var(--text-muted);
+    background-color: transparent; color: var(--text-muted);
     border: 1px solid var(--border-color);
-    padding: 8px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
+    padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem;
 }
 .back-menu-btn:hover { color: var(--text-color); border-color: var(--text-color); }
 
@@ -252,14 +257,4 @@ h1 {
 .score-card { text-align: center; }
 .score-card h2 { font-size: 2rem; margin-bottom: 15px; color: var(--primary-color); }
 .big-stars { font-size: 2.5rem; color: var(--star-color); margin: 15px 0; }
-.restart-btn {
-    background-color: var(--primary-color);
-    color: #0f172a;
-    border: none;
-    padding: 12px 30px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 20px;
-}
+.result-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
