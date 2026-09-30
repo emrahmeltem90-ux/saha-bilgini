@@ -37,6 +37,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 .btn-settings { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; box-shadow: 0 5px 0 #1e3a8a; }
 .btn-howto { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #fff; box-shadow: 0 5px 0 #14532d; }
 .btn-spin { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #4c1d95 !important; }
+.btn-daily { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #14532d !important; }
 
 /* AYARLAR */
 #settings-screen { background-color: #0f172a; padding-top: 40px; }
@@ -56,6 +57,20 @@ input:checked + .slider:before { transform: translateX(24px); }
 .howto-content { display: flex; flex-direction: column; gap: 15px; }
 .howto-item { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.4; }
 .howto-icon { font-size: 2rem; flex-shrink: 0; }
+
+/* GÜNLÜK ÖDÜL EKRANI */
+#daily-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; overflow-y: auto; }
+.daily-subtitle { color: #cbd5e1; font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
+.daily-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+.daily-card { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 0 #0f172a; position: relative; }
+.daily-card.claimed { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); border-color: #4ade80; }
+.daily-card.today { background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); border-color: #fff; box-shadow: 0 0 20px rgba(251, 191, 36, 0.8); animation: pulse 1.5s infinite; }
+.daily-day { font-size: 0.8rem; font-weight: bold; color: #cbd5e1; margin-bottom: 5px; }
+.daily-reward { font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.daily-claim-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; border-radius: 30px; padding: 15px; font-size: 1.2rem; font-weight: 900; cursor: pointer; width: 100%; box-shadow: 0 5px 0 #14532d; text-transform: uppercase; }
+.daily-claim-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #14532d; }
+.daily-claim-btn:disabled { background: #475569; box-shadow: 0 5px 0 #1e293b; cursor: not-allowed; opacity: 0.7; }
+.daily-status { color: #cbd5e1; font-size: 0.9rem; text-align: center; margin-top: 15px; font-weight: bold; }
 
 /* BİLDİRİM (TOAST) */
 .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 15px 30px; border-radius: 12px; font-weight: bold; box-shadow: 0 6px 0 #14532d; z-index: 999999; transition: top 0.4s ease; border: 3px solid #fff; font-size: 1rem; }
@@ -166,14 +181,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 .profile-save-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #14532d; }
 
 /* HOŞ GELDİN YAZISI (PROFİLDE) */
-.player-welcome {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: var(--accent-gold);
-    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-    margin-top: 5px;
-    text-align: center;
-}
+.player-welcome { font-size: 1.1rem; font-weight: bold; color: var(--accent-gold); text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); margin-top: 5px; text-align: center; }
 
 /* İSTATİSTİK ÇEMBERİ */
 .stats-circle-container { position: relative; width: 200px; height: 200px; margin: 0 auto 20px auto; display: flex; justify-content: center; align-items: center; }
@@ -196,27 +204,6 @@ input:checked + .slider:before { transform: translateX(24px); }
 .stat-orange { background: linear-gradient(180deg, #fb923c 0%, #c2410c 100%); border: 2px solid #fdba74; }
 
 /* RÜTBE KUTUSU (EN ALTTA) */
-.player-rank-box {
-    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
-    border: 3px solid var(--accent-gold);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
-}
-.player-rank-box .player-rank {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--accent-gold);
-    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-    letter-spacing: 2px;
-    margin: 0;
-}
-.player-rank-box .player-rank-desc {
-    font-size: 0.85rem;
-    color: #cbd5e1;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 5px;
-    }
+.player-rank-box { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 3px solid var(--accent-gold); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); }
+.player-rank-box .player-rank { font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); letter-spacing: 2px; margin: 0; }
+.player-rank-box .player-rank-desc { font-size: 0.85rem; color: #cbd5e1; text-align: center; font-weight: bold; margin-top: 5px; }
