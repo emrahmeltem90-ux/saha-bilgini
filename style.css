@@ -12,7 +12,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 /* SPLASH */
 #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0a192f; z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
 #splash-screen img.bg { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: -1; }
-.loader-container { position: absolute; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.loader-container { position: absolute; bottom: 180px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .loader-circle { position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; }
 .loader-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 4px solid transparent; border-top: 4px solid var(--accent-green); border-right: 4px solid var(--accent-green); animation: spin 1s linear infinite; }
 .loader-ball { font-size: 2rem; z-index: 2; animation: pulse 1.5s infinite; }
@@ -20,6 +20,28 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 .loading-percent { font-size: 1.5rem; font-weight: 900; color: var(--accent-green); }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+/* BAŞLAMAK İÇİN DOKUN BUTONU */
+.start-btn {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    color: #fff;
+    border: 4px solid #fff;
+    border-radius: 50px;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #78350f;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+    letter-spacing: 1px;
+    z-index: 10;
+    animation: pulse 1.5s infinite;
+}
+.start-btn:active { transform: translateX(-50%) translateY(4px); box-shadow: 0 2px 0 #78350f; }
 
 /* MENÜ */
 #menu-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); justify-content: space-between; align-items: center; padding-top: 40px; padding-bottom: 40px; }
