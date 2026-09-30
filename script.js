@@ -70,35 +70,54 @@ if (!userProgress.levels[0]) {
     userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 }
 
-// --- İKON EŞLEŞTİRME ---
-// Her kategori ID'sine karşılık gelen ikon dosyasını ve rol adını burada tanımlıyoruz.
-const categoryIcons = {
-    1: { icon: "icon_dunya_kupasi.jpg", role: "DÜNYA KUPASI" },
-    2: { icon: "icon_sampiyonlar.jpg", role: "ŞAMPİYONLAR LİGİ" },
-    3: { icon: "icon_turk_futbolu.jpg", role: "TÜRK FUTBOLU" },
-    4: { icon: "icon_premier_lig.jpg", role: "PREMIER LİG" },
-    5: { icon: "icon_la_liga.jpg", role: "LA LIGA" },
-    6: { icon: "icon_serie_a.jpg", role: "SERIE A" },
-    7: { icon: "icon_bundesliga.jpg", role: "BUNDESLIGA" },
-    8: { icon: "icon_ligue_1.jpg", role: "LIGUE 1" },
-    9: { icon: "icon_ballon_dor.jpg", role: "BALLON D'OR" },
-    10: { icon: "icon_avrupa_ligi.jpg", role: "AVRUPA LİGİ" },
-    11: { icon: "icon_milli_takimlar.jpg", role: "MİLLİ TAKIMLAR" },
-    12: { icon: "icon_dunya_kupasi_2022.jpg", role: "DÜNYA KUPASI 2022" },
-    13: { icon: "icon_efsaneler.jpg", role: "EFSANELER" },
-    14: { icon: "icon_genc_yetenekler.jpg", role: "GENÇ YETENEKLER" },
-    15: { icon: "icon_kaleci.jpg", role: "KALECİ EFSANELERİ" },
-    16: { icon: "icon_defans.jpg", role: "DEFANS EFSANELERİ" },
-    17: { icon: "icon_orta_saha.jpg", role: "ORTA SAHA" },
-    18: { icon: "icon_forvet.jpg", role: "FORVET YILDIZLARI" },
-    19: { icon: "icon_teknik_direktor.jpg", role: "TEKNİK DİREKTÖRLER" },
-    20: { icon: "icon_kurallar.jpg", role: "KURALLAR" },
-    // Diğer kategoriler için de aynı şekilde ekleyebilirsin
+// --- EMOJİ EŞLEŞTİRME ---
+// Her kategori ID'sine karşılık gelen emojiyi burada tanımlıyoruz.
+const categoryEmojis = {
+    1: { icon: "🏆", role: "DÜNYA KUPASI" },
+    2: { icon: "⭐", role: "ŞAMPİYONLAR LİGİ" },
+    3: { icon: "🇹🇷", role: "TÜRK FUTBOLU" },
+    4: { icon: "🦁", role: "PREMIER LİG" },
+    5: { icon: "🇪🇸", role: "LA LIGA" },
+    6: { icon: "🇮🇹", role: "SERIE A" },
+    7: { icon: "🇩🇪", role: "BUNDESLIGA" },
+    8: { icon: "🇫🇷", role: "LIGUE 1" },
+    9: { icon: "🥇", role: "BALLON D'OR" },
+    10: { icon: "🏅", role: "AVRUPA LİGİ" },
+    11: { icon: "🌍", role: "MİLLİ TAKIMLAR" },
+    12: { icon: "🇶🇦", role: "DÜNYA KUPASI 2022" },
+    13: { icon: "👑", role: "EFSANELER" },
+    14: { icon: "🌱", role: "GENÇ YETENEKLER" },
+    15: { icon: "🧤", role: "KALECİ EFSANELERİ" },
+    16: { icon: "🛡️", role: "DEFANS EFSANELERİ" },
+    17: { icon: "🎩", role: "ORTA SAHA" },
+    18: { icon: "⚽", role: "FORVET YILDIZLARI" },
+    19: { icon: "📋", role: "TEKNİK DİREKTÖRLER" },
+    20: { icon: "📜", role: "KURALLAR" },
+    21: { icon: "🏟️", role: "AVRUPA KUPALARI" },
+    22: { icon: "🌐", role: "MİLLİ TAKIMLAR" },
+    23: { icon: "📊", role: "REKORLAR" },
+    24: { icon: "♟️", role: "TAKTİKLER" },
+    25: { icon: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", role: "PREMIER LİG" },
+    26: { icon: "🇪🇸", role: "LA LIGA" },
+    27: { icon: "🇮🇹", role: "SERIE A" },
+    28: { icon: "🇩🇪", role: "BUNDESLIGA" },
+    29: { icon: "🇫🇷", role: "LIGUE 1" },
+    30: { icon: "🥇", role: "BALLON D'OR" },
+    31: { icon: "🏆", role: "SÜPER LİG" },
+    32: { icon: "🇹🇷", role: "MİLLİ TAKIM" },
+    33: { icon: "🦁", role: "GALATASARAY" },
+    34: { icon: "🟡", role: "FENERBAHÇE" },
+    35: { icon: "🦅", role: "BEŞİKTAŞ" },
+    36: { icon: "⚓", role: "TRABZONSPOR" },
+    37: { icon: "✈️", role: "AVRUPA'DA TÜRKLER" },
+    38: { icon: "📺", role: "TEKNOLOJİ (VAR)" },
+    39: { icon: "👩", role: "KADIN FUTBOLU" },
+    40: { icon: "🌟", role: "GELECEK YILDIZLAR" }
 };
 
-// Eğer tanımlı bir ikon yoksa varsayılan ikonu kullan
-function getCategoryIcon(categoryId) {
-    return categoryIcons[categoryId] || { icon: "icon_dunya_kupasi.jpg", role: "FUTBOL" };
+// Eğer tanımlı bir emoji yoksa varsayılan emojiyi kullan
+function getCategoryEmoji(categoryId) {
+    return categoryEmojis[categoryId] || { icon: "⚽", role: "FUTBOL" };
 }
 
 function showScreen(screenId) {
@@ -166,8 +185,8 @@ function showLevelScreen() {
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
         
-        // --- YENİ: İkon ve Rol Eşleştirmesi ---
-        let iconData = getCategoryIcon(categoryId);
+        // --- EMOJİ EŞLEŞTİRMESİ ---
+        let emojiData = getCategoryEmoji(categoryId);
 
         let starsStr = '☆☆☆';
         if (progress.stars === 1) starsStr = '⭐☆☆';
@@ -179,8 +198,8 @@ function showLevelScreen() {
 
         card.innerHTML = `
             <div class="level-avatar-box">
-                <img src="${iconData.icon}" alt="${iconData.role}" class="level-avatar-img">
-                <div class="level-avatar-role">${iconData.role}</div>
+                <div class="level-avatar-icon">${emojiData.icon}</div>
+                <div class="level-avatar-role">${emojiData.role}</div>
             </div>
             <div class="level-info">
                 <div class="level-title">${categoryName}</div>
