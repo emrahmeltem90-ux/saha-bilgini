@@ -1,3 +1,4 @@
+
 :root {
     --bg-dark: #0a192f; --bg-card: #112240; --primary-blue: #2563eb;
     --primary-light: #3b82f6; --accent-green: #22c55e; --accent-gold: #fbbf24;
@@ -244,3 +245,58 @@ input:checked + .slider:before { transform: translateX(24px); }
 .player-rank-box { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 3px solid var(--accent-gold); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); }
 .player-rank-box .player-rank { font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); letter-spacing: 2px; margin: 0; }
 .player-rank-box .player-rank-desc { font-size: 0.85rem; color: #cbd5e1; text-align: center; font-weight: bold; margin-top: 5px; }
+
+/* ============================================ */
+/* ŞAMPİYONLAR LİGİ BÖLÜMÜ */
+/* ============================================ */
+
+.champion-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    margin: 20px 0 10px 0;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+    letter-spacing: 2px;
+    border-top: 2px dashed rgba(251, 191, 36, 0.3);
+    border-bottom: 2px dashed rgba(251, 191, 36, 0.3);
+}
+
+.champion-card {
+    background: linear-gradient(180deg, #6b21a8 0%, #0f172a 100%) !important;
+    border: 2px solid var(--accent-gold) !important;
+    box-shadow: 0 4px 0 #4c1d95, 0 0 15px rgba(251, 191, 36, 0.3) !important;
+}
+
+.champion-card.locked {
+    background: linear-gradient(180deg, #3b0764 0%, #0f172a 100%) !important;
+    border-color: #64748b !important;
+    box-shadow: 0 4px 0 #1e1b4b !important;
+}
+
+.champion-avatar {
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.8) !important;
+    background: linear-gradient(180deg, #4c1d95 0%, #0f172a 100%) !important;
+}
+
+.champion-card .level-title {
+    color: var(--accent-gold) !important;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5) !important;
+}
+
+.champion-card.locked .level-title {
+    color: #94a3b8 !important;
+    text-shadow: none !important;
+}
+
+.champion-card .level-stars {
+    color: var(--accent-gold) !important;
+}
+
+.champion-card.locked .level-stars {
+    color: #64748b !important;
+}
