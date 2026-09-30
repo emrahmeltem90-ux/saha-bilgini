@@ -6,7 +6,7 @@
     <title>Futbol Bilgi Yarışması - 40 Level</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Giriş ekranı için özel stil */
+        /* --- GİRİŞ EKRANI ÖZEL STİLLERİ --- */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -20,7 +20,7 @@
             align-items: center;
             transition: opacity 0.5s ease;
         }
-        #splash-screen img {
+        #splash-screen img.bg {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -29,21 +29,70 @@
             left: 0;
             z-index: -1;
         }
-        .splash-text {
+        
+        /* Yükleme Alanı */
+        .loader-container {
             position: absolute;
-            bottom: 60px;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 3px;
-            text-shadow: 0 2px 10px #000;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Futbol Topu + Yeşil Çember */
+        .loader-circle {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Dönen Yeşil Çember */
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top: 4px solid #a3e635; /* Açık yeşil */
+            border-right: 4px solid #a3e635;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Ortadaki Futbol Topu */
+        .loader-ball {
+            font-size: 2rem;
+            z-index: 2;
             animation: pulse 1.5s infinite;
         }
+
+        /* Yükleniyor Yazısı ve Yüzde */
+        .loading-text {
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .loading-percent {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #a3e635;
+            text-shadow: 0 0 10px rgba(163, 230, 53, 0.5);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -51,13 +100,20 @@
 
     <!-- GİRİŞ EKRANI -->
     <div id="splash-screen">
-        <img src="splash-bg.jpg" alt="Futbol Bilgini">
-        <div class="splash-text">YÜKLENİYOR...</div>
+        <img src="splash-bg.jpg" alt="Futbol Bilgini" class="bg">
+        
+        <div class="loader-container">
+            <div class="loader-circle">
+                <div class="loader-ring"></div>
+                <div class="loader-ball">⚽</div>
+            </div>
+            <div class="loading-text">YÜKLENİYOR...</div>
+            <div class="loading-percent" id="splash-percent">0%</div>
+        </div>
     </div>
 
     <div class="container">
         
-        <!-- ÜST PANEL -->
         <div class="top-panel">
             <div class="stat-box">
                 <span class="stat-icon">⭐</span>
@@ -72,7 +128,6 @@
 
         <h1>⚽ Futbol Bilgi Yarışması</h1>
 
-        <!-- 1. ANA MENÜ -->
         <div id="menu-screen" class="screen active menu-screen">
             <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;">
                 40 Farklı Level ve 400 Soruluk dev futbol arşivine hoş geldiniz!<br>
@@ -81,7 +136,6 @@
             <button class="menu-btn" onclick="showLevelScreen()">Oyuna Başla / Level Seç</button>
         </div>
 
-        <!-- 2. LEVEL SEÇİM -->
         <div id="levels-screen" class="screen">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <span style="font-weight: bold; color: var(--text-color); font-size: 1.1rem;">Level Seçin</span>
@@ -90,7 +144,6 @@
             <div class="levels-container" id="levels-container"></div>
         </div>
 
-        <!-- 3. OYUN / QUIZ -->
         <div id="quiz-screen" class="screen">
             <div class="quiz-info">
                 <span id="level-title-indicator">Level 1</span>
@@ -105,7 +158,6 @@
             </div>
         </div>
 
-        <!-- 4. SONUÇ -->
         <div id="score-screen" class="screen score-card">
             <h2>Level Tamamlandı!</h2>
             <div class="big-stars" id="result-stars">⭐⭐⭐</div>
