@@ -3,58 +3,61 @@ document.addEventListener("DOMContentLoaded", function() {
     let percent = 0;
     const percentDisplay = document.getElementById('splash-percent');
     
-    // Yüzdeyi 0'dan 100'e çıkar
     const interval = setInterval(() => {
-        percent += Math.floor(Math.random() * 5) + 1; // Rastgele artış
+        percent += Math.floor(Math.random() * 5) + 1;
         if (percent >= 100) {
             percent = 100;
             clearInterval(interval);
-            // Yükleme bitince giriş ekranını kapat ve level ekranını aç
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 if (splash) {
                     splash.style.opacity = '0';
                     setTimeout(() => {
                         splash.style.display = 'none';
-                        showLevelScreen(); // Direkt level seçim ekranı
+                        showLevelScreen();
                     }, 500);
                 }
             }, 500);
         }
         if(percentDisplay) percentDisplay.innerText = percent + '%';
-    }, 100); // 100ms'de bir artar
+    }, 100);
 });
 
-// 40 Level - Her birinde 10 soru
-const levelsData = [];
+// --- TÜM SORULARI YÜKLE (4 DOSYA) ---
+let levelsData = [];
 
-// Daha kaliteli ve gerçekçi örnek sorular
-const sampleBaseQuestions = [
-    { soru: "Futbol maçında sahada her bir takım kaç oyuncuyla yer alır?", secenekler: ["9", "10", "11", "12"], dogru: 2 },
-    { soru: "Standart bir futbol maçı normal sürede toplam kaç dakikadır?", secenekler: ["80", "90", "100", "120"], dogru: 1 },
-    { soru: "Hakemin oyuncuyu ihraç etmek için gösterdiği kartın rengi nedir?", secenekler: ["Sarı", "Kırmızı", "Mavi", "Yeşil"], dogru: 1 },
-    { soru: "Kendi ceza sahası dışındayken elleriyle topu tutabilen tek oyuncu kimdir?", secenekler: ["Stoper", "Forvet", "Kaleci", "Kaptan"], dogru: 2 },
-    { soru: "Topun taç çizgisini tamamen geçmesiyle hangi atış kullanılır?", secenekler: ["Korner", "Taç atışı", "Penaltı", "Aut"], dogru: 1 },
-    { soru: "Ofsayt kuralı hangi alanda geçerlidir?", secenekler: ["Rakip yarı alanda", "Kendi yarı alanında", "Tüm sahada", "Orta yuvarlakta"], dogru: 0 },
-    { soru: "Penaltı vuruşu kaleye kaç metre mesafeden yapılır?", secenekler: ["9 metre", "11 metre", "12 metre", "14 metre"], dogru: 1 },
-    { soru: "Süper Lig'in kuruluş yılı resmi olarak hangisidir?", secenekler: ["1923", "1959", "1967", "1980"], dogru: 1 },
-    { soru: "Şampiyonlar Ligi kupasını en çok kazanan kulüp hangisidir?", secenekler: ["AC Milan", "Barcelona", "Real Madrid", "Bayern Münih"], dogru: 2 },
-    { soru: "Dünya Kupası organizasyonu kaç yılda bir düzenlenir?", secenekler: ["2", "3", "4", "5"], dogru: 2 }
-];
-
-// 40 leveli otomatik doldur
-for (let l = 1; l <= 40; l++) {
-    let qList = [];
-    for (let q = 1; q <= 10; q++) {
-        let baseQ = sampleBaseQuestions[(q + l - 2) % sampleBaseQuestions.length];
-        qList.push({
-            soru: baseQ.soru, // Artık sadece soru metni var, başında [Level X] yok
-            secenekler: baseQ.secenekler,
-            dogru: baseQ.dogru
-        });
+async function loadAllQuestions() {
+    const files = ['sorular_1.json', 'sorular_2.json', 'sorular_3.json', 'sorular_4.json'];
+    
+    try {
+        for (const file of files) {
+            const response = await fetch(file);
+            if (!response.ok) throw new Error(`${file} yüklenemedi`);
+            const data = await response.json();
+            
+            // JSON'un yapısını kontrol et: "kategoriler" anahtarı var mı?
+            let kategoriler = [];
+            if (data.kategoriler && Array.isArray(data.kategoriler)) {
+                kategoriler = data.kategoriler;
+            } else if (Array.isArray(data)) {
+                kategoriler = data;
+            }
+            
+            // Gelen kategorileri ana listeye ekle
+            levelsData = levelsData.concat(kategoriler);
+        }
+        console.log("Tüm sorular başarıyla yüklendi! Toplam kategori:", levelsData.length);
+    } catch (error) {
+        console.error("Sorular yüklenirken hata oluştu:", error);
+        // Hata durumunda eski örnek soruları kullan (yedek)
+        levelsData = [
+            { kategori: "Yedek Kategori", sorular: [{ soru: "Yedek Soru?", secenekler: ["A", "B", "C", "D"], dogru: 0 }] }
+        ];
     }
-    levelsData.push(qList);
 }
+
+// Sayfa yüklendiğinde soruları çek
+loadAllQuestions();
 
 let currentLevelIndex = 0;
 let currentQuestionIndex = 0;
@@ -64,20 +67,35 @@ let answered = false;
 let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
     levels: {},
     totalStars: 0,
-    totalCoins: 0
+    totalCoins: 100
 };
 
 if (!userProgress.levels[0]) {
     userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 }
 
+// Kategorilere göre rol ve ikon eşleştirmesi
 const levelRoles = [
-    { role: "PLAYER", icon: "👤" },
-    { role: "LEGEND", icon: "🌟" },
-    { role: "COACH", icon: "🧑‍🏫" },
-    { role: "CLUB", icon: "🛡️" },
-    { role: "ICON", icon: "👑" },
-    { role: "GOAT", icon: "🐐" }
+    { role: "DÜNYA KUPASI", icon: "🏆" },
+    { role: "ŞAMPİYONLAR LİGİ", icon: "⭐" },
+    { role: "TÜRK FUTBOLU", icon: "🇹🇷" },
+    { role: "PREMIER LİG", icon: "🦁" },
+    { role: "LA LIGA", icon: "🇪🇸" },
+    { role: "SERIE A", icon: "🇮🇹" },
+    { role: "BUNDESLIGA", icon: "🇩🇪" },
+    { role: "LIGUE 1", icon: "🇫🇷" },
+    { role: "BALLON D'OR", icon: "🥇" },
+    { role: "AVRUPA LİGİ", icon: "🏅" },
+    { role: "MİLLİ TAKIMLAR", icon: "🌍" },
+    { role: "DÜNYA KUPASI 2022", icon: "🇶🇦" },
+    { role: "EFSANE FUTBOLCULAR", icon: "👑" },
+    { role: "GENÇ YETENEKLER", icon: "🌱" },
+    { role: "KALECİ EFSANELERİ", icon: "🧤" },
+    { role: "DEFANS EFSANELERİ", icon: "🛡️" },
+    { role: "ORTA SAHA", icon: "🎩" },
+    { role: "FORVET YILDIZLARI", icon: "⚽" },
+    { role: "TEKNİK DİREKTÖRLER", icon: "📋" },
+    { role: "KURALLAR", icon: "📜" }
 ];
 
 function showScreen(screenId) {
@@ -95,18 +113,62 @@ function updateTopPanel() {
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
 }
 
+// --- SORU FORMATINI STANDARTLAŞTIRAN YARDIMCI FONKSİYON ---
+function normalizeQuestion(q) {
+    let soruMetni = q.soru;
+    let secenekler = [];
+    let dogruIndex = 0;
+
+    // Format 1: secenekler bir dizi ve dogru bir sayı (0,1,2,3)
+    if (Array.isArray(q.secenekler)) {
+        secenekler = q.secenekler;
+        dogruIndex = q.dogru;
+    } 
+    // Format 2: secenekler bir obje (A,B,C,D) ve dogru_cevap bir harf
+    else if (typeof q.secenekler === 'object' && q.secenekler !== null) {
+        secenekler = [q.secenekler.A, q.secenekler.B, q.secenekler.C, q.secenekler.D];
+        const harf = q.dogru_cevap;
+        if (harf === 'A') dogruIndex = 0;
+        else if (harf === 'B') dogruIndex = 1;
+        else if (harf === 'C') dogruIndex = 2;
+        else if (harf === 'D') dogruIndex = 3;
+    }
+
+    return {
+        soru: soruMetni,
+        secenekler: secenekler,
+        dogru: dogruIndex
+    };
+}
+
 function showLevelScreen() {
     const container = document.getElementById('levels-container');
     container.innerHTML = '';
     updateTopPanel();
 
-    for (let i = 0; i < 40; i++) {
+    if (levelsData.length === 0) {
+        container.innerHTML = "<p style='color: #fff; text-align: center;'>Sorular yükleniyor...</p>";
+        return;
+    }
+
+    // Toplam level sayısı (40 level göstereceğiz)
+    let totalLevels = 40;
+
+    for (let i = 0; i < totalLevels; i++) {
         let lvlNum = i + 1;
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
-        let isUnlocked = progress.unlocked || (i === 0) || (userProgress.levels[i-1] && userProgress.levels[i-1].stars > 0);
+        
+        // Kategori verisi var mı?
+        let categoryData = levelsData[i] || { kategori: "Gelecek Kategori", kategori_adi: "Gelecek Kategori", sorular: [] };
+        let categoryName = categoryData.kategori || categoryData.kategori_adi || `LEVEL ${lvlNum}`;
+
+        // Kilit kontrolü (Basit: Bir önceki levelden 1 yıldız alınca açılır)
+        let isUnlocked = (i === 0) || (userProgress.levels[i-1] && userProgress.levels[i-1].stars > 0);
 
         let card = document.createElement('div');
         card.className = 'level-card' + (isUnlocked ? '' : ' locked');
+        
+        // Rol ve ikon (Kategoriye göre)
         let roleData = levelRoles[i % levelRoles.length];
 
         let starsStr = '☆☆☆';
@@ -123,7 +185,7 @@ function showLevelScreen() {
                 <div class="level-avatar-role">${roleData.role}</div>
             </div>
             <div class="level-info">
-                <div class="level-title">LEVEL ${lvlNum}</div>
+                <div class="level-title">${categoryName}</div>
                 <div class="level-progress-bar">
                     <div class="level-progress-fill" style="width: ${progressPercent}%"></div>
                     <div class="level-progress-text">${progressText}</div>
@@ -149,6 +211,13 @@ function startLevel(levelIndex) {
     currentLevelIndex = levelIndex;
     currentQuestionIndex = 0;
     score = 0;
+    
+    // Kategori verisi var mı kontrol et
+    if (!levelsData[levelIndex] || !levelsData[levelIndex].sorular || levelsData[levelIndex].sorular.length === 0) {
+        alert("Bu level için henüz soru eklenmemiş. Lütfen daha sonra tekrar dene.");
+        return;
+    }
+    
     showScreen('quiz-screen');
     loadQuestion();
 }
@@ -156,9 +225,26 @@ function startLevel(levelIndex) {
 function loadQuestion() {
     answered = false;
     document.getElementById('next-btn').style.display = "none";
-    const currentQ = levelsData[currentLevelIndex][currentQuestionIndex];
-    document.getElementById('level-title-indicator').innerText = `Level ${currentLevelIndex + 1}`;
-    document.getElementById('question-counter').innerText = `Soru: ${currentQuestionIndex + 1} / 10`;
+    
+    let currentCategory = levelsData[currentLevelIndex];
+    let questionsInCategory = currentCategory.sorular;
+    
+    if (currentQuestionIndex >= questionsInCategory.length) {
+        currentQuestionIndex = currentQuestionIndex % questionsInCategory.length;
+    }
+    
+    // Soruyu normalize et (eski veya yeni formatı standart hale getir)
+    const rawQ = questionsInCategory[currentQuestionIndex];
+    const currentQ = normalizeQuestion(rawQ);
+    
+    if (!currentQ) {
+        document.getElementById('question-text').innerText = "Soru bulunamadı.";
+        return;
+    }
+
+    let categoryName = currentCategory.kategori || currentCategory.kategori_adi || `Level ${currentLevelIndex + 1}`;
+    document.getElementById('level-title-indicator').innerText = categoryName;
+    document.getElementById('question-counter').innerText = `Soru: ${currentQuestionIndex + 1} / ${questionsInCategory.length}`;
     document.getElementById('score-display').innerText = `Puan: ${score}`;
     document.getElementById('question-text').innerText = currentQ.soru;
 
@@ -177,7 +263,11 @@ function loadQuestion() {
 function selectOption(selectedIndex, selectedBtn) {
     if (answered) return;
     answered = true;
-    const currentQ = levelsData[currentLevelIndex][currentQuestionIndex];
+    
+    let currentCategory = levelsData[currentLevelIndex];
+    let rawQ = currentCategory.sorular[currentQuestionIndex];
+    let currentQ = normalizeQuestion(rawQ);
+    
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
 
     if (selectedIndex === currentQ.dogru) {
@@ -186,12 +276,14 @@ function selectOption(selectedIndex, selectedBtn) {
         document.getElementById('score-display').innerText = `Puan: ${score}`;
     } else {
         selectedBtn.classList.add("incorrect");
-        buttons[currentQ.dogru].classList.add("correct");
+        if (buttons[currentQ.dogru]) {
+            buttons[currentQ.dogru].classList.add("correct");
+        }
     }
 
     for (let btn of buttons) { btn.disabled = true; }
 
-    if (currentQuestionIndex < 9) {
+    if (currentQuestionIndex < currentCategory.sorular.length - 1) {
         document.getElementById('next-btn').style.display = "block";
     } else {
         setTimeout(showResults, 1000);
@@ -206,9 +298,14 @@ function nextQuestion() {
 function showResults() {
     showScreen('score-screen');
     let starsEarned = 0;
-    if (score >= 30) starsEarned = 1;
-    if (score >= 70) starsEarned = 2;
-    if (score >= 100) starsEarned = 3;
+    
+    let currentCategory = levelsData[currentLevelIndex];
+    let totalPossibleScore = currentCategory.sorular.length * 10;
+    let percentage = (score / (totalPossibleScore || 100)) * 100;
+
+    if (percentage >= 30) starsEarned = 1;
+    if (percentage >= 70) starsEarned = 2;
+    if (percentage >= 100) starsEarned = 3;
 
     let previousStars = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].stars : 0;
     
@@ -224,14 +321,6 @@ function showResults() {
     let coinsEarned = Math.floor(score / 10);
     userProgress.totalCoins = (userProgress.totalCoins || 0) + coinsEarned;
 
-    if (starsEarned >= 1 && currentLevelIndex + 1 < 40) {
-        if (!userProgress.levels[currentLevelIndex + 1]) {
-            userProgress.levels[currentLevelIndex + 1] = { stars: 0, score: 0, unlocked: true };
-        } else {
-            userProgress.levels[currentLevelIndex + 1].unlocked = true;
-        }
-    }
-
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel();
 
@@ -241,9 +330,21 @@ function showResults() {
     if (starsEarned === 3) starsDisplay = '⭐⭐⭐';
 
     document.getElementById('result-stars').innerText = starsDisplay;
-    document.getElementById('final-score-text').innerText = `Toplam Puanınız: ${score} / 100\nKazanılan Coin: ${coinsEarned} 🪙`;
+    document.getElementById('final-score-text').innerText = `Toplam Puanınız: ${score} / ${totalPossibleScore}\nKazanılan Coin: ${coinsEarned} 🪙`;
 }
 
 function restartLevel() {
     startLevel(currentLevelIndex);
+}
+
+// Reklam İzle Fonksiyonu
+function watchAdForStars() {
+    alert("Reklam izleniyor... (Simülasyon)");
+    setTimeout(() => {
+        userProgress.totalStars = (userProgress.totalStars || 0) + 5;
+        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+        updateTopPanel();
+        alert("Tebrikler! 5 yıldız kazandın. ⭐");
+        showLevelScreen();
+    }, 1500);
 }
