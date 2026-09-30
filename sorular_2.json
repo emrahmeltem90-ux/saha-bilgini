@@ -1,0 +1,166 @@
+{
+  "quiz_adi": "Futbol Bilgi Yarışması",
+  "paket": "101-200",
+  "kategoriler": [
+    {
+      "kategori_id": 11,
+      "kategori_adi": "Milli Takımlar",
+      "sorular": [
+        { "id": 101, "soru": "Dünya Kupası tarihini en çok kazanan ülke hangisidir?", "secenekler": { "A": "Almanya", "B": "Arjantin", "C": "Brezilya", "D": "İtalya" }, "dogru_cevap": "C" },
+        { "id": 102, "soru": "Türkiye A Milli Futbol Takımı, 2002 FIFA Dünya Kupası'nda hangi dereceyi elde etmiştir?", "secenekler": { "A": "Şampiyon", "B": "İkinci", "C": "Üçüncü", "D": "Çeyrek final" }, "dogru_cevap": "C" },
+        { "id": 103, "soru": "Avrupa Futbol Şampiyonası'nı (EURO) en çok kazanan ülkeler hangileridir?", "secenekler": { "A": "Almanya ve İspanya", "B": "Fransa ve İtalya", "C": "Brezilya ve Arjantin", "D": "İngiltere ve Portekiz" }, "dogru_cevap": "A" },
+        { "id": 104, "soru": "Tarihteki ilk resmi uluslararası futbol maçı hangi iki ülke arasında oynanmıştır?", "secenekler": { "A": "İngiltere - Almanya", "B": "İskoçya - İngiltere", "C": "Fransa - Belçika", "D": "Arjantin - Uruguay" }, "dogru_cevap": "B" },
+        { "id": 105, "soru": "Copa America turnuvasını en çok kazanan ülke hangisidir?", "secenekler": { "A": "Brezilya", "B": "Uruguay", "C": "Arjantin", "D": "Şili" }, "dogru_cevap": "C" },
+        { "id": 106, "soru": "EURO 2016 finalinde ev sahibi Fransa'yı yenerek kupayı müzesine götüren sürpriz ülke hangisi olmuştur?", "secenekler": { "A": "Yunanistan", "B": "Portekiz", "C": "Galler", "D": "Hırvatistan" }, "dogru_cevap": "B" },
+        { "id": 107, "soru": "Dünya futbol tarihinde 4 kez Dünya Kupası'nı kazanan Avrupa ülkesi İtalya'dır, diğeri hangisidir?", "secenekler": { "A": "Fransa", "B": "İngiltere", "C": "Almanya", "D": "İspanya" }, "dogru_cevap": "C" },
+        { "id": 108, "soru": "Afrika Uluslar Kupası'nı (AFCON) tarihte en çok kazanan ülke hangisidir?", "secenekler": { "A": "Kamerun", "B": "Gana", "C": "Nijerya", "D": "Mısır" }, "dogru_cevap": "D" },
+        { "id": 109, "soru": "2004 Avrupa Futbol Şampiyonası'nı (EURO 2004) defansif oyunu ve disipliniyle kazanarak tüm dünyayı şaşırtan ülke hangisidir?", "secenekler": { "A": "Çek Cumhuriyeti", "B": "Yunanistan", "C": "Danimarka", "D": "Portekiz" }, "dogru_cevap": "B" },
+        { "id": 110, "soru": "Asya Kupası'nı en çok kazanan (4 kez) milli takım hangisidir?", "secenekler": { "A": "Japonya", "B": "Güney Kore", "C": "İran", "D": "Suudi Arabistan" }, "dogru_cevap": "A" }
+      ]
+    },
+    {
+      "kategori_id": 12,
+      "kategori_adi": "Dünya Kupası 2022",
+      "sorular": [
+        { "id": 111, "soru": "2022 FIFA Dünya Kupası hangi ülkede düzenlenmiştir?", "secenekler": { "A": "Birleşik Arap Emirlikleri", "B": "Katar", "C": "Suudi Arabistan", "D": "Rusya" }, "dogru_cevap": "B" },
+        { "id": 112, "soru": "2022 Dünya Kupası finalinde Arjantin, Fransa'yı hangi skorla ve ne şekilde mağlup ederek şampiyon olmuştur?", "secenekler": { "A": "Normal sürede 2-1", "B": "Uzatmalarda 3-2", "C": "Penaltılarla", "D": "Altın golle 1-0" }, "dogru_cevap": "C" },
+        { "id": 113, "soru": "2022 Dünya Kupası'nda turnuvanın gol kralı (Altın Ayakkabı) olarak 8 gol atan Fransız futbolcu kimdir?", "secenekler": { "A": "Olivier Giroud", "B": "Kylian Mbappe", "C": "Karim Benzema", "D": "Antoine Griezmann" }, "dogru_cevap": "B" },
+        { "id": 114, "soru": "2022 Dünya Kupası'nda yarı finale yükselerek turnuva tarihinin bu aşamaya ulaşan ilk Afrika ve Arap ülkesi olan milli takım hangisidir?", "secenekler": { "A": "Senegal", "B": "Gana", "C": "Fas", "D": "Kamerun" }, "dogru_cevap": "C" },
+        { "id": 115, "soru": "2022 Dünya Kupası'nda turnuvanın en iyi oyuncusuna verilen Altın Top ödülünü kazanan Arjantinli futbolcu kimdir?", "secenekler": { "A": "Angel Di Maria", "B": "Julian Alvarez", "C": "Emiliano Martinez", "D": "Lionel Messi" }, "dogru_cevap": "D" },
+        { "id": 116, "soru": "2022 Dünya Kupası'nda en iyi kaleciye verilen 'Altın Eldiven' ödülünü kazanan Arjantinli kaleci kimdir?", "secenekler": { "A": "Franco Armani", "B": "Emiliano Martinez", "C": "Geronimo Rulli", "D": "Sergio Romero" }, "dogru_cevap": "B" },
+        { "id": 117, "soru": "Tarihte ilk kez yaz ayları yerine Kasım ve Aralık aylarında düzenlenen Dünya Kupası hangisidir?", "secenekler": { "A": "2010 Güney Afrika", "B": "2014 Brezilya", "C": "2018 Rusya", "D": "2022 Katar" }, "dogru_cevap": "D" },
+        { "id": 118, "soru": "2022 Dünya Kupası'nda turnuvanın en iyi genç oyuncusu seçilen Arjantinli futbolcu kimdir?", "secenekler": { "A": "Enzo Fernandez", "B": "Alexis Mac Allister", "C": "Julian Alvarez", "D": "Paulo Dybala" }, "dogru_cevap": "A" },
+        { "id": 119, "soru": "2022 Dünya Kupası çeyrek finalinde Hollanda ile Arjantin arasında oynanan ve tansiyonun çok yüksek olduğu maçta kaleci Emiliano Martinez kaç penaltı kurtarmıştır?", "secenekler": { "A": "1", "B": "2", "C": "3", "D": "Hiç kurtarmadı, direğe çarptı" }, "dogru_cevap": "B" },
+        { "id": 120, "soru": "2022 Dünya Kupası'nda final maçında hat-trick yapmasına rağmen kupayı kazanamayan futbolcu kimdir?", "secenekler": { "A": "Lionel Messi", "B": "Kylian Mbappe", "C": "Olivier Giroud", "D": "Kingsley Coman" }, "dogru_cevap": "B" }
+      ]
+    },
+    {
+      "kategori_id": 13,
+      "kategori_adi": "Efsane Futbolcular",
+      "sorular": [
+        { "id": 121, "soru": "Futbol dünyasında 'Pelé' lakabıyla tanınan efsanevi Brezilyalı futbolcunun gerçek adı nedir?", "secenekler": { "A": "Edson Arantes do Nascimento", "B": "Ronaldo de Assis Moreira", "C": "Arthur Antunes Coimbra", "D": "Ricardo Izecson dos Santos Leite" }, "dogru_cevap": "A" },
+        { "id": 122, "soru": "Arjantinli efsane Diego Maradona'nın kariyerinde harikalar yarattığı ve Serie A şampiyonlukları yaşadığı İtalyan kulübü hangisidir?", "secenekler": { "A": "Juventus", "B": "AC Milan", "C": "Napoli", "D": "Inter" }, "dogru_cevap": "C" },
+        { "id": 123, "soru": "Cruyff dönüşü (Cruyff turn) hareketiyle futbol literatürüne adını yazdıran efsanevi Hollandalı futbolcu ve teknik direktör kimdir?", "secenekler": { "A": "Marco van Basten", "B": "Johan Cruyff", "C": "Ruud Gullit", "D": "Frank Rijkaard" }, "dogru_cevap": "B" },
+        { "id": 124, "soru": "Real Madrid ile 5 kez üst üste Şampiyon Kulüpler Kupası kazanan, turnuvanın tarihine damga vurmuş efsanevi Arjantinli/İspanyol futbolcu kimdir?", "secenekler": { "A": "Ferenc Puskas", "B": "Alfredo Di Stefano", "C": "Francisco Gento", "D": "Raymond Kopa" }, "dogru_cevap": "B" },
+        { "id": 125, "soru": "'Fenomen' lakaplı, kariyerinde Barcelona, Inter, Real Madrid ve Milan gibi devlerde oynamış Brezilyalı golcü kimdir?", "secenekler": { "A": "Ronaldinho", "B": "Rivaldo", "C": "Ronaldo Nazario", "D": "Adriano" }, "dogru_cevap": "C" },
+        { "id": 126, "soru": "Fransız futbolunun efsane 10 numarası, 1998 Dünya Kupası'nı ve EURO 2000'i kazanan kadronun lideri kimdir?", "secenekler": { "A": "Michel Platini", "B": "Zinedine Zidane", "C": "Thierry Henry", "D": "Eric Cantona" }, "dogru_cevap": "B" },
+        { "id": 127, "soru": "Kariyerinin neredeyse tamamını Roma kulübünde geçiren ve kulübün simgesi haline gelen 'Il Re di Roma' (Roma'nın Kralı) lakaplı futbolcu kimdir?", "secenekler": { "A": "Daniele De Rossi", "B": "Francesco Totti", "C": "Alessandro Del Piero", "D": "Roberto Baggio" }, "dogru_cevap": "B" },
+        { "id": 128, "soru": "Kariyerinde sadece bir kulüpte (AC Milan) forma giyen, zarafeti ve oyun görüşüyle tanınan efsanevi İtalyan defans oyuncusu kimdir?", "secenekler": { "A": "Franco Baresi", "B": "Paolo Maldini", "C": "Alessandro Nesta", "D": "Fabio Cannavaro" }, "dogru_cevap": "B" },
+        { "id": 129, "soru": "Alman futbolunun 'Kaiser' (İmparator) lakaplı efsanevi liberosu ve hem futbolcu hem teknik direktör olarak Dünya Kupası kazanan ismi kimdir?", "secenekler": { "A": "Gerd Müller", "B": "Franz Beckenbauer", "C": "Lothar Matthäus", "D": "Karl-Heinz Rummenigge" }, "dogru_cevap": "B" },
+        { "id": 130, "soru": "Kariyerinde frikik ustası olarak tanınan ve Brezilya formasıyla 2002 Dünya Kupası'nı kazanan, sol ayağıyla çektiği sert şutlarla bilinen sol bek kimdir?", "secenekler": { "A": "Cafu", "B": "Roberto Carlos", "C": "Marcelo", "D": "Dani Alves" }, "dogru_cevap": "B" }
+      ]
+    },
+    {
+      "kategori_id": 14,
+      "kategori_adi": "Genç Yetenekler",
+      "sorular": [
+        { "id": 131, "soru": "Barcelona altyapısı La Masia'dan yetişip çok genç yaşta hem kulüp hem milli takımda parlayan, 2024 Avrupa Şampiyonası'nda yıldızlaşan İspanyol kanat oyuncusu kimdir?", "secenekler": { "A": "Gavi", "B": "Pedri", "C": "Lamine Yamal", "D": "Pau Cubarsi" }, "dogru_cevap": "C" },
+        { "id": 132, "soru": "Real Madrid'e transfer olduktan sonra olağanüstü bir performans sergileyen ve orta sahadan golleriyle öne çıkan İngiliz genç yıldız kimdir?", "secenekler": { "A": "Jude Bellingham", "B": "Phil Foden", "C": "Bukayo Saka", "D": "Cole Palmer" }, "dogru_cevap": "A" },
+        { "id": 133, "soru": "Norveçli gol makinesi Erling Haaland, Borussia Dortmund'a transfer olmadan önce hangi genç yaş kategorisinde gol rekorları kırarak dikkat çekmişti?", "secenekler": { "A": "Molde ve Red Bull Salzburg", "B": "Rosenborg", "C": "Bodø/Glimt", "D": "Brann" }, "dogru_cevap": "A" },
+        { "id": 134, "soru": "Fransa'nın Bondy mahallesinden çıkıp çok genç yaşta Monaco ve ardından PSG ile dünya çapında üne kavuşan süper yıldız kimdir?", "secenekler": { "A": "Eduardo Camavinga", "B": "Kylian Mbappe", "C": "Ousmane Dembele", "D": "Aurelien Tchouameni" }, "dogru_cevap": "B" },
+        { "id": 135, "soru": "Brezilya'nın Palmeiras kulübünden Real Madrid'e transfer olan ve genç yaşta Brezilya A Milli Takımı'na çağrılan sol ayaklı forvet kimdir?", "secenekler": { "A": "Vitor Roque", "B": "Endrick", "C": "Estevao Willian", "D": "Savinho" }, "dogru_cevap": "B" },
+        { "id": 136, "soru": "Barcelona'da genç yaşta orta sahada sergilediği olgun futbolla 'Andres Iniesta'nın varisi' olarak gösterilen İspanyol futbolcu kimdir?", "secenekler": { "A": "Fermin Lopez", "B": "Marc Casado", "C": "Pedri", "D": "Eric Garcia" }, "dogru_cevap": "C" },
+        { "id": 137, "soru": "Almanya Bundesliga'da Bayer Leverkusen formasıyla genç yaşta sergilediği oyun liderliğiyle dikkat çeken ve Almanya milli takımının geleceği olarak görülen orta saha kimdir?", "secenekler": { "A": "Florian Wirtz", "B": "Jamal Musiala", "C": "Karim Adeyemi", "D": "Youssoufa Moukoko" }, "dogru_cevap": "A" },
+        { "id": 138, "soru": "Bayern Munich formasıyla sergilediği çalım yeteneği ve hızıyla Alman futbolunun göz bebeği olan genç hücum oyuncusu kimdir?", "secenekler": { "A": "Florian Wirtz", "B": "Jamal Musiala", "C": "Leroy Sane", "D": "Serge Gnabry" }, "dogru_cevap": "B" },
+        { "id": 139, "soru": "Fenerbahçe altyapısından yetişip Real Madrid'e transfer olan Türk futbolunun büyük umudu olan genç yetenek kimdir?", "secenekler": { "A": "Emirhan İlkhan", "B": "Arda Güler", "C": "Semih Kılıçsoy", "D": "Kenan Yıldız" }, "dogru_cevap": "B" },
+        { "id": 140, "soru": "İtalyan devi Juventus'ta forma giyen ve Türk milli takımının hücum hattında görev yapan genç yetenek kimdir?", "secenekler": { "A": "Kerem Aktürkoğlu", "B": "Kenan Yıldız", "C": "Yunus Akgün", "D": "Orkun Kökçü" }, "dogru_cevap": "B" }
+      ]
+    },
+    {
+      "kategori_id": 15,
+      "kategori_adi": "Kaleci Efsaneleri",
+      "sorular": [
+        { "id": 141, "soru": "Tarihte Ballon d'Or kazanan tek kaleci unvanına sahip olan Sovyet efsane kimdir?", "secenekler": { "A": "Rinat Dasayev", "B": "Lev Yashin", "C": "Igor Akinfeev", "D": "Anzor Kavazashvili" }, "dogru_cevap": "B" },
+        { "id": 142, "soru": "'Örümcek Adam' lakaplı, Manchester United ve Fulham formalarıyla Premier Lig'e damga vuran Hollandalı efsane kaleci kimdir?", "secenekler": { "A": "Edwin van der Sar", "B": "Hans van Breukelen", "C": "Jasper Cillessen", "D": "Ronald Waterreus" }, "dogru_cevap": "A" },
+        { "id": 143, "soru": "Bayern Munich ve Almanya milli takımının kalesini uzun yıllar koruyan, 'Sweeper-keeper' (libero kaleci) tarzının öncülerinden olan Alman kaleci kimdir?", "secenekler": { "A": "Oliver Kahn", "B": "Manuel Neuer", "C": "Jens Lehmann", "D": "Andreas Köpke" }, "dogru_cevap": "B" },
+        { "id": 144, "soru": "'Titan' lakaplı, 2002 Dünya Kupası'nda Almanya'yı finale taşıyan hırslı Alman kaleci kimdir?", "secenekler": { "A": "Oliver Kahn", "B": "Manuel Neuer", "C": "Toni Schumacher", "D": "Bodo Illgner" }, "dogru_cevap": "A" },
+        { "id": 145, "soru": "Real Madrid ve İspanya milli takımının efsane kaptanı, 3 Şampiyonlar Ligi ve 1 Dünya Kupası kazanan kaleci kimdir?", "secenekler": { "A": "Santiago Cañizares", "B": "Iker Casillas", "C": "Victor Valdes", "D": "David de Gea" }, "dogru_cevap": "B" },
+        { "id": 146, "soru": "Kariyerinde 1000'den fazla resmi maça çıkan, Juventus ve İtalya milli takımının efsanevi file bekçisi kimdir?", "secenekler": { "A": "Gianluigi Buffon", "B": "Dino Zoff", "C": "Francesco Toldo", "D": "Gianluca Pagliuca" }, "dogru_cevap": "A" },
+        { "id": 147, "soru": "Danimarka milli takımıyla 1992 Avrupa Şampiyonu olan ve Manchester United'ın efsane kadrosunun vazgeçilmezi olan Danimarkalı kaleci kimdir?", "secenekler": { "A": "Kasper Schmeichel", "B": "Peter Schmeichel", "C": "Thomas Sorensen", "D": "Jesper Christiansen" }, "dogru_cevap": "B" },
+        { "id": 148, "soru": "Kaleci olmasına rağmen kariyeri boyunca attığı penaltı ve frikik golleriyle (toplamda 60'tan fazla gol) tanınan Kolombiyalı renkli kaleci kimdir?", "secenekler": { "A": "Rene Higuita", "B": "Oscar Cordoba", "C": "Faryd Mondragon", "D": "David Ospina" }, "dogru_cevap": "A" },
+        { "id": 149, "soru": "Rene Higuita'nın 1995 yılında Wembley'de İngiltere maçında kaleye gelen topu uzaklaştırmak için yaptığı ünlü kurtarışın adı nedir?", "secenekler": { "A": "Akrep Vuruşu (Scorpion Kick)", "B": "Röveşata Kurtarış", "C": "Uçan Kafa", "D": "Topukla Çelme" }, "dogru_cevap": "A" },
+        { "id": 150, "soru": "Türkiye A Milli Futbol Takımı'nın 2002 Dünya Kupası'ndaki üçüncülüğünde ve kulüplerde gösterdiği başarılarla tanınan efsane Türk kaleci kimdir?", "secenekler": { "A": "Rüştü Reçber", "B": "Volkan Demirel", "C": "Tuncay Şanlı", "D": "Engin İpekoğlu" }, "dogru_cevap": "A" }
+      ]
+    },
+    {
+      "kategori_id": 16,
+      "kategori_adi": "Defans Efsaneleri",
+      "sorular": [
+        { "id": 151, "soru": "AC Milan ve İtalya milli takımının efsanevi sol/stoper oyuncusu, kariyerinde 5 Şampiyonlar Ligi kazanan defans filozofu kimdir?", "secenekler": { "A": "Franco Baresi", "B": "Paolo Maldini", "C": "Alessandro Nesta", "D": "Mauro Tassotti" }, "dogru_cevap": "B" },
+        { "id": 152, "soru": "2006 yılında İtalya ile Dünya Kupası'nı kazanan ve aynı yıl stoper olmasına rağmen Ballon d'Or ödülünü kazanan efsane kimdir?", "secenekler": { "A": "Fabio Cannavaro", "B": "Marco Materazzi", "C": "Gianluca Zambrotta", "D": "Alessandro Nesta" }, "dogru_cevap": "A" },
+        { "id": 153, "soru": "Barcelona'nın 'Tiki-Taka' sisteminin gerideki kurucusu, oyun kurma becerisiyle tanınan efsanevi İspanyol stoper kimdir?", "secenekler": { "A": "Carles Puyol", "B": "Gerard Pique", "C": "Sergio Ramos", "D": "Fernando Hierro" }, "dogru_cevap": "B" },
+        { "id": 154, "soru": "Real Madrid ve İspanya milli takımının sertliği, liderliği ve kritik golleriyle tanınan efsanevi kaptanı kimdir?", "secenekler": { "A": "Pepe", "B": "Sergio Ramos", "C": "Carles Puyol", "D": "Raphael Varane" }, "dogru_cevap": "B" },
+        { "id": 155, "soru": "Barcelona'nın hırsı, saçları ve fedakar mücadelesiyle tanınan efsanevi kaptanı kimdir?", "secenekler": { "A": "Carles Puyol", "B": "Xavi Hernandez", "C": "Andres Iniesta", "D": "Victor Valdes" }, "dogru_cevap": "A" },
+        { "id": 156, "soru": "İngiltere Premier Lig tarihinde Manchester United formasıyla geride güven timsali olan, Sırp efsane stoper kimdir?", "secenekler": { "A": "Rio Ferdinand", "B": "Nemanja Vidic", "C": "John Terry", "D": "Jaap Stam" }, "dogru_cevap": "B" },
+        { "id": 157, "soru": "Alman futbolunun dev ismi, Bayern Munich ve Inter formalarıyla orta saha ve libero oynamış çok yönlü efsane kimdir?", "secenekler": { "A": "Lothar Matthäus", "B": "Matthias Sammer", "C": "Juergen Kohler", "D": "Philipp Lahm" }, "dogru_cevap": "B" },
+        { "id": 158, "soru": "Brezilya'nın ve Real Madrid'in sağ bek pozisyonunda çelik gibi fiziği ve hücum bindirmeleriyle tanınan efsanesi kimdir?", "secenekler": { "A": "Cafu", "B": "Dani Alves", "C": "Maicon", "D": "Carlos Alberto" }, "dogru_cevap": "A" },
+        { "id": 159, "soru": "Bayern Munich formasıyla hem sağ bek hem orta sahada oynamış, kariyeri boyunca hiç kırmızı kart görmemiş disiplinli Alman kaptan kimdir?", "secenekler": { "A": "Bastian Schweinsteiger", "B": "Philipp Lahm", "C": "Thomas Müller", "D": "Jerome Boateng" }, "dogru_cevap": "B" },
+        { "id": 160, "soru": "Galatasaray'ın ve Türk milli takımının UEFA Kupası zaferinde ve 2002 Dünya Kupası'nda defansın sigortası olan efsane stoperi kimdir?", "secenekler": { "A": "Bülent Korkmaz", "B": "Alpay Özalan", "C": "Fatih Akyel", "D": "Ergün Penbe" }, "dogru_cevap": "A" }
+      ]
+    },
+    {
+      "kategori_id": 17,
+      "kategori_adi": "Orta Saha Maestroları",
+      "sorular": [
+        { "id": 161, "soru": "Barcelona'nın 'Xavi ve Iniesta' ikilisiyle birlikte orta sahadaki beyni olan, pas kalitesiyle tanınan İspanyol maestro kimdir?", "secenekler": { "A": "Sergio Busquets", "B": "Xavi Hernandez", "C": "Cesc Fabregas", "D": "Thiago Alcantara" }, "dogru_cevap": "B" },
+        { "id": 162, "soru": "Fransa ve Juventus'un efsanevi orta sahası, sahadaki zarafeti ve 'Platini'den sonraki 10 numara' olarak bilinen isim kimdir?", "secenekler": { "A": "Zinedine Zidane", "B": "Didier Deschamps", "C": "Patrick Vieira", "D": "Robert Pires" }, "dogru_cevap": "A" },
+        { "id": 163, "soru": "AC Milan formasıyla derin oyun kurucu (regista) pozisyonunun modern tarihteki en büyük temsilcisi olan İtalyan maestro kimdir?", "secenekler": { "A": "Gennaro Gattuso", "B": "Andrea Pirlo", "C": "Clarence Seedorf", "D": "Massimo Ambrosini" }, "dogru_cevap": "B" },
+        { "id": 164, "soru": "Real Madrid formasıyla yaşını inkar eden performanslar sergileyen, dış üst pasları ve şık çalımlarıyla tanınan Hırvat orta saha kimdir?", "secenekler": { "A": "Toni Kroos", "B": "Luka Modric", "C": "Casemiro", "D": "Mateo Kovacic" }, "dogru_cevap": "B" },
+        { "id": 165, "soru": "Real Madrid ve Almanya'nın pas istatistikleriyle oynayan, yanılma payı neredeyse sıfır olan Alman orta saha maestro kimdir?", "secenekler": { "A": "Toni Kroos", "B": "Sami Khedira", "C": "Mesut Özil", "D": "Bastian Schweinsteiger" }, "dogru_cevap": "A" },
+        { "id": 166, "soru": "Liverpool ve Real Madrid formalarıyla Şampiyonlar Ligi kazanan, uzaktan sert şutları ve liderliğiyle bilinen İngiliz orta saha kimdir?", "secenekler": { "A": "Frank Lampard", "B": "Steven Gerrard", "C": "Paul Scholes", "D": "David Beckham" }, "dogru_cevap": "B" },
+        { "id": 167, "soru": "Manchester United'ın efsanevi uzaktan golcüsü, Alex Ferguson'un 'rakip formayı giymekten korktuğu' dediği İngiliz orta saha kimdir?", "secenekler": { "A": "Paul Scholes", "B": "Michael Carrick", "C": "Nicky Butt", "D": "David Beckham" }, "dogru_cevap": "A" },
+        { "id": 168, "soru": "Chelsea tarihinin orta sahadan en çok gol atan oyuncusu unvanına sahip, gol yollarındaki sezgileriyle tanınan İngiliz maestro kimdir?", "secenekler": { "A": "Frank Lampard", "B": "Joe Cole", "C": "John Terry", "D": "Michael Ballack" }, "dogru_cevap": "A" },
+        { "id": 169, "soru": "Fransa milli takımının ve Arsenal'in orta sahadaki kesici gücü, uzun bacakları ve dinamizmiyle tanınan efsane kimdir?", "secenekler": { "A": "Emmanuel Petit", "B": "Patrick Vieira", "C": "Claude Makelele", "D": "Mathieu Flamini" }, "dogru_cevap": "B" },
+        { "id": 170, "soru": "Fenerbahçe formasıyla Süper Lig'e damga vuran, asistleri ve zekasıyla 'Kral' ilan edilen Brezilyalı 10 numara kimdir?", "secenekler": { "A": "Ariel Ortega", "B": "Alex de Souza", "C": "Lincoln Catanhede", "D": "Elvir Bolic" }, "dogru_cevap": "B" }
+      ]
+    },
+    {
+      "kategori_id": 18,
+      "kategori_adi": "Forvet Yıldızları",
+      "sorular": [
+        { "id": 171, "soru": "Arjantinli süper yıldız Lionel Messi, kariyeri boyunca hangi kulüpte efsaneleşmiştir?", "secenekler": { "A": "Real Madrid", "B": "Barcelona", "C": "PSG", "D": "Inter Miami" }, "dogru_cevap": "B" },
+        { "id": 172, "soru": "Portekizli gol makinesi Cristiano Ronaldo'nun Şampiyonlar Ligi'nde en çok gol atarak kazandığı lakap nedir?", "secenekler": { "A": "Mr. Champions League", "B": "El Nino", "C": "Il Fenomeno", "D": "Bomber" }, "dogru_cevap": "A" },
+        { "id": 173, "soru": "Arsenal formasıyla Premier Lig'de unutulmaz sezonlar geçiren, kulübün tüm zamanların en golcü Fransız oyuncusu kimdir?", "secenekler": { "A": "Thierry Henry", "B": "Nicolas Anelka", "C": "Sylvain Wiltord", "D": "Alexandre Lacazette" }, "dogru_cevap": "A" },
+        { "id": 174, "soru": "İsveçli dev golcü, Ajax, Juventus, Inter, Barcelona, Milan, PSG ve Manchester United gibi birçok devde oynamış renkli karakter kimdir?", "secenekler": { "A": "Henrik Larsson", "B": "Zlatan Ibrahimovic", "C": "Fredrik Ljungberg", "D": "Marcus Berg" }, "dogru_cevap": "B" },
+        { "id": 175, "soru": "Polonyalı golcü Robert Lewandowski, Bayern Munich formasıyla Bundesliga'da bir maçta kaç dakikada 5 gol atarak rekor kırmıştır?", "secenekler": { "A": "9 dakika", "B": "15 dakika", "C": "20 dakika", "D": "45 dakika" }, "dogru_cevap": "A" },
+        { "id": 176, "soru": "İngiliz futbolunun modern dönemdeki en büyük golcülerinden, Tottenham ve Bayern Munich formaları giyen golcü kimdir?", "secenekler": { "A": "Wayne Rooney", "B": "Harry Kane", "C": "Michael Owen", "D": "Jamie Vardy" }, "dogru_cevap": "B" },
+        { "id": 177, "soru": "Manchester United'ın efsanevi golcüsü, hem kulüp hem milli takım düzeyinde hırslı oyunuyla tanınan İngiliz forvet kimdir?", "secenekler": { "A": "Wayne Rooney", "B": "Alan Shearer", "C": "Teddy Sheringham", "D": "Andy Cole" }, "dogru_cevap": "A" },
+        { "id": 178, "soru": "Mısır milli takımı ve Liverpool formasıyla Premier Lig'e damga vuran sağ kanat golcüsü kimdir?", "secenekler": { "A": "Sadio Mane", "B": "Mohamed Salah", "C": "Riyad Mahrez", "D": "Hakim Ziyech" }, "dogru_cevap": "B" },
+        { "id": 179, "soru": "Galatasaray formasıyla Süper Lig'de gol krallıkları yaşayan ve 'Kral' unvanıyla anılan, Türk futbol tarihinin en önemli golcülerinden biri kimdir?", "secenekler": { "A": "Hakan Şükür", "B": "Burak Yılmaz", "C": "Tanju Çolak", "D": "Metin Oktay" }, "dogru_cevap": "D" },
+        { "id": 180, "soru": "Beşiktaş'ın ve Türk futbolunun 'Taçsız Kral' lakaplı efsane golcüsü kimdir?", "secenekler": { "A": "Metin Oktay", "B": "Feyyaz Uçar", "C": "Oktay Derelioğlu", "D": "Ertuğrul Sağlam" }, "dogru_cevap": "A" }
+      ]
+    },
+    {
+      "kategori_id": 19,
+      "kategori_adi": "Teknik Direktörler",
+      "sorular": [
+        { "id": 181, "soru": "Barcelona, Bayern Munich ve Manchester City ile modern futbolun taktiksel devrimini yapan İspanyol teknik direktör kimdir?", "secenekler": { "A": "Jurgen Klopp", "B": "Pep Guardiola", "C": "Carlo Ancelotti", "D": "Jose Mourinho" }, "dogru_cevap": "B" },
+        { "id": 182, "soru": "Şampiyonlar Ligi'ni en çok kazanan (4 kez) ve Avrupa'nın 5 büyük liginde de şampiyonluk yaşayan İtalyan teknik direktör kimdir?", "secenekler": { "A": "Massimiliano Allegri", "B": "Carlo Ancelotti", "C": "Antonio Conte", "D": "Luciano Spalletti" }, "dogru_cevap": "B" },
+        { "id": 183, "soru": "Kendini 'Special One' (Özel Biri) olarak adlandıran, Porto, Chelsea, Inter, Real Madrid ve Roma gibi devleri çalıştıran Portekizli teknik direktör kimdir?", "secenekler": { "A": "Jose Mourinho", "B": "Rafa Benitez", "C": "Nuno Espirito Santo", "D": "Abel Ferreira" }, "dogru_cevap": "A" },
+        { "id": 184, "soru": "Gegenpressing taktiğiyle tanınan, Borussia Dortmund ve Liverpool'a unutulmaz yıllar yaşatan Alman teknik direktör kimdir?", "secenekler": { "A": "Julian Nagelsmann", "B": "Jurgen Klopp", "C": "Thomas Tuchel", "D": "Hansi Flick" }, "dogru_cevap": "B" },
+        { "id": 185, "soru": "Manchester United'ı 26 yıl boyunca çalıştıran, kulübe 13 Premier Lig ve 2 Şampiyonlar Ligi kazandıran efsanevi İskoç menajer kimdir?", "secenekler": { "A": "Matt Busby", "B": "Alex Ferguson", "C": "David Moyes", "D": "Ron Atkinson" }, "dogru_cevap": "B" },
+        { "id": 186, "soru": "Arsenal'de 22 yıl görev yapan, takımını 2003-2004 sezonunda hiç yenilgisiz şampiyon yaparak 'Yenilmezler' (Invincibles) unvanını kazandıran Fransız hoca kimdir?", "secenekler": { "A": "Arsene Wenger", "B": "Unai Emery", "C": "Gerard Houllier", "D": "Claude Puel" }, "dogru_cevap": "A" },
+        { "id": 187, "soru": "Galatasaray'a UEFA Kupası'nı kazandıran ve Türk futbol tarihinin en çok kupa kazanan teknik direktörü kimdir?", "secenekler": { "A": "Mustafa Denizli", "B": "Şenol Güneş", "C": "Fatih Terim", "D": "Aykut Kocaman" }, "dogru_cevap": "C" },
+        { "id": 188, "soru": "Türkiye A Milli Futbol Takımı'na 2002 Dünya Kupası'nda dünya üçüncülüğü kazandıran teknik direktör kimdir?", "secenekler": { "A": "Fatih Terim", "B": "Şenol Güneş", "C": "Mustafa Denizli", "D": "Ersun Yanal" }, "dogru_cevap": "B" },
+        { "id": 189, "soru": "Ajax ile 1995 yılında genç kadrosuyla Şampiyonlar Ligi'ni kazanan ve total futbol anlayışını sürdüren Hollandalı efsane teknik direktör kimdir?", "secenekler": { "A": "Louis van Gaal", "B": "Guus Hiddink", "C": "Dick Advocaat", "D": "Ronald Koeman" }, "dogru_cevap": "A" },
+        { "id": 190, "soru": "İtalya milli takımına 2006 Dünya Kupası'nı kazandıran deneyimli İtalyan teknik direktör kimdir?", "secenekler": { "A": "Marcello Lippi", "B": "Giovanni Trapattoni", "C": "Cesare Prandelli", "D": "Roberto Mancini" }, "dogru_cevap": "A" }
+      ]
+    },
+    {
+      "kategori_id": 20,
+      "kategori_adi": "Futbol Kuralları",
+      "sorular": [
+        { "id": 191, "soru": "Futbol maçlarında resmi olarak bir takımın sahada bulundurması gereken en az futbolcu sayısı kaç kişidir?", "secenekler": { "A": "7 kişi", "B": "9 kişi", "C": "11 kişi", "D": "8 kişi" }, "dogru_cevap": "A" },
+        { "id": 192, "soru": "Normal süresi berabere biten eleme usulü maçlarda oynanan uzatma devrelerinin toplam süresi ne kadardır?", "secenekler": { "A": "15 dakika", "B": "30 dakika", "C": "20 dakika", "D": "40 dakika" }, "dogru_cevap": "B" },
+        { "id": 193, "soru": "Futbolda bir oyuncunun ofsayt pozisyonunda sayılması için topun kendisine atıldığı an rakip kaleye göre nerede bulunması gerekir?", "secenekler": { "A": "Rakip oyuncudan geride", "B": "Topun kendisinden ileride", "C": "Rakip kale çizgisine sondan ikinci oyuncudan daha yakın", "D": "Orta sahaya yakın" }, "dogru_cevap": "C" },
+        { "id": 194, "soru": "Uluslararası futbol kurallarını belirleyen resmi kurulun (IFAB) yapısında toplam kaç ana üye federasyon/kurum oy hakkına sahiptir?", "secenekler": { "A": "FIFA ve 4 İngiliz federasyonu (İngiltere, İskoçya, Galler, Kuzey İrlanda)", "B": "Sadece FIFA üyeleri", "C": "UEFA ve CONMEBOL", "D": "FIFA hakem komitesi" }, "dogru_cevap": "A" },
+        { "id": 195, "soru": "Futbolda sarı kart gören bir oyuncu aynı maçta ikinci sarı kartı görürse hangi ceza ile karşı karşıya kalır?", "secenekler": { "A": "Doğrudan uyarı", "B": "Kırmızı kart görerek oyundan ihraç edilir", "C": "5 dakika kenarda bekler", "D": "Sadece para cezası alır" }, "dogru_cevap": "B" },
+        { "id": 196, "soru": "Futbolda penaltı vuruşu yapılırken kalecinin ayaklarının durumu kural olarak nasıl olmalıdır?", "secenekler": { "A": "Çizginin gerisinde zıplamalıdır", "B": "En azından bir kısmının çizgiye temas etmesi veya hizasında bulunması gerekir", "C": "İstediği yerde durabilir", "D": "Çizginin 1 metre önünde durabilir" }, "dogru_cevap": "B" },
+        { "id": 197, "soru": "Bir oyuncu kendi sahasından topu doğrudan rakip kaleye atarsa ve gol olursa bu durum nasıl değerlendirilir?", "secenekler": { "A": "Geçerli gol olur", "B": "Endirekt serbest vuruş verilir", "C": "Aut verilir", "D": "Kazanılan kale vuruşu tekrarlanır" }, "dogru_cevap": "A" },
+        { "id": 198, "soru": "Maç esnasında taç atışı kullanan oyuncu topu oyuna sokarken topu doğrudan kendi kalecisine elleriyle atabilir mi?", "secenekler": { "A": "Evet, atabilir", "B": "Hayır, kaleci elleriyle tutamaz", "C": "Sadece uzatmalarda atabilir", "D": "Hakem izniyle atabilir" }, "dogru_cevap": "B" },
+        { "id": 199, "soru": "Futbolda VAR (Video Yardımcı Hakem) sistemi resmi olarak ilk kez hangi yıl IFAB tarafından oyun kuralı olarak onaylanmıştır?", "secenekler": { "A": "2012", "B": "2016", "C": "2018", "D": "2020" }, "dogru_cevap": "C" },
+        { "id": 200, "soru": "Bir futbol maçında kalecinin topu ellerinde kontrol altında tutabileceği azami süre kural olarak kaç saniyedir?", "secenekler": { "A": "4 saniye", "B": "6 saniye", "C": "10 saniye", "D": "Süre sınırı yoktur" }, "dogru_cevap": "B" }
+      ]
+    }
+  ]
+}
