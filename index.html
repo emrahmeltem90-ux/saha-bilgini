@@ -6,35 +6,58 @@
     <title>Futbol Bilgi Yarışması - 40 Level</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Giriş ekranı için özel stil */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0f172a;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
         }
-        .splash-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255,255,255,0.3);
-            border-top: 5px solid #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+        #splash-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .splash-text {
+            position: absolute;
+            bottom: 60px;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px #000;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
 
-    <!-- GİRİŞ (SPLASH) EKRANI -->
+    <!-- GİRİŞ EKRANI -->
     <div id="splash-screen">
         <img src="splash-bg.jpg" alt="Futbol Bilgini">
-        <div class="splash-loading">
-            <div class="splash-spinner"></div>
-            <p>YÜKLENİYOR...</p>
-        </div>
+        <div class="splash-text">YÜKLENİYOR...</div>
     </div>
 
     <div class="container">
         
-        <!-- ÜST PANEL (Yıldız ve Coin) -->
+        <!-- ÜST PANEL -->
         <div class="top-panel">
             <div class="stat-box">
                 <span class="stat-icon">⭐</span>
@@ -49,7 +72,7 @@
 
         <h1>⚽ Futbol Bilgi Yarışması</h1>
 
-        <!-- 1. ANA MENÜ EKRANI -->
+        <!-- 1. ANA MENÜ -->
         <div id="menu-screen" class="screen active menu-screen">
             <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;">
                 40 Farklı Level ve 400 Soruluk dev futbol arşivine hoş geldiniz!<br>
@@ -58,7 +81,7 @@
             <button class="menu-btn" onclick="showLevelScreen()">Oyuna Başla / Level Seç</button>
         </div>
 
-        <!-- 2. LEVEL SEÇİM EKRANI -->
+        <!-- 2. LEVEL SEÇİM -->
         <div id="levels-screen" class="screen">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <span style="font-weight: bold; color: var(--text-color); font-size: 1.1rem;">Level Seçin</span>
@@ -67,7 +90,7 @@
             <div class="levels-container" id="levels-container"></div>
         </div>
 
-        <!-- 3. OYUN / QUIZ EKRANI -->
+        <!-- 3. OYUN / QUIZ -->
         <div id="quiz-screen" class="screen">
             <div class="quiz-info">
                 <span id="level-title-indicator">Level 1</span>
@@ -82,7 +105,7 @@
             </div>
         </div>
 
-        <!-- 4. SONUÇ EKRANI -->
+        <!-- 4. SONUÇ -->
         <div id="score-screen" class="screen score-card">
             <h2>Level Tamamlandı!</h2>
             <div class="big-stars" id="result-stars">⭐⭐⭐</div>
