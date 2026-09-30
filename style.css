@@ -38,6 +38,16 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 .btn-howto { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #fff; box-shadow: 0 5px 0 #14532d; }
 .btn-spin { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%) !important; color: #fff !important; box-shadow: 0 5px 0 #4c1d95 !important; }
 
+#welcome-text {
+    color: #cbd5e1;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
 /* AYARLAR */
 #settings-screen { background-color: #0f172a; padding-top: 40px; }
 .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -143,40 +153,137 @@ input:checked + .slider:before { transform: translateX(24px); }
 .prize-collect-btn { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; border: 3px solid #fff; border-radius: 15px; padding: 15px 40px; font-size: 1.2rem; font-weight: 900; cursor: pointer; box-shadow: 0 6px 0 #14532d; text-transform: uppercase; }
 .prize-collect-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
 
-/* PROFİL EKRANI */
-#profile-screen { background-color: #0f172a; padding-top: 30px; }
+/* ============================================ */
+/* PROFİL EKRANI - YENİ TASARIM (OYUNCU KARTI) */
+/* ============================================ */
+#profile-screen { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); padding-top: 30px; overflow-y: auto; }
 .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.profile-info { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; }
-.profile-avatar {
-    width: 80px; height: 80px; border-radius: 50%;
+.profile-header h2 { color: #fff; margin: 0; }
+
+/* OYUNCU KARTI */
+.player-card {
     background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+    border: 3px solid var(--accent-gold);
+    border-radius: 20px;
+    padding: 25px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+}
+.player-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%);
     border: 3px solid var(--accent-gold);
     display: flex; justify-content: center; align-items: center;
     font-size: 2.5rem; box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
 }
 .profile-name-input {
-    background-color: var(--bg-card);
+    background-color: rgba(15, 23, 42, 0.9);
     border: 2px solid #3b82f6;
     border-radius: 12px;
-    padding: 12px 20px;
+    padding: 10px 20px;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
     text-align: center;
     width: 80%;
-    max-width: 300px;
+    max-width: 250px;
     outline: none;
 }
 .profile-name-input:focus { border-color: var(--accent-gold); }
 .profile-save-btn {
     background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
     color: #fff; border: 3px solid #fff; border-radius: 12px;
-    padding: 12px 30px; font-size: 1rem; font-weight: bold;
+    padding: 10px 25px; font-size: 0.9rem; font-weight: bold;
     cursor: pointer; box-shadow: 0 4px 0 #14532d;
 }
 .profile-save-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #14532d; }
 
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.stat-card { background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 2px solid #3b82f6; border-radius: 12px; padding: 15px; text-align: center; }
-.stat-card-value { font-size: 1.6rem; font-weight: 900; color: var(--accent-gold); text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
-.stat-card-label { font-size: 0.75rem; font-weight: bold; color: #cbd5e1; text-transform: uppercase; margin-top: 5px; }
+/* RÜTBE */
+.player-rank {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+.player-rank-desc {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* İSTATİSTİK ÇEMBERİ */
+.stats-circle-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#stats-canvas {
+    position: absolute;
+    top: 0; left: 0;
+}
+.stats-circle-center {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+.stats-circle-value {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent-gold);
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+}
+.stats-circle-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #cbd5e1;
+    text-transform: uppercase;
+}
+
+/* RENKLİ İSTATİSTİK KUTULARI */
+.stats-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    margin-bottom: 20px;
+}
+.stat-card { 
+    border-radius: 15px; 
+    padding: 15px; 
+    text-align: center; 
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+.stat-card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+.stat-card-value { 
+    font-size: 1.5rem; 
+    font-weight: 900; 
+    color: #fff; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.stat-card-label { 
+    font-size: 0.7rem; 
+    font-weight: bold; 
+    color: rgba(255,255,255,0.9); 
+    text-transform: uppercase; 
+    margin-top: 3px; 
+}
+
+/* RENKLİ KARTLAR */
+.stat-blue { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); border: 2px solid #60a5fa; }
+.stat-green { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); border: 2px solid #4ade80; }
+.stat-red { background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%); border: 2px solid #f87171; }
+.stat-gold { background: linear-gradient(180deg, #fbbf24 0%, #b45309 100%); border: 2px solid #fde047; }
+.stat-purple { background: linear-gradient(180deg, #a855f7 0%, #6b21a8 100%); border: 2px solid #c084fc; }
+.stat-orange { background: linear-gradient(180deg, #fb923c 0%, #c2410c 100%); border: 2px solid #fdba74; }
