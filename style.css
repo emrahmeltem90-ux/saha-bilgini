@@ -1,12 +1,11 @@
 :root {
-    /* YENİ RENK PALETİ (Oyun Hissi) */
-    --bg-dark: #0a192f;        /* Koyu lacivert arka plan */
-    --bg-card: #112240;        /* Kart arka planı */
-    --bg-card-locked: #1e2a3a; /* Kilitli kart arka planı */
-    --primary-blue: #2563eb;   /* Parlak mavi */
-    --primary-light: #3b82f6;  /* Açık mavi */
-    --accent-green: #22c55e;   /* İlerleme çubuğu yeşili */
-    --accent-gold: #fbbf24;    /* Altın sarısı (Yıldız, Kilit) */
+    --bg-dark: #0a192f;
+    --bg-card: #112240;
+    --bg-card-locked: #1e2a3a;
+    --primary-blue: #2563eb;
+    --primary-light: #3b82f6;
+    --accent-green: #22c55e;
+    --accent-gold: #fbbf24;
     --text-main: #ffffff;
     --text-muted: #94a3b8;
     --border-color: #2d4a6d;
@@ -15,7 +14,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-image: url('stadium-bg.jpg'); /* Stadyum arka planı */
+    background-image: url('stadium-bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -29,39 +28,9 @@ body {
     min-height: 100vh;
 }
 
-/* --- GİRİŞ EKRANI --- */
-#splash-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #0a192f; z-index: 99999;
-    display: flex; justify-content: center; align-items: center;
-    transition: opacity 0.5s ease;
-}
-#splash-screen img.bg {
-    width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: -1;
-}
-.loader-container {
-    position: absolute; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 10px;
-}
-.loader-circle {
-    position: relative; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center;
-}
-.loader-ring {
-    position: absolute; width: 100%; height: 100%; border-radius: 50%;
-    border: 4px solid transparent; border-top: 4px solid var(--accent-green); border-right: 4px solid var(--accent-green);
-    animation: spin 1s linear infinite;
-}
-.loader-ball { font-size: 2rem; z-index: 2; animation: pulse 1.5s infinite; }
-.loading-text { color: #fff; font-family: sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; text-align: center; }
-.loading-percent { font-size: 1.5rem; font-weight: 900; color: var(--accent-green); text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
-
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-/* --- ANA KAPSAYICI --- */
 .container {
     width: 100%;
     max-width: 600px;
-    /* Oyun görselindeki gibi hafif şeffaf mavi arka plan */
     background-color: rgba(17, 34, 64, 0.85); 
     border: 2px solid var(--border-color);
     border-radius: 20px;
@@ -72,13 +41,22 @@ body {
     position: relative;
 }
 
-/* --- ÜST PANEL (Yıldız/Coin) --- */
+/* ÜST PANEL */
 .top-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     padding: 0 5px;
+}
+.settings-btn {
+    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #fff;
 }
 .stat-box {
     background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
@@ -113,14 +91,14 @@ h1 {
     color: #fff;
     margin-bottom: 20px;
     font-size: 1.8rem;
-    text-shadow: 0 2px 4px #000, 0 0 15px rgba(59, 130, 246, 0.8); /* Mavi parlama */
+    text-shadow: 0 2px 4px #000, 0 0 15px rgba(59, 130, 246, 0.8);
 }
 
-/* --- EKRAN GEÇİŞLERİ --- */
+/* EKRAN GEÇİŞLERİ */
 .screen { display: none; }
 .screen.active { display: block; }
 
-/* --- ANA MENÜ --- */
+/* ANA MENÜ */
 .menu-screen { text-align: center; padding: 30px 0; }
 .menu-btn {
     background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
@@ -134,17 +112,17 @@ h1 {
     width: 100%;
     margin-top: 20px;
     transition: transform 0.2s;
-    box-shadow: 0 5px 0 #14532d, 0 8px 15px rgba(0,0,0,0.5); /* 3D buton efekti */
+    box-shadow: 0 5px 0 #14532d, 0 8px 15px rgba(0,0,0,0.5);
     text-shadow: 0 2px 2px rgba(0,0,0,0.5);
 }
 .menu-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #14532d; }
 
-/* --- LEVEL SEÇİM EKRANI (KARTLAR) --- */
+/* LEVEL SEÇİM */
 .levels-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-height: 65vh;
+    max-height: 60vh;
     overflow-y: auto;
     padding-right: 5px;
     margin-bottom: 15px;
@@ -152,11 +130,11 @@ h1 {
 .levels-container::-webkit-scrollbar { width: 6px; }
 .levels-container::-webkit-scrollbar-thumb { background: var(--primary-blue); border-radius: 10px; }
 
-/* YENİ LEVEL KART TASARIMI (Oyun Görselindeki Gibi) */
+/* YENİ LEVEL KART TASARIMI */
 .level-card {
     display: flex;
     align-items: center;
-    background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%); /* Canlı mavi gradient */
+    background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 100%);
     border: 3px solid #60a5fa;
     border-radius: 12px;
     padding: 8px 12px;
@@ -164,33 +142,53 @@ h1 {
     cursor: pointer;
     transition: all 0.2s;
     min-height: 80px;
-    box-shadow: 0 5px 0 #1e3a8a, 0 8px 15px rgba(0,0,0,0.5); /* 3D Kart efekti */
+    box-shadow: 0 5px 0 #1e3a8a, 0 8px 15px rgba(0,0,0,0.5);
 }
 .level-card:active:not(.locked) { transform: translateY(4px); box-shadow: 0 1px 0 #1e3a8a; }
 
-/* Sol Taraf - Karakter */
+/* Sol Taraf - Karakter İkonu */
 .level-avatar-box {
-    width: 60px; height: 65px;
+    width: 60px; 
+    height: 65px;
     background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
     border: 3px solid var(--accent-gold);
     border-radius: 8px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    margin-right: 15px; flex-shrink: 0;
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    margin-right: 15px; 
+    flex-shrink: 0;
     box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    overflow: hidden;
 }
-.level-avatar-icon { font-size: 1.8rem; }
-.level-avatar-role { font-size: 0.6rem; font-weight: bold; color: var(--accent-gold); text-transform: uppercase; margin-top: 2px;}
+.level-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+.level-avatar-role {
+    font-size: 0.55rem; 
+    font-weight: bold; 
+    color: var(--accent-gold); 
+    text-transform: uppercase; 
+    margin-top: 2px;
+    text-align: center;
+    line-height: 1;
+    padding: 0 2px;
+}
 
-/* Orta Kısım - Bilgi */
+/* Orta Kısım */
 .level-info {
     flex-grow: 1; display: flex; flex-direction: column; gap: 5px;
 }
 .level-title {
-    font-size: 1.3rem; font-weight: 900;
+    font-size: 1.1rem; font-weight: 900;
     color: #fff; text-transform: uppercase;
     letter-spacing: 1px;
-    text-shadow: 2px 2px 0 #1e3a8a, 0 0 5px rgba(255,255,255,0.5); /* Güçlü gölge */
+    text-shadow: 2px 2px 0 #1e3a8a, 0 0 5px rgba(255,255,255,0.5);
+    line-height: 1.2;
 }
 .level-progress-bar {
     width: 100%; height: 18px;
@@ -236,7 +234,7 @@ h1 {
 .level-card.locked .level-title { color: #94a3b8; text-shadow: none; }
 .level-card.locked .level-stars { color: #64748b; text-shadow: none; }
 
-/* --- QUIZ EKRANI --- */
+/* QUIZ EKRANI */
 .quiz-info {
     display: flex; justify-content: space-between;
     margin-bottom: 20px; color: var(--text-muted);
@@ -282,7 +280,7 @@ h1 {
 }
 .back-menu-btn:hover { color: var(--text-color); border-color: var(--text-color); }
 
-/* --- 4. SONUÇ EKRANI --- */
+/* SONUÇ EKRANI */
 .score-card { text-align: center; }
 .score-card h2 { font-size: 2rem; margin-bottom: 15px; color: var(--accent-green); text-shadow: 0 2px 4px #000; }
 .big-stars { font-size: 3rem; color: var(--accent-gold); margin: 15px 0; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
