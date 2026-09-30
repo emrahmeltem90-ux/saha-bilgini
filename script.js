@@ -1,3 +1,13 @@
+// --- SES DOSYALARI ---
+const sesDogru = new Audio('ses_dogru.mp3');
+const sesYanlis = new Audio('ses_yanlis.mp3');
+const sesTiklama = new Audio('ses_tiklama.mp3');
+
+// Ses seviyelerini ayarla (0.0 - 1.0)
+sesDogru.volume = 0.7;
+sesYanlis.volume = 0.7;
+sesTiklama.volume = 0.5;
+
 // --- GİRİŞ EKRANI KONTROLÜ ---
 document.addEventListener("DOMContentLoaded", function() {
     let percent = 0;
@@ -133,8 +143,8 @@ function showLevelScreen() {
             </div>
             <div class="level-status">${isUnlocked ? '🏆' : '🔒'}</div>`;
 
-        if (isUnlocked) card.onclick = () => startLevel(i);
-        else card.onclick = () => alert("Bu level kilitli!");
+        if (isUnlocked) card.onclick = () => { sesTiklama.play(); startLevel(i); };
+        else card.onclick = () => { sesTiklama.play(); alert("Bu level kilitli!"); };
         container.appendChild(card);
     }
     showScreen('levels-screen');
@@ -170,7 +180,7 @@ function loadQuestion() {
         const btn = document.createElement("button");
         btn.classList.add("option-btn");
         btn.innerHTML = `<span class="option-letter">${letters[index]}</span> ${option}`;
-        btn.onclick = () => selectOption(index, btn);
+        btn.onclick = () => { sesTiklama.play(); selectOption(index, btn); };
         optionsContainer.appendChild(btn);
     });
 
@@ -187,6 +197,7 @@ function loadQuestion() {
                 const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
                 for (let btn of buttons) btn.disabled = true;
                 buttons[currentQ.dogru].classList.add("correct");
+                sesYanlis.play();
                 setTimeout(nextQuestion, 1500);
             }
         }
@@ -205,9 +216,11 @@ function selectOption(selectedIndex, selectedBtn) {
         selectedBtn.classList.add("correct");
         score += 100;
         correctCount++;
+        sesDogru.play();
     } else {
         selectedBtn.classList.add("incorrect");
         if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
+        sesYanlis.play();
     }
 
     for (let btn of buttons) btn.disabled = true;
@@ -258,7 +271,7 @@ function showResults() {
     document.getElementById('final-correct-text').innerText = `Doğru Sayısı: ${correctCount}/${totalQ}`;
 }
 
-function restartLevel() { startLevel(currentLevelIndex); }
+function restartLevel() { sesTiklama.play(); startLevel(currentLevelIndex); }
 
 function resetGame() {
     if(confirm("Tüm ilerlemen silinecek. Emin misin?")) {
@@ -268,6 +281,7 @@ function resetGame() {
 }
 
 function watchAdForStars() {
+    sesTiklama.play();
     alert("Reklam izleniyor... (Simülasyon)");
     setTimeout(() => {
         userProgress.totalStars += 5;
