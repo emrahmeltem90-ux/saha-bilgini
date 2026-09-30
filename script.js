@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if(percentDisplay) percentDisplay.innerText = percent + '%';
     }, 100);
     drawWheel();
+    loadProfileName();
 });
 
 let levelsData = [];
@@ -53,16 +54,25 @@ async function loadAllQuestions() {
 }
 loadAllQuestions();
 
-let currentLevelIndex = 0, currentQuestionIndex = 0, score = 0, correctCount = 0, answered = false, timerInterval;
+let currentLevelIndex = 0, currentQuestionIndex = 0, score = 0, correctCount = 0, wrongCount = 0, answered = false, timerInterval;
 let selectedLockedLevel = -1;
 let usedJokers = { "5050": false, "answer": false, "double": false };
 let hasDoubleChance = false;
 const JOKER_PRICES = { "5050": 20, "answer": 40, "double": 60 };
 
-let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || { levels: {}, totalStars: 0, totalCoins: 100 };
+let userProgress = JSON.parse(localStorage.getItem('futbol_quiz_progress')) || {
+    levels: {}, totalStars: 0, totalCoins: 100,
+    profileName: "Oyuncu", totalScore: 0, totalCorrect: 0, totalWrong: 0, highScore: 0, perfectLevels: 0
+};
 if (!userProgress.levels[0]) userProgress.levels[0] = { stars: 0, score: 0, unlocked: true };
 if (userProgress.lastSpinTime === undefined) userProgress.lastSpinTime = 0;
 if (userProgress.freeSpins === undefined) userProgress.freeSpins = 1;
+if (userProgress.profileName === undefined) userProgress.profileName = "Oyuncu";
+if (userProgress.totalScore === undefined) userProgress.totalScore = 0;
+if (userProgress.totalCorrect === undefined) userProgress.totalCorrect = 0;
+if (userProgress.totalWrong === undefined) userProgress.totalWrong = 0;
+if (userProgress.highScore === undefined) userProgress.highScore = 0;
+if (userProgress.perfectLevels === undefined) userProgress.perfectLevels = 0;
 
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
@@ -88,6 +98,33 @@ function showSettingsScreen() { showScreen('settings-screen'); }
 function updateTopPanel() {
     document.getElementById('total-stars-display').innerText = userProgress.totalStars || 0;
     document.getElementById('total-coins-display').innerText = userProgress.totalCoins || 0;
+    document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
+}
+
+// --- PROFİL FONKSİYONLARI ---
+function showProfileScreen() {
+    showScreen('profile-screen');
+    document.getElementById('profile-name-input').value = userProgress.profileName || "Oyuncu";
+    document.getElementById('stat-total-score').innerText = userProgress.totalScore || 0;
+    document.getElementById('stat-total-correct').innerText = userProgress.totalCorrect || 0;
+    document.getElementById('stat-total-wrong').innerText = userProgress.totalWrong || 0;
+    document.getElementById('stat-high-score').innerText = userProgress.highScore || 0;
+    document.getElementById('stat-levels-completed').innerText = Object.keys(userProgress.levels).length || 0;
+    document.getElementById('stat-perfect-levels').innerText = userProgress.perfectLevels || 0;
+}
+
+function saveProfileName() {
+    let newName = document.getElementById('profile-name-input').value.trim();
+    if (newName === "") newName = "Oyuncu";
+    userProgress.profileName = newName;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    sesDogru.play();
+    alert("İsim kaydedildi: " + newName);
+    updateTopPanel();
+}
+
+function loadProfileName() {
+    document.getElementById('menu-profile-name').innerText = userProgress.profileName || "Oyuncu";
 }
 
 // --- ÇARKIFELEK ---
@@ -164,7 +201,6 @@ function spinWheel() {
         }
     }
 
-    // Çark sesini çal
     sesCark.currentTime = 0;
     sesCark.play();
 
@@ -318,7 +354,7 @@ function unlockLevelWithCoins() {
 }
 
 function startLevel(index) {
-    currentLevelIndex = index; currentQuestionIndex = 0; score = 0; correctCount = 0;
+    currentLevelIndex = index; currentQuestionIndex = 0; score = 0; correctCount = 0; wrongCount = 0;
     usedJokers = { "5050": false, "answer": false, "double": false };
     hasDoubleChance = false;
     if (!levelsData[index] || levelsData[index].sorular.length === 0) { alert("Soru yok!"); return; }
@@ -351,7 +387,7 @@ function loadQuestion() {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             if (!answered) {
-                answered = true;
+                answered = true; wrongCount++;
                 const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
                 for (let btn of buttons) btn.disabled = true;
                 buttons[currentQ.dogru].classList.add("correct");
@@ -416,6 +452,7 @@ function selectOption(selectedIndex, selectedBtn) {
             sesYanlis.play(); updateJokerButtons();
         } else {
             answered = true; clearInterval(timerInterval);
+            wrongCount++;
             selectedBtn.classList.add("incorrect");
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
             sesYanlis.play();
@@ -440,6 +477,14 @@ function showResults() {
     if (percentage >= 30) starsEarned = 1;
     if (percentage >= 70) starsEarned = 2;
     if (percentage >= 100) starsEarned = 3;
+
+    // İstatistikleri güncelle
+    userProgress.totalScore = (userProgress.totalScore || 0) + score;
+    userProgress.totalCorrect = (userProgress.totalCorrect || 0) + correctCount;
+    userProgress.totalWrong = (userProgress.totalWrong || 0) + wrongCount;
+    if (score > (userProgress.highScore || 0)) userProgress.highScore = score;
+    if (starsEarned === 3) userProgress.perfectLevels = (userProgress.perfectLevels || 0) + 1;
+
     let prevStars = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].stars : 0;
     if (starsEarned > prevStars) {
         userProgress.totalStars += (starsEarned - prevStars);
@@ -451,6 +496,7 @@ function showResults() {
     let coinsEarned = correctCount * 10;
     userProgress.totalCoins += coinsEarned;
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+
     let starsDisplay = '☆☆☆';
     if (starsEarned === 1) starsDisplay = '⭐☆☆';
     if (starsEarned === 2) starsDisplay = '⭐⭐☆';
@@ -469,4 +515,4 @@ function watchAdForStars() {
         localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
         updateTopPanel(); alert("Tebrikler! 5 yıldız kazandın. ⭐"); showLevelScreen();
     }, 1500);
-                                                  }
+                              }
