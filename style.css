@@ -1,107 +1,95 @@
+/* Genel Ayarlar ve Reset */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
+    user-select: none;
 }
 
 body {
-    background: linear-gradient(135deg, #050b14, #0a192f, #022c14);
+    background-color: #050b14;
     color: #ffffff;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
     overflow: hidden;
 }
 
+/* Ortak Gizleme Sınıfı */
 .hidden {
     display: none !important;
 }
 
-/* GİRİŞ VE YÜKLENME EKRANI - SİNEMATİK & TEKNOLOJİK */
+/* Splash (Açılış) Ekranı */
 .splash-container {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        radial-gradient(circle at center, rgba(0, 255, 128, 0.15) 0%, rgba(11, 29, 19, 0.85) 60%),
-        linear-gradient(135deg, #050b14 0%, #0a192f 50%, #022c14 100%);
-    background-blend-mode: screen;
+    background: linear-gradient(135deg, #050b14, #0a192f);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    z-index: 100;
-    padding: 40px;
-    border: 2px solid rgba(0, 255, 128, 0.2);
-    box-shadow: inset 0 0 50px rgba(0, 255, 128, 0.1);
+    z-index: 999;
 }
 
 .game-logo-title {
-    font-size: 3rem;
+    font-size: 36px;
     font-weight: 900;
-    color: #00ff80;
-    text-shadow: 0 0 20px rgba(0, 255, 128, 0.6), 0 4px 10px rgba(0,0,0,0.8);
-    letter-spacing: 3px;
+    color: #00ff88;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    letter-spacing: 2px;
 }
 
 .game-year {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #64ffda;
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-    margin-bottom: 40px;
-    letter-spacing: 6px;
+    font-size: 16px;
+    color: #8892b0;
+    margin-bottom: 30px;
+    letter-spacing: 4px;
 }
 
 .loading-box {
-    width: 85%;
-    max-width: 320px;
-    background: rgba(5, 11, 20, 0.6);
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 255, 128, 0.3);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    width: 80%;
+    max-width: 300px;
+    text-align: center;
 }
 
 #loading-text {
-    font-size: 0.95rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #64ffda;
-    letter-spacing: 1px;
+    font-size: 12px;
+    color: #a8b2d1;
+    margin-bottom: 8px;
+    font-weight: 700;
 }
 
 .progress-bar-bg {
     width: 100%;
-    height: 14px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 7px;
+    height: 8px;
+    background: rgba(255, 255, 136, 0.1);
+    border-radius: 4px;
     overflow: hidden;
-    border: 1px solid #00ff80;
 }
 
 .progress-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #00b0ff, #00ff80);
-    box-shadow: 0 0 10px #00ff80;
-    transition: width 0.1s linear;
+    background: linear-gradient(90deg, #00b0ff, #00ff88);
+    transition: width 0.1s ease;
 }
 
-/* ANA MENÜ VE SEVİYE EKRANI */
+/* Ana Menü ve Seviye Ekranı */
 .main-menu {
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
     height: 100vh;
+    background: #080f1d;
     display: flex;
     flex-direction: column;
-    padding: 15px;
-    background: rgba(5, 11, 20, 0.95);
+    padding: 20px;
+    position: relative;
 }
 
 .top-bar {
@@ -111,158 +99,157 @@ body {
     margin-bottom: 20px;
 }
 
-.icon-btn {
-    background: #0a192f;
-    border: 2px solid #64ffda;
-    border-radius: 12px;
-    font-size: 1.5rem;
-    padding: 5px 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-
 .stat-badge {
-    background: #050b14;
-    border: 2px solid #00ff80;
-    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 14px;
     border-radius: 20px;
-    font-weight: bold;
-    font-size: 1rem;
-    color: #00ff80;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    font-size: 14px;
+    font-weight: 700;
 }
 
-/* SEVİYE KARTLARI */
+.icon-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 40 Levelin Sıralandığı ve Kaydırıldığı Alan (Kritik Bölüm) */
 .levels-container {
+    flex: 1;
+    width: 100%;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: 6px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    overflow-y: auto;
-    padding-bottom: 20px;
+    gap: 12px;
 }
 
+/* Kaydırma Çubuğu Tasarımı */
+.levels-container::-webkit-scrollbar {
+    width: 5px;
+}
+.levels-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+.levels-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 136, 0.3);
+    border-radius: 3px;
+}
+
+/* Seviye Kartı Tasarımı */
 .level-card {
-    background: linear-gradient(135deg, #0a192f, #022c14);
-    border: 3px solid #64ffda;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
+    padding: 14px 18px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 15px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, border-color 0.2s;
+    width: 100%;
+    flex-shrink: 0;
 }
 
-.level-card:active {
-    transform: scale(0.97);
+.level-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 255, 136, 0.5);
 }
 
 .level-card.locked {
-    background: linear-gradient(135deg, #111b27, #0b141f);
-    border-color: #233554;
-    opacity: 0.85;
+    opacity: 0.7;
+    filter: grayscale(0.3);
 }
 
 .level-avatar {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    border: 2px solid #64ffda;
-    background-size: cover;
-    background-position: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    margin-right: 15px;
+    background: #00ff88;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-
-.player-avatar { background-color: #00ff80; }
-.legend-avatar { background-color: #00b0ff; }
-.coach-avatar { background-color: #9b59b6; }
-.club-avatar { background-color: #e74c3c; }
 
 .level-info {
     flex-grow: 1;
-    margin-left: 15px;
 }
 
 .level-info h3 {
-    font-size: 1.2rem;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
     color: #ffffff;
-    margin-bottom: 5px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .progress-bar-small {
-    width: 100px;
-    height: 8px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 4px;
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
     overflow: hidden;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
 .progress-bar-small .fill {
     height: 100%;
-    background: #00ff80;
+    background: #00ff88;
+    width: 0%;
 }
 
 .level-info span {
-    font-size: 0.85rem;
+    font-size: 11px;
     color: #8892b0;
 }
 
-.level-action {
-    font-size: 1.5rem;
-}
-
 .lock-badge {
-    background: rgba(0,0,0,0.5);
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: #ffd700;
+    font-size: 16px;
+    margin-left: 10px;
 }
 
-/* SORU EKRANI STİLLERİ */
+/* Oyun İçi Soru Ekranı */
 .game-screen {
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
     height: 100vh;
+    background: #080f1d;
     display: flex;
     flex-direction: column;
-    padding: 15px;
-    background: rgba(5, 11, 20, 0.98);
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 50;
+    padding: 20px;
+    position: relative;
 }
 
 .game-top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .question-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    flex-grow: 1;
-    justify-content: center;
+    gap: 25px;
+    flex: 1;
 }
 
 .question-text {
-    background: linear-gradient(135deg, #0a192f, #022c14);
-    border: 2px solid #64ffda;
-    border-radius: 16px;
-    padding: 20px;
-    font-size: 1.15rem;
-    font-weight: bold;
-    text-align: center;
-    color: #ffffff;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+    font-size: 18px;
+    font-weight: 700;
     line-height: 1.5;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
 }
 
 .options-container {
@@ -272,115 +259,102 @@ body {
 }
 
 .option-btn {
-    background: #0a192f;
-    border: 2px solid #64ffda;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: bold;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    text-align: left;
+    transition: background 0.2s, border-color 0.2s;
 }
 
-.option-btn:active {
-    transform: scale(0.98);
+.option-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .option-btn.correct {
-    background: #00ff80 !important;
-    color: #050b14 !important;
-    border-color: #ffffff !important;
-    box-shadow: 0 0 15px #00ff80;
+    background: rgba(0, 255, 136, 0.2) !important;
+    border-color: #00ff88 !important;
+    color: #00ff88;
 }
 
 .option-btn.wrong {
-    background: #e74c3c !important;
-    color: #ffffff !important;
-    border-color: #ffffff !important;
-    box-shadow: 0 0 15px #e74c3c;
+    background: rgba(255, 75, 75, 0.2) !important;
+    border-color: #ff4b4b !important;
+    color: #ff4b4b;
 }
 
-/* AYARLAR MODALI */
+/* Ayarlar Modalı */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(5, 11, 20, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 200;
+    z-index: 1000;
 }
 
 .modal-content {
-    background: linear-gradient(135deg, #0a192f, #050b14);
-    border: 4px solid #64ffda;
+    background: #0a192f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px 20px;
     border-radius: 20px;
-    width: 90%;
-    max-width: 360px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 85%;
+    max-width: 320px;
+    text-align: center;
     position: relative;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+}
+
+.modal-content h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #00ff88;
 }
 
 .close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #e74c3c;
+    top: 15px;
+    right: 15px;
+    background: none;
     border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    color: #8892b0;
+    font-size: 16px;
     cursor: pointer;
-    font-weight: bold;
-    color: white;
-}
-
-.modal-content h2 {
-    color: #00ff80;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
 }
 
 .settings-toggles {
     display: flex;
-    justify-content: space-around;
-    width: 100%;
-    margin-bottom: 15px;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .setting-toggle-btn {
-    background: #0a192f;
-    border: 2px solid #64ffda;
-    color: white;
-    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    padding: 12px;
     border-radius: 10px;
-    font-size: 0.8rem;
+    font-weight: 700;
     cursor: pointer;
 }
 
 .settings-main-btn {
-    width: 100%;
-    background: #00ff80;
-    border: 2px solid #64ffda;
-    color: #050b14;
-    font-weight: bold;
-    padding: 10px;
+    background: #ff4b4b;
+    border: none;
+    color: #ffffff;
+    padding: 14px;
     border-radius: 12px;
-    margin-top: 8px;
+    font-weight: 700;
+    width: 100%;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-
-.settings-main-btn:active {
-  transform: scale(0.98);
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
