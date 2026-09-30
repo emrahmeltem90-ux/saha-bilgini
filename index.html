@@ -29,42 +29,14 @@
             <div class="stat-badge">🪙 <span id="coin-count">100</span></div>
         </div>
 
-        <div class="levels-container">
-            <!-- Level 1 (Açık) -->
-            <div class="level-card" onclick="startLevel(1)">
-                <div class="level-avatar player-avatar"></div>
-                <div class="level-info">
-                    <h3>LEVEL 1</h3>
-                    <div class="progress-bar-small"><div class="fill" id="l1-bar" style="width: 0%;"></div></div>
-                    <span id="l1-text">0/10 Soru</span>
-                </div>
-                <div class="level-action">▶️</div>
-            </div>
+        <!-- 40 Levelin Dinamik Olarak Yükleneceği ve Kaydırılacağı Alan -->
+        <div class="levels-container" id="levels-container">
+            <!-- JavaScript buraya 40 seviyeyi otomatik basacak -->
+        </div>
 
-            <!-- Level 2 (Kilitli) -->
-            <div id="card-level-2" class="level-card locked" onclick="startLevel(2)">
-                <div class="level-avatar legend-avatar"></div>
-                <div class="level-info">
-                    <h3>LEVEL 2</h3>
-                    <div class="progress-bar-small"><div class="fill" id="l2-bar" style="width: 0%;"></div></div>
-                    <span id="l2-text">Kilitli (5 ⭐ Gerekli)</span>
-                </div>
-                <div class="lock-badge" id="l2-lock">🔒</div>
-            </div>
-
-            <!-- Level 3 (Kilitli) -->
-            <div id="card-level-3" class="level-card locked" onclick="startLevel(3)">
-                <div class="level-avatar coach-avatar"></div>
-                <div class="level-info">
-                    <h3>LEVEL 3</h3>
-                    <div class="progress-bar-small"><div class="fill" id="l3-bar" style="width: 0%;"></div></div>
-                    <span id="l3-text">Kilitli (15 ⭐ Gerekli)</span>
-                </div>
-                <div class="lock-badge" id="l3-lock">🔒</div>
-            </div>
-
-            <!-- Reklam İzle & Yıldız Kazan Butonu -->
-            <button class="settings-main-btn" onclick="watchAdForStars()" style="background: linear-gradient(135deg, #00b0ff, #00ff80); color: #050b14; margin-top: 10px;">
+        <!-- Reklam İzle & Yıldız Kazan Butonu -->
+        <div style="padding: 10px 0; width: 100%;">
+            <button class="settings-main-btn" onclick="watchAdForStars()" style="background: linear-gradient(135deg, #00b0ff, #00ff80); color: #050b14; width: 100%;">
                 📺 Reklam İzle (+5 ⭐ Kazan)
             </button>
         </div>
