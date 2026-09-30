@@ -34,13 +34,20 @@
         <div class="menu-buttons">
             <button class="menu-btn btn-play" onclick="showLevelScreen()">▶️ OYUNA BAŞLA</button>
             <button class="menu-btn btn-daily" onclick="showDailyScreen()">🎁 GÜNLÜK ÖDÜL</button>
+            <button class="menu-btn btn-ach" onclick="showAchievementsScreen()">🏆 BAŞARIMLAR</button>
             <button class="menu-btn btn-spin" onclick="showSpinScreen()">🎡 ÇARKIFELEK</button>
             <button class="menu-btn btn-settings" onclick="showSettingsScreen()">⚙️ AYARLAR</button>
             <button class="menu-btn btn-howto" onclick="showHowToScreen()">📖 NASIL OYNANIR</button>
         </div>
     </div>
 
-    <!-- YENİ: GÜNLÜK ÖDÜL EKRANI -->
+    <!-- YENİ: BAŞARIMLAR EKRANI -->
+    <div id="achievements-screen" class="screen">
+        <div class="settings-header"><h2>🏆 Başarımlar</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
+        <p class="ach-subtitle">Hedefleri tamamla, ödülleri kap!</p>
+        <div class="ach-list" id="ach-list"></div>
+    </div>
+
     <div id="daily-screen" class="screen">
         <div class="settings-header"><h2>🎁 Günlük Ödül</h2><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <p class="daily-subtitle">Her gün gel, ödülünü al! Seri bozulursa başa döner.</p>
@@ -58,6 +65,7 @@
             <div class="howto-item"><div class="howto-icon">🃏</div><div><strong>Jokerler:</strong> Zorlandığında joker kullan. Coin maliyeti vardır.</div></div>
             <div class="howto-item"><div class="howto-icon">🎡</div><div><strong>Çarkıfelek:</strong> 4 saatte 1 ücretsiz çevirme hakkın var!</div></div>
             <div class="howto-item"><div class="howto-icon">🎁</div><div><strong>Günlük Ödül:</strong> Her gün gel, artan ödüller kazan!</div></div>
+            <div class="howto-item"><div class="howto-icon">🏆</div><div><strong>Başarımlar:</strong> Hedefleri tamamla, büyük ödüller kazan!</div></div>
         </div>
     </div>
 
@@ -176,4 +184,4 @@
 
     <script src="script.js"></script>
 </body>
-    </html>
+</html>
