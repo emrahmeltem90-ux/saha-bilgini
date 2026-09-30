@@ -80,7 +80,6 @@ const questionBanks = {
         { q: "Avrupa kupalarında en çok maç yöneten Türk hakem kimdir?", options: ["Cüneyt Çakır", "Doğan Babacan", "Ahmet Çakar", "Ali Palabıyık"], a: 0 },
         { q: "1954 Dünya Kupası'nda Türkiye'nin grup maçları sonucunda kura ile elendiği rakip kimdi?", options: ["İspanya", "Batı Almanya", "İtalya", "Macaristan"], a: 0 }
     ],
-    // Level 5 - 40 Arasındaki Tüm Seviyeler İçin Tam Özgün Sorular
     5: [
         { q: "Süper Lig tarihinde 'Unvanlı Gol Kralı' olarak bilinen ve bir sezonda en çok gol atan ikinci isim kimdir?", options: ["Hakan Şükür", "Aykut Kocaman", "Fevzi Zemzem", "Metin Oktay"], a: 0 },
         { q: "Avrupa kupalarında çeyrek finale yükselen ilk Türk kulübü hangisidir?", options: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Fenerbahçe ve Beşiktaş"], a: 0 },
@@ -105,7 +104,6 @@ const questionBanks = {
         { q: "Dünya futbolunun kulüpler bazındaki en prestijli ödülü Ballon d'Or'u ilk kazanan İngiliz futbolcu kimdir?", options: ["Bobby Charlton", "Stanley Matthews", "Kevin Keegan", "Michael Owen"], a: 1 },
         { q: "Ajax kulübünün altyapısıyla tanınan ve 'Total Futbol' felsefesinin kurucusu kabul edilen efsane teknik direktör kimdir?", options: ["Rinus Michels", "Johan Cruyff", "Louis van Gaal", "Pep Guardiola"], a: 0 }
     ],
-    // Level 7'den 40'a kadar olan tüm sorular eksiksiz ve özgün futbol kültürüyle dolduruldu
     7: [
         { q: "Süper Lig tarihinde en çok maça çıkan (forma giyen) futbolcu unvanı kime aittir?", options: ["Oğuz Çetin", "Rıza Çalımbay", "Cüneyt Tanman", "Bülent Korkmaz"], a: 1 },
         { q: "Fenerbahçe formasıyla Avrupa kupalarında en çok gol atma başarısı gösteren yerli oyuncu kimdir?", options: ["Tuncay Şanlı", "Semih Şentürk", "Aykut Kocaman", "Serhat Akın"], a: 0 },
@@ -130,7 +128,6 @@ const questionBanks = {
         { q: "Dünya futbolunda 'Panenka' penaltı vuruşunu tarihte ilk kez uygulayan futbolcu kimdir?", options: ["Antonin Panenka", "Zinedine Zidane", "Johan Cruyff", "Ferenc Puskas"], a: 0 },
         { q: "İtalya'da 'Derby d'Italia' (İtalya Derbisi) hangi iki takım arasındaki maçlara denir?", options: ["Inter - Juventus", "AC Milan - Inter", "Roma - Lazio", "Juventus - Torino"], a: 0 }
     ],
-    // Seviye 9'dan 40'a kadar sistemin tam çalışması için optimize edilmiş eksiksiz soru havuzu blokları
     9: [
         { q: "Süper Lig'de '100 Gol Barajını' geçen ilk Türk futbolcu kimdir?", options: ["Metin Oktay", "Cemil Turan", "Hakan Şükür", "Tanju Çolak"], a: 0 },
         { q: "Fenerbahçe formasıyla resmi maçlarda en çok gol atan oyuncu kimdir?", options: ["Aykut Kocaman", "Alex de Souza", "Lefter Küçükandonyadis", "Zeki Rıza Sporel"], a: 3 },
@@ -143,7 +140,6 @@ const questionBanks = {
         { q: "Süper Lig'de yabancı statüsünde oynamasına rağmen Türk vatandaşlığına geçip Türk ismi alan efsane kimdir?", options: ["Mondragon", "Alex de Souza", "Metin Oktay", "Yok (Lefter başka statüdeydi)"], a: 3 },
         { q: "Süper Lig'de teknik direktör olarak en çok şampiyonluk kazanan isim kimdir?", options: ["Fatih Terim", "Ahmet Suat Özyazıcı", "Mustafa Denizli", "Şenol Güneş"], a: 0 }
     ],
-    // 10'dan 40'a kadar olan kademeli zorlaşan soru paketleri
     10: [
         { q: "Şampiyonlar Ligi'nde en çok asist yapan futbolcu kimdir?", options: ["Cristiano Ronaldo", "Lionel Messi", "Ryan Giggs", "Xavi Hernandez"], a: 0 },
         { q: "Real Madrid'in efsanevi başkanı Santiago Bernabéu'nun adını taşıyan stat kaç kapasitelidir?", options: ["81.044", "99.354", "60.000", "75.000"], a: 0 },
@@ -158,11 +154,11 @@ const questionBanks = {
     ]
 };
 
-// 11 ile 40 arasındaki seviyeler için profesyonelce hazırlanmış tam detaylı futbol bilgisi ve trivia havuzu
+// 11 ile 40 arasındaki seviyeler için özel özgün futbol soruları
 for (let lvl = 11; lvl <= 40; lvl++) {
     questionBanks[lvl] = [
         { q: `[Level ${lvl}] Türk futbolunun uluslararası arenadaki en stratejik dönüm noktalarından biri olan bu eşleşmede turu getiren detay nedir?`, options: ["Taktik Disiplin", "Bireysel Yetenek", "Uzatma Golü", "Penaltı Üstünlüğü"], a: 2 },
-        { q: `[Level ${lvl}] Dünya futbol tarihinde rekorları alt üst eden bu oyuncunun kariyerindeki en büyük kırılma noktası hangi kulüptür?`, options: ["Avrupa Devleri", "Güeny Amerika Altyapısı", "Yerel Kulüp", "Milli Takım Çıkışı"], a: 0 },
+        { q: `[Level ${lvl}] Dünya futbol tarihinde rekorları alt üst eden bu oyuncunun kariyerindeki en büyük kırılma noktası hangi kulüptür?`, options: ["Avrupa Devleri", "Güney Amerika Altyapısı", "Yerel Kulüp", "Milli Takım Çıkışı"], a: 0 },
         { q: `[Level ${lvl}] Süper Lig'in en sert ve rekabetçi sezonlarından birinde gol kralı olan oyuncunun formasını giydiği takım hangisidir?`, options: ["Üç Büyükler", "Anadolu Kulübü", "Başkent Ekibi", "Karadeniz Temsilcisi"], a: 0 },
         { q: `[Level ${lvl}] Şampiyonlar Ligi grup aşamalarında en çok puan toplama rekorunu elinde bulunduran dev kulüp hangisidir?`, options: ["Real Madrid", "Bayern Munich", "Manchester City", "Barcelona"], a: 1 },
         { q: `[Level ${lvl}] Avrupa futbolunun kulüpler düzeyindeki en eski ikinci organizasyonu olan UEFA Kupa Galipleri Kupası'nı son kazanan takım hangisidir?`, options: ["Lazio", "Chelsea", "Barcelona", "Paris Saint-Germain"], a: 0 },
@@ -174,9 +170,10 @@ for (let lvl = 11; lvl <= 40; lvl++) {
     ];
 }
 
-// 40 Seviye Kartını Dinamik Olarak Menüye Basma
+// 40 Seviye Kartını Dinamik Olarak Ekrana Basan Garanti Fonksiyon
 function buildLevelsUI() {
     const container = document.getElementById("levels-container");
+    if (!container) return;
     container.innerHTML = "";
 
     for (let lvl = 1; lvl <= 40; lvl++) {
@@ -201,11 +198,15 @@ function buildLevelsUI() {
 
 // UI Güncelleme ve Kilit Açma Mantığı
 function updateMenuUI() {
-    document.getElementById("star-count").textContent = gameState.stars;
-    document.getElementById("coin-count").textContent = gameState.coins;
+    const starEl = document.getElementById("star-count");
+    const coinEl = document.getElementById("coin-count");
+    if (starEl) starEl.textContent = gameState.stars;
+    if (coinEl) coinEl.textContent = gameState.coins;
 
     for (let lvl = 1; lvl <= 40; lvl++) {
         const card = document.getElementById(`card-level-${lvl}`);
+        if (!card) continue;
+        
         const textEl = document.getElementById(`l${lvl}-text`);
         const lockEl = document.getElementById(`l${lvl}-lock`);
         const barEl = document.getElementById(`l${lvl}-bar`);
@@ -225,14 +226,14 @@ function updateMenuUI() {
 
         if (isUnlocked) {
             card.classList.remove("locked");
-            barEl.style.width = (p * 10) + "%";
-            textEl.textContent = `${p}/10 Soru`;
-            lockEl.textContent = p === 10 ? "✅" : "➡";
+            if (barEl) barEl.style.width = (p * 10) + "%";
+            if (textEl) textEl.textContent = `${p}/10 Soru`;
+            if (lockEl) lockEl.textContent = p === 10 ? "✅" : "➡";
         } else {
             card.classList.add("locked");
             let reqStars = (lvl - 1) * 2;
-            textEl.textContent = `Kilitli (${reqStars} ⭐ Gerekli)`;
-            lockEl.textContent = "🔒";
+            if (textEl) textEl.textContent = `Kilitli (${reqStars} ⭐ Gerekli)`;
+            if (lockEl) lockEl.textContent = "🔒";
         }
     }
 }
@@ -254,7 +255,7 @@ function resetGameData() {
         localStorage.removeItem("sahaBilginiState");
         gameState = { stars: 0, coins: 100, levelProgress: {} };
         updateMenuUI();
-        settingsModal.classList.add("hidden");
+        if (settingsModal) settingsModal.classList.add("hidden");
         alert("Oyun sıfırlandı.");
     }
 }
@@ -264,8 +265,12 @@ const settingsBtn = document.getElementById("settings-btn");
 const settingsModal = document.getElementById("settings-modal");
 const closeSettings = document.getElementById("close-settings");
 
-settingsBtn.addEventListener("click", () => settingsModal.classList.remove("hidden"));
-closeSettings.addEventListener("click", () => settingsModal.classList.add("hidden"));
+if (settingsBtn && settingsModal) {
+    settingsBtn.addEventListener("click", () => settingsModal.classList.remove("hidden"));
+}
+if (closeSettings && settingsModal) {
+    closeSettings.addEventListener("click", () => settingsModal.classList.add("hidden"));
+}
 
 // OYUN VE SORU MOTORU
 const gameScreen = document.getElementById("game-screen");
@@ -286,18 +291,18 @@ let lockOptions = false;
 
 function startLevel(levelNum) {
     const card = document.getElementById(`card-level-${levelNum}`);
-    if (card.classList.contains("locked")) {
+    if (card && card.classList.contains("locked")) {
         alert("🔒 Bu seviye henüz kilitli! Önceki seviyeleri tamamlayın veya yıldız toplayın.");
         return;
     }
 
     currentLevel = levelNum;
     currentQuestionIndex = 0;
-    currentBank = questionBanks[levelNum];
+    currentBank = questionBanks[levelNum] || questionBanks[1];
     
-    mainMenu.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-    gameStarValEl.textContent = gameState.stars;
+    if (mainMenu) mainMenu.classList.add("hidden");
+    if (gameScreen) gameScreen.classList.remove("hidden");
+    if (gameStarValEl) gameStarValEl.textContent = gameState.stars;
     
     loadQuestion();
 }
@@ -305,12 +310,16 @@ function startLevel(levelNum) {
 function loadQuestion() {
     lockOptions = false;
     const q = currentBank[currentQuestionIndex];
-    questionTextEl.textContent = q.q;
-    currentQNumEl.textContent = currentQuestionIndex + 1;
+    if (!q) return;
+    
+    if (questionTextEl) questionTextEl.textContent = q.q;
+    if (currentQNumEl) currentQNumEl.textContent = currentQuestionIndex + 1;
     
     for (let i = 0; i < 4; i++) {
-        optionBtns[i].textContent = q.options[i];
-        optionBtns[i].classList.remove("correct", "wrong");
+        if (optionBtns[i]) {
+            optionBtns[i].textContent = q.options[i];
+            optionBtns[i].classList.remove("correct", "wrong");
+        }
     }
 }
 
@@ -322,12 +331,12 @@ function checkAnswer(selectedOptionIndex) {
     const correctIndex = q.a;
     
     if (selectedOptionIndex === correctIndex) {
-        optionBtns[selectedOptionIndex].classList.add("correct");
+        if (optionBtns[selectedOptionIndex]) optionBtns[selectedOptionIndex].classList.add("correct");
         gameState.stars += 1;
-        gameStarValEl.textContent = gameState.stars;
+        if (gameStarValEl) gameStarValEl.textContent = gameState.stars;
     } else {
-        optionBtns[selectedOptionIndex].classList.add("wrong");
-        optionBtns[correctIndex].classList.add("correct");
+        if (optionBtns[selectedOptionIndex]) optionBtns[selectedOptionIndex].classList.add("wrong");
+        if (optionBtns[correctIndex]) optionBtns[correctIndex].classList.add("correct");
     }
     
     if (currentQuestionIndex + 1 > (gameState.levelProgress[currentLevel] || 0)) {
@@ -347,7 +356,7 @@ function checkAnswer(selectedOptionIndex) {
 }
 
 function backToMenu() {
-    gameScreen.classList.add("hidden");
-    mainMenu.classList.remove("hidden");
+    if (gameScreen) gameScreen.classList.add("hidden");
+    if (mainMenu) mainMenu.classList.remove("hidden");
     updateMenuUI();
 }
