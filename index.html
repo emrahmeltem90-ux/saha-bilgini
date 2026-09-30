@@ -3,84 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saha Bilgini - Futbol Quiz</title>
+    <title>Saha Bilgini</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- AÇILIŞ VE YÜKLENME EKRANI -->
-    <div id="splash-screen" class="splash-container">
-        <h1 class="game-logo-title">SAHA BİLGİNİ</h1>
-        <div class="game-year">2026</div>
-        <div class="loading-box">
-            <div id="loading-text">LOADING... 0%</div>
-            <div class="progress-bar-bg">
-                <div id="progress-fill" class="progress-fill"></div>
-            </div>
+    <!-- Ana Menü Ekranı -->
+    <div id="main-menu" class="main-menu">
+        <div class="menu-content">
+            <h1>SAHA BİLGİNİ</h1>
+            <p>Futbol kültürünü test et, en iyisi ol!</p>
+            <button id="start-btn" class="btn-primary">Oyuna Başla</button>
         </div>
     </div>
 
-    <!-- ANA MENÜ / SEVİYE EKRANI -->
-    <div id="main-menu" class="main-menu hidden">
-        <div class="top-bar">
-            <button id="settings-btn" class="icon-btn">⚙️</button>
-            <div class="stat-badge">⭐ <span id="star-count">0</span></div>
-            <div class="stat-badge">🪙 <span id="coin-count">100</span></div>
+    <!-- Oyun Ekranı -->
+    <div id="game-screen" class="game-screen" style="display: none;">
+        <div class="game-header">
+            <button id="home-btn" class="icon-btn">🏠</button>
+            <div id="question-counter" class="badge">Soru: 1/10</div>
+            <div id="score-display" class="badge">⭐ 0</div>
         </div>
 
-        <!-- 40 Levelin Dinamik Olarak Yükleneceği ve Kaydırılacağı Alan -->
-        <div class="levels-container" id="levels-container">
-            <!-- JavaScript buraya 40 seviyeyi otomatik basacak -->
-        </div>
-
-        <!-- Reklam İzle & Yıldız Kazan Butonu -->
-        <div style="padding: 10px 0; width: 100%;">
-            <button class="settings-main-btn" onclick="watchAdForStars()" style="background: linear-gradient(135deg, #00b0ff, #00ff80); color: #050b14; width: 100%;">
-                📺 Reklam İzle (+5 ⭐ Kazan)
-            </button>
-        </div>
-    </div>
-
-    <!-- OYUN İÇİ SORU EKRANI -->
-    <div id="game-screen" class="game-screen hidden">
-        <div class="game-top-bar">
-            <button class="icon-btn" onclick="backToMenu()">🏠</button>
-            <div class="stat-badge">Soru: <span id="current-question-num">1</span>/10</div>
-            <div class="stat-badge">⭐ <span id="game-star-val">0</span></div>
+        <div class="jokers-container">
+            <button id="fifty-joker" class="joker-btn">✂️ 50:50 (20 🪙)</button>
+            <button id="pass-joker" class="joker-btn">⏭️ Pas Geç (30 🪙)</button>
         </div>
 
         <div class="question-container">
-            <!-- JOKER BUTONLARI -->
-            <div class="jokers-container" style="display: flex; gap: 10px;">
-                <button class="joker-btn" onclick="useFiftyFifty()" style="flex: 1; background: rgba(0, 176, 255, 0.15); border: 1px solid #00b0ff; color: #00b0ff; padding: 10px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px;">
-                    ✂️ 50:50 (20 🪙)
-                </button>
-                <button class="joker-btn" onclick="useSkipQuestion()" style="flex: 1; background: rgba(255, 183, 3, 0.15); border: 1px solid #ffb703; color: #ffb703; padding: 10px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px;">
-                    ⏩ Pas Geç (30 🪙)
-                </button>
-            </div>
-
-            <div id="question-text" class="question-text">Soru buraya gelecek...</div>
-            <div class="options-container">
-                <button class="option-btn" onclick="checkAnswer(0)" id="opt-0">Seçenek A</button>
-                <button class="option-btn" onclick="checkAnswer(1)" id="opt-1">Seçenek B</button>
-                <button class="option-btn" onclick="checkAnswer(2)" id="opt-2">Seçenek C</button>
-                <button class="option-btn" onclick="checkAnswer(3)" id="opt-3">Seçenek D</button>
-            </div>
+            <h2 id="question-text">Soru metni yükleniyor...</h2>
         </div>
-    </div>
 
-    <!-- AYARLAR MODALI -->
-    <div id="settings-modal" class="modal hidden">
-        <div class="modal-content">
-            <button id="close-settings" class="close-btn">X</button>
-            <h2>AYARLAR</h2>
-            <div class="settings-toggles">
-                <button class="setting-toggle-btn">🔊 Ses: AÇIK</button>
-                <button class="setting-toggle-btn">🎵 Müzik: AÇIK</button>
+        <div class="options-container">
+            <button class="option-btn" data-index="0">Seçenek 1</button>
+            <button class="option-btn" data-index="1">Seçenek 2</button>
+            <button class="option-btn" data-index="2">Seçenek 3</button>
+            <button class="option-btn" data-index="3">Seçenek 4</button>
+        </div>
+
+        <!-- Görsel Animasyon Katmanı (Gol / Kırmızı Kart) -->
+        <div id="game-feedback-overlay" class="feedback-overlay">
+            <div id="feedback-content" class="feedback-box">
+                <span id="feedback-icon">⚽</span>
+                <h2 id="feedback-text">GOL!</h2>
             </div>
-            <button class="settings-main-btn" onclick="resetGameData()">OYUNU SIFIRLA</button>
         </div>
     </div>
 
