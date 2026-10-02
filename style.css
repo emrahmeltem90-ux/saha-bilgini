@@ -73,7 +73,8 @@ body::before {
 [data-theme="light"] .profile-name { color: #334155; }
 .stats-box { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); font-weight: bold; color: #fff; }
 [data-theme="light"] .stats-box { background: rgba(255,255,255,0.7); color: #0f172a; border-color: #64748b; }
-.logo-container { text-align: center; margin-top: 20px; margin-bottom: 20px; }
+.logo-container { text-align: center; margin-top: 20px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.logo-badge { width: 60px; height: 60px; background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); border: 3px solid var(--accent-gold); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
 .game-logo { font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 4px 0 #1e3a8a; line-height: 1.1; margin: 0; }
 [data-theme="light"] .game-logo { color: #0f172a; text-shadow: 0 4px 0 #93c5fd; }
 .game-logo span { font-size: 1.5rem; color: var(--accent-gold); text-shadow: 0 2px 0 #b45309; }
