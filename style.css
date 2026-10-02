@@ -189,22 +189,25 @@ input:checked + .slider:before { transform: translateX(24px); }
 .pause-btn:active { transform: scale(0.9); }
 .question-box { background-color: var(--question-bg); border: 3px solid #3b82f6; border-radius: 16px; padding: 25px 20px; font-size: 1.2rem; font-weight: bold; text-align: center; min-height: 100px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); color: var(--question-text); animation: floatIn 0.3s ease; }
 
-/* JOKER PANELİ */
+/* JOKER PANELİ - CAM EFEKTİ */
 .jokers-panel { 
-    background: rgba(15, 23, 42, 0.7); 
-    border: 2px solid #334155; 
-    border-radius: 15px; 
+    background: rgba(15, 23, 42, 0.4); 
+    border: 1px solid rgba(251, 191, 36, 0.2); 
+    border-radius: 18px; 
     padding: 12px; 
     margin-bottom: 20px; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 [data-theme="light"] .jokers-panel { 
-    background: rgba(226, 232, 240, 0.9); 
-    border-color: #94a3b8; 
+    background: rgba(226, 232, 240, 0.5); 
+    border-color: rgba(148, 163, 184, 0.5); 
 }
 .joker-info-title { 
     font-size: 0.7rem; 
     font-weight: bold; 
-    color: var(--text-muted); 
+    color: rgba(255, 255, 255, 0.7); 
     text-transform: uppercase; 
     text-align: center; 
     margin-bottom: 10px; 
@@ -225,18 +228,21 @@ input:checked + .slider:before { transform: translateX(24px); }
     align-items: center; 
     justify-content: center;
     gap: 5px; 
-    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); 
-    border: 2px solid #fbbf24; 
+    background: rgba(30, 58, 138, 0.35); 
+    border: 1.5px solid rgba(251, 191, 36, 0.6); 
     border-radius: 16px; 
     padding: 12px 8px; 
-    box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.05);
     cursor: pointer;
-    transition: transform 0.1s, box-shadow 0.2s;
+    transition: transform 0.1s, box-shadow 0.2s, background 0.2s;
     min-height: 100px;
 }
 .joker-wrapper:active { 
     transform: scale(0.95); 
-    box-shadow: 0 0 25px rgba(251, 191, 36, 0.6);
+    background: rgba(30, 58, 138, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(251, 191, 36, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.1);
 }
 .joker-icon {
     font-size: 2rem;
@@ -249,15 +255,18 @@ input:checked + .slider:before { transform: translateX(24px); }
     color: #ffffff; 
     text-align: center;
     line-height: 1.1;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 .joker-price-tag { 
     font-size: 0.75rem; 
     font-weight: 900; 
     color: #fbbf24; 
-    background: rgba(0,0,0,0.5); 
+    background: rgba(0,0,0,0.4); 
     padding: 2px 10px; 
     border-radius: 10px; 
     border: 1px solid rgba(251, 191, 36, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 /* OPTIONS */
