@@ -109,9 +109,9 @@ loadAllQuestions();
 
 let currentLevelIndex = 0, currentQuestionIndex = 0, score = 0, correctCount = 0, wrongCount = 0, answered = false, timerInterval;
 let selectedLockedLevel = -1;
-let usedJokers = { "5050": false, "answer": false, "double": false };
+let usedJokers = { "cut": false, "answer": false, "heart": false };
 let hasDoubleChance = false;
-const JOKER_PRICES = { "5050": 30, "answer": 70, "double": 50 };
+const JOKER_PRICES = { "cut": 30, "answer": 70, "heart": 50 };
 let isChampionLevel = false;
 let isPaused = false;
 
@@ -233,7 +233,7 @@ function resumeGame() {
     score = userProgress.lastPlayedScore || 0;
     correctCount = userProgress.lastPlayedCorrect || 0;
     wrongCount = userProgress.lastPlayedWrong || 0;
-    usedJokers = { "5050": false, "answer": false, "double": false };
+    usedJokers = { "cut": false, "answer": false, "heart": false };
     hasDoubleChance = false;
     showScreen('quiz-screen');
     if (isChampionLevel) {
@@ -778,7 +778,7 @@ function startChampionLevel(champIndex) {
     isChampionLevel = true;
     currentLevelIndex = champIndex;
     currentQuestionIndex = 0; score = 0; correctCount = 0; wrongCount = 0;
-    usedJokers = { "5050": false, "answer": false, "double": false };
+    usedJokers = { "cut": false, "answer": false, "heart": false };
     hasDoubleChance = false;
     if (!championsData[champIndex] || championsData[champIndex].sorular.length === 0) { showToast("Soru yok!"); return; }
     showScreen('quiz-screen'); loadChampionQuestion();
@@ -931,7 +931,7 @@ function unlockLevelWithCoins() {
 function startLevel(index) {
     isChampionLevel = false;
     currentLevelIndex = index; currentQuestionIndex = 0; score = 0; correctCount = 0; wrongCount = 0;
-    usedJokers = { "5050": false, "answer": false, "double": false };
+    usedJokers = { "cut": false, "answer": false, "heart": false };
     hasDoubleChance = false;
     if (!levelsData[index] || levelsData[index].sorular.length === 0) { showToast("Soru yok!"); return; }
     showScreen('quiz-screen'); loadQuestion();
@@ -976,15 +976,15 @@ function loadQuestion() {
     }, 1000);
 }
 function updateJokerButtons() {
-    const btn5050 = document.getElementById('joker-5050');
+    const btnCut = document.getElementById('joker-cut');
     const btnAnswer = document.getElementById('joker-answer');
-    const btnDouble = document.getElementById('joker-double');
-    if(btn5050) btn5050.disabled = usedJokers["5050"] || userProgress.totalCoins < JOKER_PRICES["5050"];
+    const btnHeart = document.getElementById('joker-heart');
+    if(btnCut) btnCut.disabled = usedJokers["cut"] || userProgress.totalCoins < JOKER_PRICES["cut"];
     if(btnAnswer) btnAnswer.disabled = usedJokers["answer"] || userProgress.totalCoins < JOKER_PRICES["answer"];
-    if(btnDouble) btnDouble.disabled = usedJokers["double"] || userProgress.totalCoins < JOKER_PRICES["double"];
-    if (usedJokers["5050"] && btn5050) btn5050.classList.add("used");
+    if(btnHeart) btnHeart.disabled = usedJokers["heart"] || userProgress.totalCoins < JOKER_PRICES["heart"];
+    if (usedJokers["cut"] && btnCut) btnCut.classList.add("used");
     if (usedJokers["answer"] && btnAnswer) btnAnswer.classList.add("used");
-    if (usedJokers["double"] && btnDouble) btnDouble.classList.add("used");
+    if (usedJokers["heart"] && btnHeart) btnHeart.classList.add("used");
     document.getElementById('quiz-coins-display').innerText = userProgress.totalCoins || 0;
 }
 function useJoker(type) {
@@ -999,7 +999,7 @@ function useJoker(type) {
     updateTopPanel(); sesTiklama.play(); vibrate(30);
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
     let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
-    if (type === "5050") {
+    if (type === "cut") {
         let wrongIndices = [];
         for (let i = 0; i < 4; i++) { if (i !== currentQ.dogru) wrongIndices.push(i); }
         wrongIndices.sort(() => Math.random() - 0.5);
@@ -1007,7 +1007,7 @@ function useJoker(type) {
         toHide.forEach(idx => { if (buttons[idx]) buttons[idx].classList.add("hidden-option"); });
     } else if (type === "answer") {
         if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
-    } else if (type === "double") {
+    } else if (type === "heart") {
         hasDoubleChance = true;
         showToast("❤️ Çift Cevap Hakkı aktif!");
     }
@@ -1168,4 +1168,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-}
+                         }
