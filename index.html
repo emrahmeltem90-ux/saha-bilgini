@@ -200,9 +200,18 @@
         <div class="jokers-panel">
             <div class="joker-info-title">JOKERLER (🪙 Coin ile alınır)</div>
             <div class="jokers-container">
-                <div class="joker-wrapper"><button class="joker-btn" id="joker-5050" onclick="useJoker('5050')">✂️</button><div class="joker-desc">İki yanlış şıkkı siler</div><div class="joker-price-tag">🪙 30</div></div>
-                <div class="joker-wrapper"><button class="joker-btn" id="joker-answer" onclick="useJoker('answer')">🎯</button><div class="joker-desc">Doğru cevabı gösterir</div><div class="joker-price-tag">🪙 70</div></div>
-                <div class="joker-wrapper"><button class="joker-btn" id="joker-double" onclick="useJoker('double')">❤️</button><div class="joker-desc">Bir yanlış hakkı daha verir</div><div class="joker-price-tag">🪙 50</div></div>
+                <div class="joker-wrapper" onclick="useJoker('5050')">
+                    <div class="joker-name">Yarı Yarıya</div>
+                    <div class="joker-price-tag">🪙 50</div>
+                </div>
+                <div class="joker-wrapper" onclick="useJoker('answer')">
+                    <div class="joker-name">50:50</div>
+                    <div class="joker-price-tag">🪙 70</div>
+                </div>
+                <div class="joker-wrapper" onclick="useJoker('double')">
+                    <div class="joker-name">Ekstra Kalp</div>
+                    <div class="joker-price-tag">🪙 50</div>
+                </div>
             </div>
         </div>
         <div class="options-list" id="options-container"></div>
