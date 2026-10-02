@@ -225,35 +225,39 @@ input:checked + .slider:before { transform: translateX(24px); }
     align-items: center; 
     justify-content: center;
     gap: 5px; 
-    background: linear-gradient(180deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%); 
-    border: 2px solid var(--accent-gold); 
-    border-radius: 12px; 
-    padding: 10px 5px; 
-    box-shadow: 0 4px 0 rgba(0,0,0,0.3); 
+    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%); 
+    border: 2px solid #fbbf24; 
+    border-radius: 16px; 
+    padding: 12px 8px; 
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); 
     cursor: pointer;
-    transition: transform 0.1s;
-    min-height: 80px;
+    transition: transform 0.1s, box-shadow 0.2s;
+    min-height: 100px;
 }
 .joker-wrapper:active { 
     transform: scale(0.95); 
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.6);
+}
+.joker-icon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
 }
 .joker-name { 
-    font-size: 0.75rem; 
+    font-size: 0.8rem; 
     font-weight: 900; 
-    color: var(--text-main); 
+    color: #ffffff; 
     text-align: center;
     line-height: 1.1;
 }
-[data-theme="light"] .joker-name { 
-    color: #0f172a; 
-}
 .joker-price-tag { 
-    font-size: 0.7rem; 
+    font-size: 0.75rem; 
     font-weight: 900; 
-    color: var(--accent-gold); 
+    color: #fbbf24; 
     background: rgba(0,0,0,0.5); 
-    padding: 2px 8px; 
+    padding: 2px 10px; 
     border-radius: 10px; 
+    border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
 /* OPTIONS */
