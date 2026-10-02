@@ -190,18 +190,71 @@ input:checked + .slider:before { transform: translateX(24px); }
 .question-box { background-color: var(--question-bg); border: 3px solid #3b82f6; border-radius: 16px; padding: 25px 20px; font-size: 1.2rem; font-weight: bold; text-align: center; min-height: 100px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); color: var(--question-text); animation: floatIn 0.3s ease; }
 
 /* JOKER PANELİ */
-.jokers-panel { background: rgba(15, 23, 42, 0.7); border: 2px solid #334155; border-radius: 15px; padding: 12px; margin-bottom: 20px; }
-[data-theme="light"] .jokers-panel { background: rgba(226, 232, 240, 0.9); border-color: #94a3b8; }
-.joker-info-title { font-size: 0.7rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; text-align: center; margin-bottom: 10px; letter-spacing: 1px; }
-[data-theme="light"] .joker-info-title { color: #334155; }
-.jokers-container { display: flex; justify-content: space-between; gap: 8px; }
-.joker-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: linear-gradient(180deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%); border: 2px solid var(--accent-gold); border-radius: 12px; padding: 8px 5px; box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
-.joker-wrapper .joker-btn { background: transparent; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; box-shadow: none; width: auto; }
-.joker-wrapper .joker-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.joker-wrapper .joker-btn.used { filter: grayscale(1); }
-.joker-desc { font-size: 0.55rem; text-align: center; color: var(--text-muted); line-height: 1.1; font-weight: bold; min-height: 22px; }
-[data-theme="light"] .joker-desc { color: #334155; }
-.joker-price-tag { font-size: 0.7rem; font-weight: 900; color: var(--accent-gold); background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 10px; }
+.jokers-panel { 
+    background: rgba(15, 23, 42, 0.7); 
+    border: 2px solid #334155; 
+    border-radius: 15px; 
+    padding: 12px; 
+    margin-bottom: 20px; 
+}
+[data-theme="light"] .jokers-panel { 
+    background: rgba(226, 232, 240, 0.9); 
+    border-color: #94a3b8; 
+}
+.joker-info-title { 
+    font-size: 0.7rem; 
+    font-weight: bold; 
+    color: var(--text-muted); 
+    text-transform: uppercase; 
+    text-align: center; 
+    margin-bottom: 10px; 
+    letter-spacing: 1px; 
+}
+[data-theme="light"] .joker-info-title { 
+    color: #334155; 
+}
+.jokers-container { 
+    display: flex; 
+    justify-content: space-between; 
+    gap: 8px; 
+}
+.joker-wrapper { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    gap: 5px; 
+    background: linear-gradient(180deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%); 
+    border: 2px solid var(--accent-gold); 
+    border-radius: 12px; 
+    padding: 10px 5px; 
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3); 
+    cursor: pointer;
+    transition: transform 0.1s;
+    min-height: 80px;
+}
+.joker-wrapper:active { 
+    transform: scale(0.95); 
+}
+.joker-name { 
+    font-size: 0.75rem; 
+    font-weight: 900; 
+    color: var(--text-main); 
+    text-align: center;
+    line-height: 1.1;
+}
+[data-theme="light"] .joker-name { 
+    color: #0f172a; 
+}
+.joker-price-tag { 
+    font-size: 0.7rem; 
+    font-weight: 900; 
+    color: var(--accent-gold); 
+    background: rgba(0,0,0,0.5); 
+    padding: 2px 8px; 
+    border-radius: 10px; 
+}
 
 /* OPTIONS */
 .options-list { display: flex; flex-direction: column; gap: 12px; }
