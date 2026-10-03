@@ -191,9 +191,34 @@ input:checked + .slider:before { transform: translateX(24px); }
 .daily-status { color: #cbd5e1; font-size: 0.9rem; text-align: center; margin-top: 15px; font-weight: bold; }
 [data-theme="light"] .daily-status { color: #334155; }
 
-/* BİLDİRİM */
-.toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 15px 30px; border-radius: 12px; font-weight: bold; box-shadow: 0 6px 0 #14532d; z-index: 999999; transition: top 0.4s ease; border: 3px solid #fff; font-size: 1rem; max-width: 90%; text-align: center; }
-.toast.show { top: 30px; }
+/* BİLDİRİM - DÜZELTİLDİ */
+.toast { 
+    position: fixed; 
+    top: -100px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); 
+    color: #fff; 
+    padding: 15px 30px; 
+    border-radius: 12px; 
+    font-weight: bold; 
+    box-shadow: 0 6px 0 #14532d; 
+    z-index: 999999; 
+    transition: top 0.4s ease, opacity 0.4s ease; 
+    border: 3px solid #fff; 
+    font-size: 1rem; 
+    max-width: 90%; 
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+.toast.show { 
+    display: block;
+    top: 80px;
+    opacity: 1;
+    pointer-events: auto;
+}
 
 /* LEVEL SEÇİM */
 #levels-screen { padding-top: 30px; }
