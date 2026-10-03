@@ -212,9 +212,14 @@ function updateTopPanel() {
 
 function showToast(message) {
     const toast = document.getElementById('toast-notification');
+    toast.classList.remove('show');
     toast.innerText = message;
-    toast.classList.add('show');
-    setTimeout(() => { toast.classList.remove('show'); }, 2500);
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 50);
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2500);
 }
 
 function vibrate(duration) {
@@ -482,13 +487,11 @@ function giveShareReward(today) {
     checkAchievements();
 }
 
-// --- BİZİ DEĞERLENDİR ---
 function rateApp() {
     sesTiklama.play(); vibrate(20);
-    // Google Play'de uygulamanın paket adı buraya gelecek
-    // Şimdilik sadece bir uyarı gösterelim, Play Store'a yüklendikten sonra gerçek linki koyacağız
     showToast("⭐ Bizi değerlendirdiğiniz için teşekkürler! (Yakında Google Play'de)");
 }
+
 function shareScore() {
     let levelName = isChampionLevel ? championsData[currentLevelIndex].kategori : (levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`);
     let totalQ = isChampionLevel ? championsData[currentLevelIndex].sorular.length : levelsData[currentLevelIndex].sorular.length;
@@ -1362,4 +1365,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-            }
+}
