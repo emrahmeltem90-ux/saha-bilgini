@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <style>
+        /* BEYAZ EKRAN SORUNU ÇÖZÜMÜ */
+        html, body { 
+            background-color: #0a192f !important; 
+            margin: 0;
+            padding: 0;
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes floatIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -189,7 +195,8 @@
     <div id="levels-screen" class="screen">
         <div class="screen-header"><span>Level Seçin</span><button class="back-menu-btn" onclick="showMenuScreen()">← Ana Menü</button></div>
         <div class="levels-container" id="levels-container"></div>
-        <button class="ad-btn" onclick="watchAdForStars()">📺 Reklam izle (+5 ⭐ Kazan)</button>
+        <!-- REKLAM BUTONU GİZLENDİ - Reklam entegrasyonu sonrası açılacak -->
+        <!-- <button class="ad-btn" onclick="watchAdForStars()">📺 Reklam izle (+5 ⭐ Kazan)</button> -->
     </div>
 
     <!-- OYUN EKRANI -->
