@@ -11,14 +11,14 @@ muzikArkaplan.volume = 0.3;
 let muzikCaliniyor = false;
 
 const WHEEL_PRIZES = [
-    { label: "10 🪙", type: "coin", value: 10, color: "#f472b6" },
-    { label: "25 🪙", type: "coin", value: 25, color: "#34d399" },
-    { label: "50 🪙", type: "coin", value: 50, color: "#60a5fa" },
-    { label: "5 ⭐", type: "star", value: 5, color: "#fbbf24" },
-    { label: "100 🪙", type: "coin", value: 100, color: "#a78bfa" },
-    { label: "✂️ JOKER", type: "joker", value: 1, color: "#f87171" },
-    { label: "250 🪙", type: "coin", value: 250, color: "#fb923c" },
-    { label: "TEKRAR", type: "respin", value: 1, color: "#4ade80" }
+    { label: "10 🪙", type: "coin", value: 10, color: "#8B2252" },
+    { label: "25 🪙", type: "coin", value: 25, color: "#1B5E20" },
+    { label: "50 🪙", type: "coin", value: 50, color: "#0D47A1" },
+    { label: "5 ⭐", type: "star", value: 5, color: "#B8860B" },
+    { label: "100 🪙", type: "coin", value: 100, color: "#4A148C" },
+    { label: "✂️ JOKER", type: "joker", value: 1, color: "#B71C1C" },
+    { label: "250 🪙", type: "coin", value: 250, color: "#E65100" },
+    { label: "TEKRAR", type: "respin", value: 1, color: "#1B5E20" }
 ];
 let isSpinning = false;
 
@@ -1350,4 +1350,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-            }
+}
