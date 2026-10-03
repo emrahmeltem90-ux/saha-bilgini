@@ -33,6 +33,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    padding-top: env(safe-area-inset-top);
 }
 [data-theme="light"] body { background-image: url('stadium-bg-light.jpg'); }
 body::before {
