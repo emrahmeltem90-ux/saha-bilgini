@@ -668,7 +668,7 @@ function spinWheel() {
     sesCark.currentTime = 0; sesCark.play(); vibrate(30);
     const randomIndex = Math.floor(Math.random() * WHEEL_PRIZES.length);
     const sliceAngle = 360 / WHEEL_PRIZES.length;
-    const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle + sliceAngle / 2));
+    const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle)) - (sliceAngle / 2);
     const canvas = document.getElementById('wheel-canvas');
     let startTime = null;
     const duration = 4000;
@@ -1172,4 +1172,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-    }
+                 }
