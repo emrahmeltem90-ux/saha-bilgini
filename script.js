@@ -432,9 +432,9 @@ function shareGameForStars() {
         showToast("⏳ Bugünkü paylaşım ödülünü zaten aldın!");
         return;
     }
-    let shareText = `⚽ Futbol Bilgi Yarışması'nı oyna ve futbol bilgini test et! 🏆 Şu an ${userProgress.totalStars} yıldızım var. Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    let shareText = `⚽ Saha Bilgini'ni oyna ve futbol bilgini test et! 🏆 Şu an ${userProgress.totalStars} yıldızım var. Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
     if (navigator.share) {
-        navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        navigator.share({ title: 'Saha Bilgini', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
         .then(() => {
             userProgress.totalStars += 10;
             userProgress.lastShareDate = today;
@@ -462,9 +462,9 @@ function shareGameForStars() {
 function shareScore() {
     let levelName = isChampionLevel ? championsData[currentLevelIndex].kategori : (levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`);
     let totalQ = isChampionLevel ? championsData[currentLevelIndex].sorular.length : levelsData[currentLevelIndex].sorular.length;
-    let shareText = `⚽ Futbol Bilgi Yarışması'nda "${levelName}" bölümünü ${score} puan ve ${correctCount}/${totalQ} doğruyla bitirdim! 🏆 Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    let shareText = `⚽ Saha Bilgini'nde "${levelName}" bölümünü ${score} puan ve ${correctCount}/${totalQ} doğruyla bitirdim! 🏆 Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
     if (navigator.share) {
-        navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        navigator.share({ title: 'Saha Bilgini', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
         .catch((err) => { console.log("Paylaşım iptal:", err); });
     } else {
         let text = encodeURIComponent(shareText);
@@ -476,9 +476,9 @@ function shareScore() {
 }
 function shareProfile() {
     let rank = calculateRank();
-    let shareText = `⚽ Futbol Bilgi Yarışması'nda ${userProgress.profileName} adlı oyuncunun profili! 🏆 Rütbe: ${rank.name} | Toplam Puan: ${userProgress.totalScore} | Doğruluk: ${rank.percentage}% Sen de katıl! 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    let shareText = `⚽ Saha Bilgini'nde ${userProgress.profileName} adlı oyuncunun profili! 🏆 Rütbe: ${rank.name} | Toplam Puan: ${userProgress.totalScore} | Doğruluk: ${rank.percentage}% Sen de katıl! 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
     if (navigator.share) {
-        navigator.share({ title: 'Futbol Bilgi Yarışması', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        navigator.share({ title: 'Saha Bilgini', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
         .catch((err) => { console.log("Paylaşım iptal:", err); });
     } else {
         let text = encodeURIComponent(shareText);
@@ -829,6 +829,7 @@ function selectChampionOption(selectedIndex, selectedBtn) {
     if (selectedIndex === currentQ.dogru) {
         answered = true; clearInterval(timerInterval);
         selectedBtn.classList.add("correct");
+        selectedBtn.innerHTML += ' <span class="gol-ikon">⚽</span>';
         score += 100; correctCount++; sesDogru.play(); vibrate(50);
         updateQuestProgress('correct', 1);
         for (let btn of buttons) btn.disabled = true;
@@ -841,6 +842,7 @@ function selectChampionOption(selectedIndex, selectedBtn) {
         } else {
             answered = true; clearInterval(timerInterval); wrongCount++;
             selectedBtn.classList.add("incorrect");
+            selectedBtn.innerHTML += ' <span class="kart-ikon">🟥</span>';
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
             sesYanlis.play(); vibrate(100);
             for (let btn of buttons) btn.disabled = true;
@@ -1020,6 +1022,7 @@ function selectOption(selectedIndex, selectedBtn) {
     if (selectedIndex === currentQ.dogru) {
         answered = true; clearInterval(timerInterval);
         selectedBtn.classList.add("correct");
+        selectedBtn.innerHTML += ' <span class="gol-ikon">⚽</span>';
         score += 100; correctCount++; sesDogru.play(); vibrate(50);
         updateQuestProgress('correct', 1);
         for (let btn of buttons) btn.disabled = true;
@@ -1032,6 +1035,7 @@ function selectOption(selectedIndex, selectedBtn) {
         } else {
             answered = true; clearInterval(timerInterval); wrongCount++;
             selectedBtn.classList.add("incorrect");
+            selectedBtn.innerHTML += ' <span class="kart-ikon">🟥</span>';
             if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
             sesYanlis.play(); vibrate(100);
             for (let btn of buttons) btn.disabled = true;
@@ -1168,4 +1172,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-                         }
+    }
