@@ -1263,13 +1263,12 @@ function showResults() {
 function restartLevel() { sesTiklama.play(); vibrate(30); if (isChampionLevel) startChampionLevel(currentLevelIndex); else if (currentLevelIndex >= 100 && currentLevelIndex < 200) startEfsaneLevel(currentLevelIndex - 100); else startLevel(currentLevelIndex); }
 function resetGame() { if(confirm("Tüm ilerlemen silinecek. Emin misin?")) { localStorage.removeItem('futbol_quiz_progress'); location.reload(); } }
 function watchAdForStars() {
-    sesTiklama.play(); vibrate(20); showToast("📺 Reklam izleniyor...");
-    setTimeout(() => {
-        userProgress.totalStars += 5;
-        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-        updateTopPanel(); showToast("⭐ Tebrikler! 5 yıldız kazandın!"); showLevelScreen();
-        checkAchievements();
-    }, 1500);
+    sesTiklama.play(); vibrate(20);
+    if (!navigator.onLine) {
+        showToast("📡 İnternet bağlantısı yok! Reklam izlemek için internete bağlan.");
+        return;
+    }
+    showToast("⏳ Reklam sistemi henüz aktif değil. Yakında eklenecek!");
 }
 
 // --- PAUSE MENÜSÜ ---
