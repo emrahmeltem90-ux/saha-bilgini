@@ -249,6 +249,8 @@ function resumeGame() {
     showScreen('quiz-screen');
     if (isChampionLevel) {
         loadChampionQuestion();
+    } else if (currentLevelIndex >= 100 && currentLevelIndex < 200) {
+        loadEfsaneQuestion();
     } else {
         loadQuestion();
     }
@@ -679,7 +681,7 @@ function spinWheel() {
     sesCark.currentTime = 0; sesCark.play(); vibrate(30);
     const randomIndex = Math.floor(Math.random() * WHEEL_PRIZES.length);
     const sliceAngle = 360 / WHEEL_PRIZES.length;
-    const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle)) - (sliceAngle / 2);
+    const targetAngle = 360 * 5 + (360 - (randomIndex * sliceAngle + sliceAngle / 2));
     const canvas = document.getElementById('wheel-canvas');
     let startTime = null;
     const duration = 4000;
@@ -739,7 +741,7 @@ function showLevelScreen() {
     container.innerHTML = ''; updateTopPanel();
     if (levelsData.length === 0) { container.innerHTML = "<p style='color:#fff;'>Yükleniyor...</p>"; return; }
     
-    // Normal Seviyeler (1-40)
+    // Normal Seviyeler
     for (let i = 0; i < levelsData.length; i++) {
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
         let catData = levelsData[i] || { kategori: `LEVEL ${i+1}` };
@@ -761,7 +763,7 @@ function showLevelScreen() {
         container.appendChild(card);
     }
 
-    // Efsaneler Ligi Bölümü
+    // Efsaneler Ligi
     if (efsanelerData.length > 0) {
         let efsanelerHeader = document.createElement('div');
         efsanelerHeader.className = 'champion-header';
@@ -771,7 +773,8 @@ function showLevelScreen() {
         for (let i = 0; i < efsanelerData.length; i++) {
             let cat = efsanelerData[i];
             let progress = userProgress.levels[100 + i] || { stars: 0, score: 0, unlocked: false };
-            let isUnlocked = (userProgress.totalStars || 0) >= (cat.gereken_yildiz || 100);
+            let prevEfsaneCompleted = (i === 0) ? true : (userProgress.levels[100 + i - 1] && userProgress.levels[100 + i - 1].stars > 0);
+            let isUnlocked = prevEfsaneCompleted && (userProgress.totalStars || 0) >= (cat.gereken_yildiz || 20);
             let starsStr = '☆☆☆';
             if (progress.stars === 1) starsStr = '⭐☆☆';
             if (progress.stars === 2) starsStr = '⭐⭐☆';
@@ -779,14 +782,14 @@ function showLevelScreen() {
             let displayScore = Math.min(progress.score, 100);
             let card = document.createElement('div');
             card.className = 'level-card champion-card' + (isUnlocked ? '' : ' locked');
-            let statusHtml = isUnlocked ? '<span>👑</span>' : `<div class="level-coin-btn">⭐ ${cat.gereken_yildiz || 100}</div>`;
+            let statusHtml = isUnlocked ? '<span>👑</span>' : `<div class="level-coin-btn">⭐ ${cat.gereken_yildiz || 20}</div>`;
             card.innerHTML = `<div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">⭐</div><div class="level-avatar-role">EFSANE</div></div><div class="level-info"><div class="level-title">${cat.kategori}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${displayScore}%"></div><div class="level-progress-text">${displayScore}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
-            card.onclick = () => { sesTiklama.play(); vibrate(20); if (isUnlocked) startEfsaneLevel(i); else showToast(`Bu bölüm için ${cat.gereken_yildiz || 100} yıldız gerekiyor!`); };
+            card.onclick = () => { sesTiklama.play(); vibrate(20); if (isUnlocked) startEfsaneLevel(i); else showToast(`Bu bölüm için ${cat.gereken_yildiz || 20} yıldız gerekiyor!`); };
             container.appendChild(card);
         }
     }
 
-    // Şampiyonlar Ligi Bölümü
+    // Şampiyonlar Ligi
     if (championsData.length > 0) {
         let header = document.createElement('div');
         header.className = 'champion-header';
@@ -796,8 +799,9 @@ function showLevelScreen() {
             let champ = championsData[i];
             let levelIndex = 200 + i;
             let progress = userProgress.levels[levelIndex] || { stars: 0, score: 0, unlocked: false };
-            let requiredStars = champ.gereken_yildiz || 100;
-            let isUnlocked = (userProgress.totalStars || 0) >= requiredStars;
+            let requiredStars = champ.gereken_yildiz || 30;
+            let prevChampCompleted = (i === 0) ? true : (userProgress.levels[200 + i - 1] && userProgress.levels[200 + i - 1].stars > 0);
+            let isUnlocked = prevChampCompleted && (userProgress.totalStars || 0) >= requiredStars;
             let starsStr = '☆☆☆';
             if (progress.stars === 1) starsStr = '⭐☆☆';
             if (progress.stars === 2) starsStr = '⭐⭐☆';
@@ -1167,7 +1171,7 @@ function useJoker(type) {
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel(); sesTiklama.play(); vibrate(30);
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
-    let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : (currentLevelIndex >= 100 ? normalizeQuestion(efsanelerData[currentLevelIndex - 100].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]));
+    let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : (currentLevelIndex >= 100 && currentLevelIndex < 200 ? normalizeQuestion(efsanelerData[currentLevelIndex - 100].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]));
     if (type === "cut") {
         let wrongIndices = [];
         for (let i = 0; i < 4; i++) { if (i !== currentQ.dogru) wrongIndices.push(i); }
@@ -1342,4 +1346,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-}
+        }
