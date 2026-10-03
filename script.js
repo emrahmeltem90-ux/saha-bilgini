@@ -450,32 +450,44 @@ function shareGameForStars() {
         showToast("⏳ Bugünkü paylaşım ödülünü zaten aldın!");
         return;
     }
+
     let shareText = `⚽ Saha Bilgini'ni oyna ve futbol bilgini test et! 🏆 Şu an ${userProgress.totalStars} yıldızım var. Sen de beni geçebilir misin? 👉 https://emrahmeltem90-ux.github.io/saha-bilgini/`;
+    let shareUrl = 'https://emrahmeltem90-ux.github.io/saha-bilgini/';
+
     if (navigator.share) {
-        navigator.share({ title: 'Saha Bilgini', text: shareText, url: 'https://emrahmeltem90-ux.github.io/saha-bilgini/' })
+        navigator.share({ title: 'Saha Bilgini', text: shareText, url: shareUrl })
         .then(() => {
-            userProgress.totalStars += 10;
-            userProgress.lastShareDate = today;
-            userProgress.totalShares = (userProgress.totalShares || 0) + 1;
-            localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-            updateTopPanel(); sesDogru.play(); vibrate(50);
-            showToast("⭐ Tebrikler! 10 yıldız kazandın!");
-            checkAchievements();
-        }).catch((err) => { console.log("Paylaşım iptal:", err); });
+            giveShareReward(today);
+        }).catch((err) => {
+            console.log("Paylaşım iptal:", err);
+            giveShareReward(today);
+        });
     } else {
-        let choice = confirm("WhatsApp için Tamam, X için İptal.");
-        let url = encodeURIComponent('https://emrahmeltem90-ux.github.io/saha-bilgini/');
-        let text = encodeURIComponent(shareText);
-        if (choice) { window.open(`https://wa.me/?text=${text}`, '_blank'); }
-        else { window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank'); }
-        userProgress.totalStars += 10;
-        userProgress.lastShareDate = today;
-        userProgress.totalShares = (userProgress.totalShares || 0) + 1;
-        localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
-        updateTopPanel(); sesDogru.play(); vibrate(50);
-        showToast("⭐ Tebrikler! 10 yıldız kazandın!");
-        checkAchievements();
+        navigator.clipboard.writeText(shareText).then(() => {
+            showToast("📋 Bağlantı kopyalandı! Arkadaşlarına gönderebilirsin.");
+            giveShareReward(today);
+        }).catch(() => {
+            showToast("❌ Bu cihazda paylaşım desteklenmiyor.");
+        });
     }
+}
+
+function giveShareReward(today) {
+    userProgress.totalStars += 10;
+    userProgress.lastShareDate = today;
+    userProgress.totalShares = (userProgress.totalShares || 0) + 1;
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    updateTopPanel(); sesDogru.play(); vibrate(50);
+    showToast("⭐ Tebrikler! 10 yıldız kazandın!");
+    checkAchievements();
+}
+
+// --- BİZİ DEĞERLENDİR ---
+function rateApp() {
+    sesTiklama.play(); vibrate(20);
+    // Google Play'de uygulamanın paket adı buraya gelecek
+    // Şimdilik sadece bir uyarı gösterelim, Play Store'a yüklendikten sonra gerçek linki koyacağız
+    showToast("⭐ Bizi değerlendirdiğiniz için teşekkürler! (Yakında Google Play'de)");
 }
 function shareScore() {
     let levelName = isChampionLevel ? championsData[currentLevelIndex].kategori : (levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`);
@@ -1350,4 +1362,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-}
+            }
