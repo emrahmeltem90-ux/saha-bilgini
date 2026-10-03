@@ -167,6 +167,7 @@ if (userProgress.lastPlayedWrong === undefined) userProgress.lastPlayedWrong = 0
 const levelCoinCosts = { 1: 50, 2: 100, 3: 150, 4: 200, 5: 250, 6: 300, 7: 350, 8: 400, 9: 450, 10: 500 };
 for (let i = 11; i <= 40; i++) { levelCoinCosts[i-1] = 500 + (i - 10) * 50; }
 
+// --- KATEGORİ EMOJİLERİ (ID TABANLI) ---
 const categoryEmojis = {
     1: { icon: "🏆", role: "DÜNYA KUPASI" }, 2: { icon: "⭐", role: "ŞAMPİYONLAR" }, 3: { icon: "🇹🇷", role: "TÜRK FUTBOLU" },
     4: { icon: "🦁", role: "PREMIER LİG" }, 5: { icon: "🇪🇸", role: "LA LIGA" }, 6: { icon: "🇮🇹", role: "SERIE A" },
@@ -174,9 +175,60 @@ const categoryEmojis = {
     10: { icon: "🏅", role: "AVRUPA LİGİ" }, 11: { icon: "🌍", role: "MİLLİ TAKIMLAR" }, 12: { icon: "🇶🇦", role: "DÜNYA KUPASI 22" },
     13: { icon: "👑", role: "EFSANELER" }, 14: { icon: "🌱", role: "GENÇ YETENEKLER" }, 15: { icon: "🧤", role: "KALECİLER" },
     16: { icon: "🛡️", role: "DEFANSLAR" }, 17: { icon: "🎩", role: "ORTA SAHA" }, 18: { icon: "⚽", role: "FORVETLER" },
-    19: { icon: "📋", role: "TEKNİK DİREKTÖR" }, 20: { icon: "📜", role: "KURALLAR" }
+    19: { icon: "📋", role: "TEKNİK DİREKTÖR" }, 20: { icon: "📜", role: "KURALLAR" },
+    21: { icon: "🏟️", role: "TURNUVALAR" }, 22: { icon: "🌟", role: "EFSANE FUTBOLCULAR" }, 23: { icon: "📖", role: "FUTBOL KURALLARI" },
+    24: { icon: "🎯", role: "REKORLAR" }, 25: { icon: "💎", role: "EFSANELER" }, 26: { icon: "🔥", role: "DERBİLER" },
+    27: { icon: "🏅", role: "AVRUPA KUPALARI" }, 28: { icon: "📊", role: "İSTATİSTİKLER" }, 29: { icon: "👟", role: "FORVETLER" },
+    30: { icon: "🧤", role: "KALECİLER" }, 31: { icon: "🎩", role: "ORTA SAHA" }, 32: { icon: "🛡️", role: "DEFANSLAR" },
+    33: { icon: "🏆", role: "KUPALAR" }, 34: { icon: "⚽", role: "GOLLER" }, 35: { icon: "🌟", role: "YILDIZLAR" },
+    36: { icon: "📜", role: "TARİH" }, 37: { icon: "🌍", role: "DÜNYA" }, 38: { icon: "🇪🇺", role: "AVRUPA" },
+    39: { icon: "🎓", role: "ANTRENÖRLER" }, 40: { icon: "🏅", role: "ÖDÜLLER" }
 };
-function getCategoryEmoji(id) { return categoryEmojis[id] || { icon: "⚽", role: "FUTBOL" }; }
+
+// --- KATEGORİ ADINA GÖRE EMOJİ (ANA FONKSİYON) ---
+function getEmojiByCategoryName(catName) {
+    if (!catName) return { icon: "⚽", role: "FUTBOL" };
+    let upper = catName.toUpperCase();
+    
+    // Özel kategoriler
+    if (upper.includes("DÜNYA KUPASI")) return { icon: "🏆", role: "DÜNYA KUPASI" };
+    if (upper.includes("ŞAMPİYONLAR")) return { icon: "⭐", role: "ŞAMPİYONLAR" };
+    if (upper.includes("TÜRK")) return { icon: "🇹🇷", role: "TÜRK FUTBOLU" };
+    if (upper.includes("PREMIER")) return { icon: "🦁", role: "PREMIER LİG" };
+    if (upper.includes("LA LIGA")) return { icon: "🇪🇸", role: "LA LIGA" };
+    if (upper.includes("SERIE A")) return { icon: "🇮🇹", role: "SERIE A" };
+    if (upper.includes("BUNDESLIGA")) return { icon: "🇩🇪", role: "BUNDESLIGA" };
+    if (upper.includes("LIGUE")) return { icon: "🇫🇷", role: "LIGUE 1" };
+    if (upper.includes("BALLON")) return { icon: "🥇", role: "BALLON D'OR" };
+    if (upper.includes("AVRUPA LİGİ")) return { icon: "🏅", role: "AVRUPA LİGİ" };
+    if (upper.includes("MİLLİ")) return { icon: "🌍", role: "MİLLİ TAKIMLAR" };
+    if (upper.includes("EFSANE")) return { icon: "👑", role: "EFSANELER" };
+    if (upper.includes("GENÇ")) return { icon: "🌱", role: "GENÇ YETENEKLER" };
+    if (upper.includes("KALECİ")) return { icon: "🧤", role: "KALECİLER" };
+    if (upper.includes("DEFANS")) return { icon: "🛡️", role: "DEFANSLAR" };
+    if (upper.includes("ORTA SAHA")) return { icon: "🎩", role: "ORTA SAHA" };
+    if (upper.includes("FORVET")) return { icon: "⚽", role: "FORVETLER" };
+    if (upper.includes("TEKNİK")) return { icon: "📋", role: "TEKNİK DİREKTÖR" };
+    if (upper.includes("KURAL")) return { icon: "📜", role: "KURALLAR" };
+    if (upper.includes("REKOR")) return { icon: "🎯", role: "REKORLAR" };
+    if (upper.includes("TARİH")) return { icon: "📖", role: "TARİH" };
+    if (upper.includes("DERBİ")) return { icon: "🔥", role: "DERBİLER" };
+    if (upper.includes("TURNUVA")) return { icon: "🏟️", role: "TURNUVALAR" };
+    if (upper.includes("KUPA")) return { icon: "🏆", role: "KUPALAR" };
+    if (upper.includes("GOL")) return { icon: "⚽", role: "GOLLER" };
+    if (upper.includes("İSTATİSTİK")) return { icon: "📊", role: "İSTATİSTİKLER" };
+    if (upper.includes("YILDIZ")) return { icon: "🌟", role: "YILDIZLAR" };
+    if (upper.includes("ANTRENÖR")) return { icon: "🎓", role: "ANTRENÖRLER" };
+    if (upper.includes("ÖDÜL")) return { icon: "🏅", role: "ÖDÜLLER" };
+    if (upper.includes("AVRUPA")) return { icon: "🇪🇺", role: "AVRUPA" };
+    if (upper.includes("DÜNYA")) return { icon: "🌍", role: "DÜNYA" };
+    
+    return { icon: "⚽", role: "FUTBOL" };
+}
+
+function getCategoryEmoji(id) { 
+    return categoryEmojis[id] || { icon: "⚽", role: "FUTBOL" }; 
+}
 
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -775,7 +827,8 @@ function showLevelScreen() {
         let catName = catData.kategori || catData.kategori_adi || `LEVEL ${i+1}`;
         let catId = catData.kategori_id || (i+1);
         let isUnlocked = progress.unlocked || (i === 0) || (userProgress.levels[i-1] && userProgress.levels[i-1].stars > 0);
-        let emojiData = getCategoryEmoji(catId);
+        // KATEGORİ ADINA GÖRE EMOJİ
+        let emojiData = getEmojiByCategoryName(catName);
         let starsStr = '☆☆☆';
         if (progress.stars === 1) starsStr = '⭐☆☆';
         if (progress.stars === 2) starsStr = '⭐⭐☆';
@@ -1397,4 +1450,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-            }
+        }
