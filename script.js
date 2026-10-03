@@ -212,18 +212,31 @@ function updateTopPanel() {
 
 function showToast(message) {
     const toast = document.getElementById('toast-notification');
-    toast.classList.remove('show');
     toast.innerText = message;
+    toast.style.display = 'block';
+    toast.style.opacity = '0';
+    toast.style.top = '-100px';
+    
     setTimeout(() => {
-        toast.classList.add('show');
+        toast.style.opacity = '1';
+        toast.style.top = '80px';
     }, 50);
+    
     setTimeout(() => {
-        toast.classList.remove('show');
+        toast.style.opacity = '0';
+        toast.style.top = '-100px';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 400);
     }, 2500);
 }
 
 function vibrate(duration) {
-    if (userProgress.vibrationEnabled && navigator.vibrate) {
+    if (!userProgress.vibrationEnabled) return;
+    if (window.Android && window.Android.vibrate) {
+        try { window.Android.vibrate(duration); return; } catch(e) {}
+    }
+    if (navigator.vibrate) {
         navigator.vibrate(duration);
     }
 }
@@ -485,11 +498,6 @@ function giveShareReward(today) {
     updateTopPanel(); sesDogru.play(); vibrate(50);
     showToast("⭐ Tebrikler! 10 yıldız kazandın!");
     checkAchievements();
-}
-
-function rateApp() {
-    sesTiklama.play(); vibrate(20);
-    showToast("⭐ Bizi değerlendirdiğiniz için teşekkürler! (Yakında Google Play'de)");
 }
 
 function shareScore() {
@@ -1365,4 +1373,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-}
+                            }
