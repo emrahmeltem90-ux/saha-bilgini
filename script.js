@@ -86,6 +86,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 let levelsData = [];
 let championsData = [];
+let efsanelerData = [];
+
 async function loadAllQuestions() {
     const files = ['sorular_1.json', 'sorular_2.json', 'sorular_3.json', 'sorular_4.json'];
     try {
@@ -97,6 +99,7 @@ async function loadAllQuestions() {
             levelsData = levelsData.concat(kategoriler);
         }
     } catch (error) { console.error("Hata:", error); }
+
     try {
         const response = await fetch('sorular_5.json');
         if (response.ok) {
@@ -104,6 +107,14 @@ async function loadAllQuestions() {
             championsData = data.seviyeler || [];
         }
     } catch (error) { console.log("Şampiyonlar Ligi yüklenemedi:", error); }
+
+    try {
+        const response = await fetch('sorular_6.json');
+        if (response.ok) {
+            const data = await response.json();
+            efsanelerData = data.kategoriler || [];
+        }
+    } catch (error) { console.log("Efsaneler Ligi yüklenemedi:", error); }
 }
 loadAllQuestions();
 
@@ -172,10 +183,10 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
     updateTopPanel();
 }
-function showMenuScreen() { 
-    showScreen('menu-screen'); 
-    updateTopPanel(); 
-    checkAchievements(); 
+function showMenuScreen() {
+    showScreen('menu-screen');
+    updateTopPanel();
+    checkAchievements();
     checkDailyReminder();
     updateResumeButton();
 }
@@ -727,7 +738,9 @@ function showLevelScreen() {
     const container = document.getElementById('levels-container');
     container.innerHTML = ''; updateTopPanel();
     if (levelsData.length === 0) { container.innerHTML = "<p style='color:#fff;'>Yükleniyor...</p>"; return; }
-    for (let i = 0; i < 40; i++) {
+    
+    // Normal Seviyeler (1-40)
+    for (let i = 0; i < levelsData.length; i++) {
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
         let catData = levelsData[i] || { kategori: `LEVEL ${i+1}` };
         let catName = catData.kategori || catData.kategori_adi || `LEVEL ${i+1}`;
@@ -747,6 +760,33 @@ function showLevelScreen() {
         card.onclick = () => { sesTiklama.play(); vibrate(20); if (isUnlocked) startLevel(i); else openUnlockModal(i); };
         container.appendChild(card);
     }
+
+    // Efsaneler Ligi Bölümü
+    if (efsanelerData.length > 0) {
+        let efsanelerHeader = document.createElement('div');
+        efsanelerHeader.className = 'champion-header';
+        efsanelerHeader.innerHTML = `<span>⭐ EFSANELER LİGİ ⭐</span>`;
+        container.appendChild(efsanelerHeader);
+
+        for (let i = 0; i < efsanelerData.length; i++) {
+            let cat = efsanelerData[i];
+            let progress = userProgress.levels[100 + i] || { stars: 0, score: 0, unlocked: false };
+            let isUnlocked = (userProgress.totalStars || 0) >= (cat.gereken_yildiz || 100);
+            let starsStr = '☆☆☆';
+            if (progress.stars === 1) starsStr = '⭐☆☆';
+            if (progress.stars === 2) starsStr = '⭐⭐☆';
+            if (progress.stars === 3) starsStr = '⭐⭐⭐';
+            let displayScore = Math.min(progress.score, 100);
+            let card = document.createElement('div');
+            card.className = 'level-card champion-card' + (isUnlocked ? '' : ' locked');
+            let statusHtml = isUnlocked ? '<span>👑</span>' : `<div class="level-coin-btn">⭐ ${cat.gereken_yildiz || 100}</div>`;
+            card.innerHTML = `<div class="level-avatar-box champion-avatar"><div class="level-avatar-icon">⭐</div><div class="level-avatar-role">EFSANE</div></div><div class="level-info"><div class="level-title">${cat.kategori}</div><div class="level-progress-bar"><div class="level-progress-fill" style="width:${displayScore}%"></div><div class="level-progress-text">${displayScore}/100</div></div><div class="level-stars">${starsStr}</div></div><div class="level-status">${statusHtml}</div>`;
+            card.onclick = () => { sesTiklama.play(); vibrate(20); if (isUnlocked) startEfsaneLevel(i); else showToast(`Bu bölüm için ${cat.gereken_yildiz || 100} yıldız gerekiyor!`); };
+            container.appendChild(card);
+        }
+    }
+
+    // Şampiyonlar Ligi Bölümü
     if (championsData.length > 0) {
         let header = document.createElement('div');
         header.className = 'champion-header';
@@ -754,7 +794,7 @@ function showLevelScreen() {
         container.appendChild(header);
         for (let i = 0; i < championsData.length; i++) {
             let champ = championsData[i];
-            let levelIndex = 40 + i;
+            let levelIndex = 200 + i;
             let progress = userProgress.levels[levelIndex] || { stars: 0, score: 0, unlocked: false };
             let requiredStars = champ.gereken_yildiz || 100;
             let isUnlocked = (userProgress.totalStars || 0) >= requiredStars;
@@ -869,7 +909,7 @@ function showChampionResults() {
     userProgress.totalWrong = (userProgress.totalWrong || 0) + wrongCount;
     if (score > (userProgress.highScore || 0)) userProgress.highScore = score;
     if (starsEarned === 3) userProgress.perfectLevels = (userProgress.perfectLevels || 0) + 1;
-    let levelIndex = 40 + currentLevelIndex;
+    let levelIndex = 200 + currentLevelIndex;
     let prevStars = userProgress.levels[levelIndex] ? userProgress.levels[levelIndex].stars : 0;
     if (starsEarned > prevStars) {
         userProgress.totalStars += (starsEarned - prevStars);
@@ -889,6 +929,133 @@ function showChampionResults() {
     if (starsEarned === 3) starsDisplay = '⭐⭐⭐';
     document.getElementById('result-stars').innerText = starsDisplay;
     document.getElementById('final-score-text').innerText = `👑 SKOR: ${score}`;
+    document.getElementById('final-correct-text').innerText = `Doğru: ${correctCount}/${totalQ} | Coin: ${coinsEarned} 🪙`;
+    isChampionLevel = false;
+    checkAchievements();
+    if (starsEarned === 3) {
+        setTimeout(() => { openChestModal(); }, 2000);
+    }
+}
+
+// --- EFSANELER LİGİ FONKSİYONLARI ---
+function startEfsaneLevel(index) {
+    isChampionLevel = false;
+    currentLevelIndex = 100 + index;
+    currentQuestionIndex = 0; score = 0; correctCount = 0; wrongCount = 0;
+    usedJokers = { "cut": false, "answer": false, "heart": false };
+    hasDoubleChance = false;
+    if (!efsanelerData[index] || efsanelerData[index].sorular.length === 0) { showToast("Soru yok!"); return; }
+    showScreen('quiz-screen'); loadEfsaneQuestion();
+}
+
+function loadEfsaneQuestion() {
+    if (isPaused) return;
+    answered = false; clearInterval(timerInterval);
+    updateJokerButtons();
+    document.getElementById('quiz-coins-display').innerText = userProgress.totalCoins || 0;
+    let currentCategory = efsanelerData[currentLevelIndex - 100];
+    let questions = currentCategory.sorular;
+    if (currentQuestionIndex >= questions.length) currentQuestionIndex = 0;
+    const currentQ = normalizeQuestion(questions[currentQuestionIndex]);
+    document.getElementById('question-counter').innerText = `⭐ ${currentQuestionIndex + 1}/${questions.length}`;
+    document.getElementById('question-text').innerText = currentQ.soru;
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = "";
+    const letters = ['A', 'B', 'C', 'D'];
+    currentQ.secenekler.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.classList.add("option-btn");
+        btn.innerHTML = `<span class="option-letter">${letters[index]}</span> ${option}`;
+        btn.onclick = () => { sesTiklama.play(); vibrate(20); selectEfsaneOption(index, btn); };
+        optionsContainer.appendChild(btn);
+    });
+    saveProgress(currentLevelIndex, currentQuestionIndex);
+    let timeLeft = 30;
+    document.getElementById('timer-text').innerText = timeLeft + 's';
+    timerInterval = setInterval(() => {
+        if (isPaused) return;
+        timeLeft--; document.getElementById('timer-text').innerText = timeLeft + 's';
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            if (!answered) {
+                answered = true; wrongCount++;
+                const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
+                for (let btn of buttons) btn.disabled = true;
+                buttons[currentQ.dogru].classList.add("correct");
+                sesYanlis.play(); vibrate(100); setTimeout(nextEfsaneQuestion, 1500);
+            }
+        }
+    }, 1000);
+}
+
+function selectEfsaneOption(selectedIndex, selectedBtn) {
+    if (answered || isPaused) return;
+    let currentQ = normalizeQuestion(efsanelerData[currentLevelIndex - 100].sorular[currentQuestionIndex]);
+    const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
+    if (selectedIndex === currentQ.dogru) {
+        answered = true; clearInterval(timerInterval);
+        selectedBtn.classList.add("correct");
+        selectedBtn.innerHTML += ' <span class="gol-ikon">⚽</span>';
+        score += 100; correctCount++; sesDogru.play(); vibrate(50);
+        updateQuestProgress('correct', 1);
+        for (let btn of buttons) btn.disabled = true;
+        setTimeout(nextEfsaneQuestion, 1200);
+    } else {
+        if (hasDoubleChance) {
+            hasDoubleChance = false;
+            selectedBtn.classList.add("incorrect"); selectedBtn.disabled = true;
+            sesYanlis.play(); vibrate(100); updateJokerButtons();
+        } else {
+            answered = true; clearInterval(timerInterval); wrongCount++;
+            selectedBtn.classList.add("incorrect");
+            selectedBtn.innerHTML += ' <span class="kart-ikon">🟥</span>';
+            if (buttons[currentQ.dogru]) buttons[currentQ.dogru].classList.add("correct");
+            sesYanlis.play(); vibrate(100);
+            for (let btn of buttons) btn.disabled = true;
+            setTimeout(nextEfsaneQuestion, 1200);
+        }
+    }
+}
+
+function nextEfsaneQuestion() {
+    if (currentQuestionIndex < efsanelerData[currentLevelIndex - 100].sorular.length - 1) {
+        currentQuestionIndex++; loadEfsaneQuestion();
+    } else { showEfsaneResults(); }
+}
+
+function showEfsaneResults() {
+    clearInterval(timerInterval); showScreen('score-screen');
+    let totalQ = efsanelerData[currentLevelIndex - 100].sorular.length;
+    let totalPossible = totalQ * 100;
+    let percentage = (score / totalPossible) * 100;
+    let starsEarned = 0;
+    if (percentage >= 30) starsEarned = 1;
+    if (percentage >= 70) starsEarned = 2;
+    if (percentage >= 100) starsEarned = 3;
+    userProgress.totalScore = (userProgress.totalScore || 0) + score;
+    userProgress.totalCorrect = (userProgress.totalCorrect || 0) + correctCount;
+    userProgress.totalWrong = (userProgress.totalWrong || 0) + wrongCount;
+    if (score > (userProgress.highScore || 0)) userProgress.highScore = score;
+    if (starsEarned === 3) userProgress.perfectLevels = (userProgress.perfectLevels || 0) + 1;
+    let prevStars = userProgress.levels[currentLevelIndex] ? userProgress.levels[currentLevelIndex].stars : 0;
+    if (starsEarned > prevStars) {
+        userProgress.totalStars += (starsEarned - prevStars);
+        userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+    } else if (!userProgress.levels[currentLevelIndex]) {
+        userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
+        userProgress.totalStars += starsEarned;
+    }
+    let coinsEarned = correctCount * 20;
+    userProgress.totalCoins += coinsEarned;
+    addToLeaderboard(`⭐ ${efsanelerData[currentLevelIndex - 100].kategori}`, score);
+    clearSavedProgress();
+    localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
+    let starsDisplay = '☆☆☆';
+    if (starsEarned === 1) starsDisplay = '⭐☆☆';
+    if (starsEarned === 2) starsDisplay = '⭐⭐☆';
+    if (starsEarned === 3) starsDisplay = '⭐⭐⭐';
+    document.getElementById('result-stars').innerText = starsDisplay;
+    document.getElementById('final-score-text').innerText = `⭐ SKOR: ${score}`;
     document.getElementById('final-correct-text').innerText = `Doğru: ${correctCount}/${totalQ} | Coin: ${coinsEarned} 🪙`;
     isChampionLevel = false;
     checkAchievements();
@@ -1000,7 +1167,7 @@ function useJoker(type) {
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
     updateTopPanel(); sesTiklama.play(); vibrate(30);
     const buttons = document.getElementById('options-container').getElementsByClassName("option-btn");
-    let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]);
+    let currentQ = isChampionLevel ? normalizeQuestion(championsData[currentLevelIndex].sorular[currentQuestionIndex]) : (currentLevelIndex >= 100 ? normalizeQuestion(efsanelerData[currentLevelIndex - 100].sorular[currentQuestionIndex]) : normalizeQuestion(levelsData[currentLevelIndex].sorular[currentQuestionIndex]));
     if (type === "cut") {
         let wrongIndices = [];
         for (let i = 0; i < 4; i++) { if (i !== currentQ.dogru) wrongIndices.push(i); }
@@ -1089,7 +1256,7 @@ function showResults() {
     }
 }
 
-function restartLevel() { sesTiklama.play(); vibrate(30); if (isChampionLevel) startChampionLevel(currentLevelIndex); else startLevel(currentLevelIndex); }
+function restartLevel() { sesTiklama.play(); vibrate(30); if (isChampionLevel) startChampionLevel(currentLevelIndex); else if (currentLevelIndex >= 100 && currentLevelIndex < 200) startEfsaneLevel(currentLevelIndex - 100); else startLevel(currentLevelIndex); }
 function resetGame() { if(confirm("Tüm ilerlemen silinecek. Emin misin?")) { localStorage.removeItem('futbol_quiz_progress'); location.reload(); } }
 function watchAdForStars() {
     sesTiklama.play(); vibrate(20); showToast("📺 Reklam izleniyor...");
@@ -1118,6 +1285,8 @@ function resumeFromPause() {
     sesTiklama.play(); vibrate(20);
     if (isChampionLevel) {
         loadChampionQuestion();
+    } else if (currentLevelIndex >= 100 && currentLevelIndex < 200) {
+        loadEfsaneQuestion();
     } else {
         loadQuestion();
     }
@@ -1127,6 +1296,7 @@ function restartFromPause() {
     isPaused = false;
     sesTiklama.play(); vibrate(20);
     if (isChampionLevel) startChampionLevel(currentLevelIndex);
+    else if (currentLevelIndex >= 100 && currentLevelIndex < 200) startEfsaneLevel(currentLevelIndex - 100);
     else startLevel(currentLevelIndex);
 }
 function exitToMenuFromPause() {
@@ -1172,4 +1342,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-                 }
+}
