@@ -769,7 +769,6 @@ function showLevelScreen() {
     container.innerHTML = ''; updateTopPanel();
     if (levelsData.length === 0) { container.innerHTML = "<p style='color:#fff;'>Yükleniyor...</p>"; return; }
     
-    // Normal Seviyeler
     for (let i = 0; i < levelsData.length; i++) {
         let progress = userProgress.levels[i] || { stars: 0, score: 0, unlocked: false };
         let catData = levelsData[i] || { kategori: `LEVEL ${i+1}` };
@@ -791,7 +790,6 @@ function showLevelScreen() {
         container.appendChild(card);
     }
 
-    // Efsaneler Ligi
     if (efsanelerData.length > 0) {
         let efsanelerHeader = document.createElement('div');
         efsanelerHeader.className = 'champion-header';
@@ -817,7 +815,6 @@ function showLevelScreen() {
         }
     }
 
-    // Şampiyonlar Ligi
     if (championsData.length > 0) {
         let header = document.createElement('div');
         header.className = 'champion-header';
@@ -950,8 +947,17 @@ function showChampionResults() {
         userProgress.levels[levelIndex] = { stars: starsEarned, score: score, unlocked: true };
         userProgress.totalStars += starsEarned;
     }
-    let coinsEarned = correctCount * 20;
+    // --- COIN SÖMÜRÜSÜ ENGELLENDİ ---
+    let coinsEarned = 0;
+    if (prevStars === 0) {
+        coinsEarned = correctCount * 20;
+    } else if (starsEarned > prevStars) {
+        coinsEarned = (starsEarned - prevStars) * 20;
+    } else {
+        coinsEarned = 0;
+    }
     userProgress.totalCoins += coinsEarned;
+    // --- COIN SÖMÜRÜSÜ ENGELLENDİ ---
     addToLeaderboard(`👑 ${championsData[currentLevelIndex].kategori}`, score);
     clearSavedProgress();
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
@@ -1077,8 +1083,17 @@ function showEfsaneResults() {
         userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
         userProgress.totalStars += starsEarned;
     }
-    let coinsEarned = correctCount * 20;
+    // --- COIN SÖMÜRÜSÜ ENGELLENDİ ---
+    let coinsEarned = 0;
+    if (prevStars === 0) {
+        coinsEarned = correctCount * 20;
+    } else if (starsEarned > prevStars) {
+        coinsEarned = (starsEarned - prevStars) * 20;
+    } else {
+        coinsEarned = 0;
+    }
     userProgress.totalCoins += coinsEarned;
+    // --- COIN SÖMÜRÜSÜ ENGELLENDİ ---
     addToLeaderboard(`⭐ ${efsanelerData[currentLevelIndex - 100].kategori}`, score);
     clearSavedProgress();
     localStorage.setItem('futbol_quiz_progress', JSON.stringify(userProgress));
@@ -1269,8 +1284,17 @@ function showResults() {
         userProgress.levels[currentLevelIndex] = { stars: starsEarned, score: score, unlocked: true };
         userProgress.totalStars += starsEarned;
     }
-    let coinsEarned = correctCount * 5;
+    // --- COIN SÖMÜRÜSÜ ENGELLENDİ ---
+    let coinsEarned = 0;
+    if (prevStars === 0) {
+        coinsEarned = correctCount * 5;
+    } else if (starsEarned > prevStars) {
+        coinsEarned = (starsEarned - prevStars) * 5;
+    } else {
+        coinsEarned = 0;
+    }
     userProgress.totalCoins += coinsEarned;
+    // --- COIN SÖMÜRÜSÜ ENGELLENDİ ---
     updateQuestProgress('levels', 1);
     addToLeaderboard(levelsData[currentLevelIndex].kategori || `Level ${currentLevelIndex + 1}`, score);
     clearSavedProgress();
@@ -1373,4 +1397,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-                                                              }
+            }
