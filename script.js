@@ -189,6 +189,11 @@ function showMenuScreen() {
     checkAchievements();
     checkDailyReminder();
     updateResumeButton();
+    if (checkDailyReward()) {
+        setTimeout(() => {
+            showToast("🎁 Günlük ödülünü almayı unutma!");
+        }, 1500);
+    }
 }
 function showSettingsScreen() {
     showScreen('settings-screen');
@@ -1345,4 +1350,4 @@ if ('serviceWorker' in navigator) {
             .then(registration => { console.log('Service Worker kaydedildi!', registration.scope); })
             .catch(err => { console.log('Service Worker kaydedilemedi:', err); });
     });
-        }
+            }
