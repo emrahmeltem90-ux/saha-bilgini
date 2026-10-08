@@ -544,3 +544,220 @@ input:checked + .slider:before { transform: translateX(24px); }
 [data-theme="light"] .level-card.locked .level-avatar-box { border-color: #94a3b8 !important; box-shadow: none !important; }
 [data-theme="light"] .level-card.locked .level-avatar-role { color: #64748b !important; }
 [data-theme="light"] .level-card.locked .level-title { color: #64748b !important; }
+
+/* ========================================== */
+/* YENİ ÖZELLİKLER - EKLENTİLER */
+/* ========================================== */
+
+/* COMBO GÖSTERGESİ */
+.combo-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: 900;
+    color: #fbbf24;
+    text-shadow: 0 0 30px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.5);
+    z-index: 99999;
+    pointer-events: none;
+    display: none;
+}
+.combo-display.show {
+    display: block;
+    animation: comboPop 0.5s ease, comboFloat 1s ease 0.5s forwards;
+}
+
+/* COMBO BARI (Oyun Ekranı) */
+.combo-bar {
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 12px;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+    animation: pulse 1s infinite;
+    letter-spacing: 1px;
+}
+
+/* SÜRE AZALINCA KIRMIZI */
+.timer-circle.warning {
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+    animation: pulse 0.5s infinite;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+}
+
+/* AÇIKLAMA KUTUSU */
+.explanation-box {
+    background: rgba(30, 58, 138, 0.5);
+    border: 2px solid #fbbf24;
+    border-radius: 16px;
+    padding: 15px;
+    margin-top: 15px;
+    backdrop-filter: blur(10px);
+    animation: floatIn 0.3s ease;
+}
+.explanation-title {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fbbf24;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+.explanation-text {
+    font-size: 0.9rem;
+    color: #fff;
+    line-height: 1.5;
+    font-weight: bold;
+}
+
+/* GÜNÜN SORUSU */
+.daily-question-box {
+    background: linear-gradient(180deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%);
+    border: 3px solid #fbbf24;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+    text-align: center;
+}
+.daily-q-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    animation: pulse 1.5s infinite;
+}
+.daily-q-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+.daily-q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.daily-q-option {
+    background: rgba(30, 58, 138, 0.5);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 12px 15px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+.daily-q-option:active {
+    transform: scale(0.97);
+    background: rgba(30, 58, 138, 0.8);
+}
+.daily-q-option.correct {
+    background: linear-gradient(180deg, #22c55e, #15803d) !important;
+    border-color: #4ade80 !important;
+}
+.daily-q-option.incorrect {
+    background: linear-gradient(180deg, #ef4444, #991b1b) !important;
+    border-color: #f87171 !important;
+}
+.daily-q-status {
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fbbf24;
+}
+
+/* MAĞAZA */
+.shop-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+.shop-tab {
+    background: rgba(30, 58, 138, 0.5);
+    color: #cbd5e1;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+.shop-tab.active {
+    background: linear-gradient(180deg, #fbbf24, #d97706);
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+}
+.shop-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.shop-item {
+    background: linear-gradient(180deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%);
+    border: 2px solid #3b82f6;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.shop-item.owned {
+    border-color: #22c55e;
+    background: linear-gradient(180deg, #15803d, #14532d);
+}
+.shop-item-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+    width: 60px;
+    text-align: center;
+}
+.shop-item-info {
+    flex-grow: 1;
+    text-align: left;
+}
+.shop-item-title {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 3px;
+}
+.shop-item-desc {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+}
+.shop-item-price {
+    background: linear-gradient(180deg, #fbbf24, #d97706);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: 900;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.shop-item-price:active {
+    transform: scale(0.95);
+}
+.shop-item-price.owned-btn {
+    background: linear-gradient(180deg, #22c55e, #15803d);
+    cursor: default;
+}
+
+/* AÇIK TEMA DÜZELTMELERİ (Yeni) */
+[data-theme="light"] .daily-q-text { color: #0f172a; }
+[data-theme="light"] .daily-q-option { color: #0f172a; background: rgba(255,255,255,0.7); }
+[data-theme="light"] .explanation-text { color: #0f172a; }
+[data-theme="light"] .shop-item-title { color: #0f172a; }
+[data-theme="light"] .shop-item-desc { color: #334155; }
